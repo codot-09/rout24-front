@@ -69,12 +69,16 @@ function renderContent(status) {
                 <button class="btn" id="submitBtn" disabled>Yuborish</button>
             </div>
         `;
-
+    
         document.getElementById('licenseBox').onclick = () => document.getElementById('licenseInput').click();
         document.getElementById('passportBox').onclick = () => document.getElementById('passportInput').click();
         document.getElementById('licenseInput').onchange = e => uploadImage(e, 'license');
         document.getElementById('passportInput').onchange = e => uploadImage(e, 'passport');
+    
+        // **Tugmaga event listener qo‘shish**
+        document.getElementById('submitBtn').onclick = submitVerification;
     }
+    
     else if (status === 'WAITING') {
         content.innerHTML = `<p style="font-size:19px;opacity:0.9;line-height:1.6;margin-top:20px">Ma'lumotlaringiz tekshirilmoqda.<br>Tez orada javob beramiz</p>`;
     }
