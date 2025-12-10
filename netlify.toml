@@ -16,7 +16,7 @@
 
 [[redirects]]
   from = "/driver/profile"
-  to = "/profile/driver-profile.html"
+  to = "/profile/driver/driver-profile.html"
   status = 200
 
 [[redirects]]
