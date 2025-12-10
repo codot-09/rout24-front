@@ -1,5 +1,5 @@
 const token = localStorage.getItem('token');
-if (!token) location.href = 'login.html';
+if (!token) location.href = '/login';
 
 async function loadProfile() {
     try {
@@ -10,25 +10,28 @@ async function loadProfile() {
         if (!data.success) throw new Error();
 
         const { fullName, imageUrl, status } = data.data;
-        document.getElementById('fullName').textContent = fullName || 'Noma‘lum';
-        document.getElementById('profileImg').src = imageUrl || 'https://via.placeholder.com/72';
+        document.getElementById('fullName').textContent = fullName || 'Haydovchi';
+        document.getElementById('profileImg').src = imageUrl || 'https://via.placeholder.com/86';
 
+        const ring = document.getElementById('statusRing');
         const badge = document.getElementById('statusBadge');
         const text = document.getElementById('statusText');
-        badge.className = 'status';
+
+        ring.className = 'status-ring';
+        badge.className = 'status-badge';
+
         if (status === 'NOT_CONFIRMED') {
-            badge.classList.add('not-confirmed');
+            ring.classList.add('not-confirmed');
             text.textContent = 'Tasdiqlanmagan';
-            badge.innerHTML += ' To‘ldirish kerak';
         } else if (status === 'WAITING') {
-            badge.classList.add('waiting');
-            text.textContent = 'Kutilyapti';
+            ring.classList.add('waiting');
+            text.textContent = 'Tekshiruvda';
         } else if (status === 'CONFIRMED') {
-            badge.classList.add('confirmed');
-            text.textContent = 'Tasdiqlangan';
+            ring.classList.add('confirmed');
+            text.textContent = 'Faol';
         }
     } catch {
-        alert('Profil ma‘lumotlari yuklanmadi');
+        alert('Profil yuklanmadi');
     }
 }
 

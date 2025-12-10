@@ -9,56 +9,85 @@
 </head>
 <body>
 
+<!-- Header -->
 <header class="header">
     <div class="logo">
-        <img src="appicon.png" alt="Rout24">
-        <span>rout24</span>
+        <img src="/assets/appicon.jpg" alt="Rout24">
+        <span>Rout24</span>
     </div>
     <button class="notifications" id="notificationsBtn">
         <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <span class="badge">3</span>
     </button>
 </header>
 
 <main class="main">
 
-    <!-- Profile Card -->
+    <!-- Creative Profile Card -->
     <div class="profile-card" id="profileCard">
-        <div class="profile-info">
-            <img id="profileImg" src="" alt="Profil">
-            <div class="profile-text">
+        <div class="profile-bg"></div>
+        <div class="profile-content">
+            <div class="profile-avatar">
+                <img id="profileImg" src="" alt="Profil">
+                <div class="status-ring" id="statusRing"></div>
+            </div>
+            <div class="profile-info">
                 <h3 id="fullName">Yuklanmoqda...</h3>
-                <div class="status" id="statusBadge">
+                <div class="status-badge" id="statusBadge">
                     <span id="statusText"></span>
                 </div>
             </div>
-        </div>
-        <button class="profile-btn" onclick="location.href='driver-profile.html'">Profil</button>
-    </div>
-
-    <!-- Statistics -->
-    <div class="stats-grid">
-        <div class="stat-item">
-            <div class="stat-value" id="routesCount">0</div>
-            <div class="stat-label">Marshrutlar</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="ordersCount">0</div>
-            <div class="stat-label">Buyurtmalar</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="monthlyIncome">0 so‘m</div>
-            <div class="stat-label">Oylik daromad</div>
+            <button class="profile-btn" onclick="location.href='driver-profile.html'">
+                <svg viewBox="0 0 24 24"><path d="M9 11l3 3 7-7"/></svg>
+            </button>
         </div>
     </div>
 
-    <!-- Banners Slider -->
+    <!-- Statistics (2 + 1 layout) -->
+    <div class="stats-container">
+        <div class="stats-row">
+            <div class="stat-big">
+                <div class="stat-value" id="routesCount">0</div>
+                <div class="stat-label">Jami marshrutlar</div>
+            </div>
+            <div class="stat-big">
+                <div class="stat-value" id="ordersCount">0</div>
+                <div class="stat-label">Faol buyurtmalar</div>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-full">
+                <div class="stat-value" id="monthlyIncome">0 so'm</div>
+                <div class="stat-label">Bu oy daromad</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banners -->
     <div class="banners-section">
         <div class="swiper" id="bannerSwiper">
             <div class="swiper-wrapper" id="bannerWrapper"></div>
+            <div class="swiper-pagination"></div>
         </div>
     </div>
 
 </main>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <button class="nav-item active" data-page="home">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Asosiy</span>
+    </button>
+    <button class="nav-item" data-page="routes">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <span>Reyslar</span>
+    </button>
+    <button class="nav-item" data-page="profile">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Profil</span>
+    </button>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="driver-dashboard.js"></script>

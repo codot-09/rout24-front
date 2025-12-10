@@ -1,0 +1,33 @@
+[build]
+  publish = "public"
+  command = ""
+
+# === Pretty URLs ===
+
+[[redirects]]
+  from = "/login"
+  to = "/login/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/driver/dashboard"
+  to = "/dashboard/driver/driver-dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/set-credentials"
+  to = "/set-credentials.html"
+  status = 200
+
+# === API Proxy ===
+[[redirects]]
+  from = "/api/*"
+  to = "https://api.rout24.online/:splat"
+  status = 200
+  force = true
+
+# === SPA fallback (optional) ===
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

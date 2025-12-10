@@ -122,7 +122,7 @@
     function updateUI() {
         const i = swiper.activeIndex;
         btn.textContent = i === 2 ? 'Boshlash' : 'Keyingi';
-        btn.onclick = i === 2 ? () => location.href='/login/login.html' : () => swiper.slideNext();
+        btn.onclick = i === 2 ? () => location.href='/login' : () => swiper.slideNext();
         dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
     }
     updateUI();
