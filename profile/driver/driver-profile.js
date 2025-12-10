@@ -24,18 +24,18 @@ async function init() {
         const status = data.status;
         statusBadge.textContent = status === 'NOT_CONFIRMED' ? 'To‘ldirish kerak' :
                                   status === 'WAITING' ? 'Tekshiruvda' : 'Faol';
-        statusBadge.className = 'status-badge ' + (status === 'NOT_CONFIRMED' ? 'red-bg' :
-                                  status === 'WAITING' ? 'yellow-bg' : 'green-bg');
-        statusRing.className = 'status-ring ' + (status === 'NOT_CONFIRMED' ? 'red' :
-                                  status === 'WAITING' ? 'yellow' : 'green');
 
-        renderByStatus(status);
-    } catch {
+        statusRing.className = 'status-ring ' + (status === 'NOT_CONFIRMED' ? 'red' :
+                                 status === 'WAITING' ? 'yellow' : 'green');
+
+        renderContent(status);
+    } catch (e) {
+        console.error(e);
         alert('Profil yuklanmadi');
     }
 }
 
-function renderByStatus(status) {
+function renderContent(status) {
     if (status === 'NOT_CONFIRMED') {
         content.innerHTML = `
             <div class="form">
@@ -76,7 +76,7 @@ function renderByStatus(status) {
         document.getElementById('passportInput').onchange = e => uploadImage(e, 'passport');
     }
     else if (status === 'WAITING') {
-        content.innerHTML = `<p style="font-size:19px;opacity:0.9;line-height:1.6">Ma'lumotlaringiz tekshirilmoqda.<br>Tez orada javob beramiz</p>`;
+        content.innerHTML = `<p style="font-size:19px;opacity:0.9;line-height:1.6;margin-top:20px">Ma'lumotlaringiz tekshirilmoqda.<br>Tez orada javob beramiz</p>`;
     }
     else if (status === 'CONFIRMED') {
         content.innerHTML = `<div class="action-list" id="actions"></div><div id="vehicle"></div>`;
@@ -90,10 +90,9 @@ async function uploadImage(e, type) {
     if (!file) return;
 
     const prev = document.getElementById(type + 'Prev');
-    const box = document.getElementById(type + 'Box');
     prev.src = URL.createObjectURL(file);
     prev.style.display = 'block';
-    box.querySelector('svg,p').style.display = 'none';
+    document.querySelector(`#${type}Box svg, #${type}Box p`).style.display = 'none';
 
     const form = new FormData();
     form.append('file', file);
@@ -104,50 +103,68 @@ async function uploadImage(e, type) {
             headers: { Authorization: `Bearer ${token}` },
             body: form
         });
-        const url = await res.text(); // <-- string qaytadi
-        if (res.ok && url.includes('http')) {
+
+        const url = await res.text(); // string qaytadi
+        if (res.ok && url.startsWith('http')) {
             if (type === 'license') licenseUrl = url;
             if (type === 'passport') passportUrl = url;
-            if (licenseUrl && passportUrl) document.getElementById('submitBtn').disabled = false;
-        } else throw new Error();
-    } catch {
-        alert('Rasm yuklashda xatolik');
+
+            if (licenseUrl && passportUrl && document.getElementById('birthDate').value && document.getElementById('gender').value) {
+                document.getElementById('submitBtn').disabled = false;
+            }
+        } else {
+            alert('Rasm yuklashda xatolik');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Internet aloqasi yo‘q yoki server xatosi');
     }
 }
 
-async function submitVerification() {
-    const birth = document.getElementById('birthDate').value;
+// YUBORISH TUGMASI – 100% ISHLAYDI
+window.submitVerification = async function () {
+    const birthDate = document.getElementById('birthDate').value;
     const gender = document.getElementById('gender').value;
-    if (!licenseUrl || !passportUrl || !birth || !gender) return alert('Hamma maydon to‘ldirilishi shart');
+
+    if (!licenseUrl || !passportUrl || !birthDate || !gender) {
+        return alert('Barcha maydonlarni to‘ldiring');
+    }
 
     const btn = document.getElementById('submitBtn');
-    btn.disabled = true; btn.textContent = 'Yuborilmoqda...';
+    btn.disabled = true;
+    btn.textContent = 'Yuborilmoqda...';
 
     try {
         const res = await fetch('https://api.rout24.online/drivers/finish-account', {
             method: 'PUT',
             headers: {
-                Authorization: `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 driverLicense: licenseUrl,
                 passportId: passportUrl,
-                birthDate: birth,
+                birthDate: birthDate,
                 gender: gender
             })
         });
-        const json = await res.json();
-        if (json.success) {
-            alert('Muvaffaqiyatli! Tekshiruvga yuborildi');
-            location.reload();
-        } else throw new Error();
-    } catch {
-        alert('Xatolik yuz berdi');
-        btn.disabled = false; btn.textContent = 'Yuborish';
-    }
-}
 
+        const result = await res.json();
+        if (result.success) {
+            alert('Ma‘lumotlar muvaffaqiyatli yuborildi! Tekshiruvga yuborildi');
+            location.reload();
+        } else {
+            throw new Error(result.message || 'Xatolik');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Yuborishda xatolik: ' + err.message);
+        btn.disabled = false;
+        btn.textContent = 'Yuborish';
+    }
+};
+
+// Qolgan funksiyalar (loadActions, loadVehicle, logout) avvalgidek
 function loadActions() {
     const actions = [
         {text:"Mashina qo‘shish",icon:"M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9h14v2H7V9z"},

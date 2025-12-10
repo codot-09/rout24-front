@@ -16,20 +16,31 @@
 </header>
 
 <main class="main">
-    <div class="profile-header">
-        <div class="avatar">
-            <img id="profileImg" src="/assets/default.png" alt="Profil">
-            <div class="status-ring" id="statusRing"></div>
+
+    <!-- Creative Profile Card (Dashboard bilan bir xil) -->
+    <div class="profile-card">
+        <div class="profile-bg"></div>
+        <div class="profile-content">
+            <div class="profile-avatar">
+                <img id="profileImg" src="/assets/default.png" alt="Profil">
+                <div class="status-ring" id="statusRing"></div>
+            </div>
+            <div class="profile-info">
+                <h3 id="fullName">Yuklanmoqda...</h3>
+                <div class="status-badge" id="statusBadge">Tekshiruvda</div>
+            </div>
+            <button class="profile-btn" onclick="location.href='driver-profile.html'">
+                <svg viewBox="0 0 24 24"><path d="M9 11l3 3 7-7"/></svg>
+            </button>
         </div>
-        <h2 id="fullName">Yuklanmoqda...</h2>
-        <div class="status-badge" id="statusBadge">Tekshiruvda</div>
     </div>
+
     <div id="content"></div>
 </main>
 
 <nav class="bottom-nav">
-    <button class="nav-item" onclick="location.href='driver-dashboard.html'"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Asosiy</span></button>
-    <button class="nav-item" onclick="location.href='routes.html'"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg><span>Reyslar</span></button>
+    <button class="nav-item" onclick="location.href='driver/dashboard'"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Asosiy</span></button>
+    <button class="nav-item" onclick="location.href='/routes'"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg><span>Reyslar</span></button>
     <button class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profil</span></button>
 </nav>
 
