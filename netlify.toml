@@ -15,6 +15,11 @@
   status = 200
 
 [[redirects]]
+  from = "/driver/profile"
+  to = "/profile/driver-profile.html"
+  status = 200
+
+[[redirects]]
   from = "/set-credentials"
   to = "/set-credentials.html"
   status = 200

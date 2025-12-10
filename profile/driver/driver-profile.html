@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Profil</title>
+    <link rel="stylesheet" href="driver-profile.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <img src="/assets/appicon.jpg" alt="Rout24">
+        <span>rout24</span>
+    </div>
+    <button class="notifications">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+    </button>
+</header>
+
+<main class="main" id="mainContent">
+    <div class="profile-header">
+        <img id="profileImg" src="/assets/default.png" alt="Profil">
+        <h2 id="fullName">Yuklanmoqda...</h2>
+        <div class="status-badge" id="statusBadge">Tekshirilmoqda</div>
+    </div>
+
+    <div id="contentArea"></div>
+</main>
+
+<nav class="bottom-nav">
+    <button class="nav-item" data-page="home">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Asosiy</span>
+    </button>
+    <button class="nav-item" data-page="routes">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <span>Reyslar</span>
+    </button>
+    <button class="nav-item active" data-page="profile">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Profil</span>
+    </button>
+</nav>
+
+<script src="driver-profile.js"></script>
+</body>
+</html>
