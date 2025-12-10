@@ -82,6 +82,11 @@
         <p>Telegram orqali bir marta bosish bilan xavfsiz kiring</p>
     </div>
 
+    <div class="terms">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">Men <a href="oferta.html" target="_blank">oferta shartlari</a> bilan tanishdim</label>
+    </div>
+
     <div class="login-box">
         <div class="telegram-login-wrapper">
             <script async src="https://telegram.org/js/telegram-widget.js?22"
@@ -93,24 +98,10 @@
                     data-request-access="write"></script>
         </div>
     </div>
-
-    <div class="terms">
-        <input type="checkbox" id="terms" required>
-        <label for="terms">Men <a href="oferta.html" target="_blank">oferta shartlari</a> bilan tanishdim</label>
-    </div>
-</div>
-
-<div class="bottom-fixed">
-    <button class="btn" id="mainBtn" disabled>Kirish</button>
 </div>
 
 <script>
 const termsCheckbox = document.getElementById('terms');
-const mainBtn = document.getElementById('mainBtn');
-
-termsCheckbox.addEventListener('change', () => {
-    mainBtn.disabled = !termsCheckbox.checked;
-});
 
 function onTelegramAuth(user) {
     if (!termsCheckbox.checked) {
