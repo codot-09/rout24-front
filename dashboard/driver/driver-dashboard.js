@@ -4,59 +4,70 @@ if (!token) location.href = '/login';
 async function loadProfile() {
     try {
         const res = await fetch('https://api.rout24.online/drivers/profile', {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` }
         });
 
         const result = await res.json();
-        if (!result.success || !result.data) throw new Error('Profil ma‘lumotlari topilmadi');
+        if (!result.success || !result.data) {
+            throw new Error('Profil ma‘lumotlari topilmadi');
+        }
 
         const { fullName, imageUrl, status } = result.data;
 
-        // Ism
+        // 1. Ism
         document.getElementById('fullName').textContent = fullName || 'Haydovchi';
 
-        // Rasm
+        // 2. Profil rasm
         const img = document.getElementById('profileImg');
         img.src = imageUrl || '/assets/default.png';
         img.onerror = () => img.src = '/assets/default.png';
 
-        // Status badge matni
-        const badgeText = document.getElementById('statusText') || document.getElementById('statusBadge');
-        const ring = document.getElementById('statusRing');
+        // 3. Elementlar (agar sahifada bo‘lsa)
+        const card       = document.querySelector('.profile-card');
+        const ring       = document.getElementById('statusRing');
+        const badgeText  = document.getElementById('statusText') || document.getElementById('statusBadge');
 
-        // Card rangi (faqat profile sahifasida bo‘lsa)
-        const card = document.querySelector('.profile-card');
-        if (card) {
-            card.classList.remove('not-confirmed', 'waiting', 'confirmed');
+        // Tozalash
+        if (card) card.className = 'profile-card';
+        if (ring) ring.className = 'status-ring';
+
+        // 4. Status bo‘yicha o‘zgarishlar
+        let cardClass = '';
+        let ringClass = '';
+        let badgeContent = '';
+
+        switch (status) {
+            case 'NOT_CONFIRMED':
+                cardClass = 'not-confirmed';
+                ringClass = 'red';
+                badgeContent = 'To‘ldirish kerak';
+                break;
+
+            case 'WAITING':
+            case 'PENDING':
+                cardClass = 'waiting';
+                ringClass = 'yellow';
+                badgeContent = 'Tekshiruvda';
+                break;
+
+            case 'CONFIRMED':
+                cardClass = 'confirmed';
+                ringClass = 'green';
+                badgeContent = 'Faol';
+                break;
+
+            default:
+                badgeContent = 'Noma‘lum';
         }
 
-        // Umumiy classlarni tozalash
-        ring.className = 'status-ring';
-        if (badgeText) badgeText.className = 'status-badge'; // agar alohida text bo‘lsa
-
-        // Status bo‘yicha o‘zgarishlar
-        if (status === 'NOT_CONFIRMED') {
-            ring.classList.add('red');
-            if (card) card.classList.add('not-confirmed');
-            badgeText.textContent = 'To‘ldirish kerak';
-        } 
-        else if (status === 'WAITING' || status === 'PENDING') {
-            ring.classList.add('yellow');
-            if (card) card.classList.add('waiting');
-            badgeText.textContent = 'Tekshiruvda';
-        } 
-        else if (status === 'CONFIRMED') {
-            ring.classList.add('green');
-            if (card) card.classList.add('confirmed');
-            badgeText.textContent = 'Faol';
-        }
-        else {
-            badgeText.textContent = 'Noma‘lum';
-        }
+        // Qo‘shish
+        if (card && cardClass) card.classList.add(cardClass);
+        if (ring && ringClass) ring.classList.add(ringClass);
+        if (badgeText) badgeText.textContent = badgeContent;
 
     } catch (err) {
-        console.error('Profil yuklashda xato:', err);
-        alert('Profil ma‘lumotlari yuklanmadi. Internetni tekshiring');
+        console.error('loadProfile xatosi:', err);
+        alert('Profil yuklanmadi. Internetni tekshiring');
     }
 }
 
