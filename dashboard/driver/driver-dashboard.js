@@ -10,8 +10,15 @@ async function loadProfile() {
         if (!data.success) throw new Error();
 
         const { fullName, imageUrl, status } = data.data;
+
+        const img = document.getElementById('profileImg');
+        img.src = imageUrl || '/assets/default.png';
+
+        img.onerror = () => {
+            img.src = '/assets/default.png';
+        };
+
         document.getElementById('fullName').textContent = fullName || 'Haydovchi';
-        document.getElementById('profileImg').src = imageUrl || 'https://via.placeholder.com/86';
 
         const ring = document.getElementById('statusRing');
         const badge = document.getElementById('statusBadge');
@@ -30,6 +37,7 @@ async function loadProfile() {
             ring.classList.add('confirmed');
             text.textContent = 'Faol';
         }
+
     } catch {
         alert('Profil yuklanmadi');
     }
