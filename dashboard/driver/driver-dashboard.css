@@ -1,0 +1,47 @@
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.header{
+    position:fixed;top:0;left:0;right:0;height:74px;padding:0 20px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:#fff;z-index:100;box-shadow:0 2px 15px rgba(128,0,0,0.08);
+}
+.logo{display:flex;align-items:center;gap:12px;font-size:24px;font-weight:800}
+.logo img{width:44px;height:44px;border-radius:12px}
+.notifications{
+    width:48px;height:48px;border:none;background:transparent;position:relative;
+}
+.notifications svg{width:28px;height:28px;fill:#800000}
+.main{padding:90px 20px 20px}
+
+.profile-card{
+    background:#fff;border-radius:28px;padding:24px;
+    box-shadow:0 12px 32px rgba(128,0,0,0.12);margin-bottom:28px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.profile-info{display:flex;align-items:center;gap:18px}
+.profile-info img{width:72px;height:72px;border-radius:50%;object-fit:cover}
+.profile-text h3{font-size:22px;font-weight:800}
+.status{
+    margin-top:6px;padding:4px 12px;border-radius:12px;font-size:13px;font-weight:600;
+}
+.status.not-confirmed{background:#ffebee;color:#c62828}
+.status.waiting{background:#fff8e1;color:#ff8f00}
+.status.confirmed{background:#e8f5e8;color:#2e7d32}
+.profile-btn{
+    background:#800000;color:#fff;border:none;padding:12px 24px;
+    border-radius:20px;font-size:15px;font-weight:700;
+}
+
+.stats-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;
+}
+.stat-item{
+    background:#fff;border-radius:24px;padding:20px;text-align:center;
+    box-shadow:0 10px 28px rgba(128,0,0,0.1);
+}
+.stat-value{font-size:28px;font-weight:900}
+.stat-label{font-size:14px;opacity:0.8;margin-top:6px}
+
+.banners-section{margin-top:20px}
+.swiper{border-radius:24px;overflow:hidden;box-shadow:0 12px 32px rgba(128,0,0,0.14)}
+.swiper-slide img{width:100%;height:180px;object-fit:cover}

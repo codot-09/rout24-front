@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Haydovchi paneli</title>
+    <link rel="stylesheet" href="driver-dashboard.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <img src="appicon.png" alt="Rout24">
+        <span>rout24</span>
+    </div>
+    <button class="notifications" id="notificationsBtn">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+    </button>
+</header>
+
+<main class="main">
+
+    <!-- Profile Card -->
+    <div class="profile-card" id="profileCard">
+        <div class="profile-info">
+            <img id="profileImg" src="" alt="Profil">
+            <div class="profile-text">
+                <h3 id="fullName">Yuklanmoqda...</h3>
+                <div class="status" id="statusBadge">
+                    <span id="statusText"></span>
+                </div>
+            </div>
+        </div>
+        <button class="profile-btn" onclick="location.href='driver-profile.html'">Profil</button>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-value" id="routesCount">0</div>
+            <div class="stat-label">Marshrutlar</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="ordersCount">0</div>
+            <div class="stat-label">Buyurtmalar</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="monthlyIncome">0 so‘m</div>
+            <div class="stat-label">Oylik daromad</div>
+        </div>
+    </div>
+
+    <!-- Banners Slider -->
+    <div class="banners-section">
+        <div class="swiper" id="bannerSwiper">
+            <div class="swiper-wrapper" id="bannerWrapper"></div>
+        </div>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="driver-dashboard.js"></script>
+</body>
+</html>
