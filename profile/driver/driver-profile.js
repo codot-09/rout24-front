@@ -23,10 +23,10 @@ async function init() {
 
         const status = data.status;
         statusBadge.textContent = status === 'NOT_CONFIRMED' ? 'To‘ldirish kerak' :
-                                  status === 'WAITING' ? 'Tekshiruvda' : 'Faol';
+                                  status === 'PENDING' ? 'Tekshiruvda' : 'Faol';
 
         statusRing.className = 'status-ring ' + (status === 'NOT_CONFIRMED' ? 'red' :
-                                 status === 'WAITING' ? 'yellow' : 'green');
+                                 status === 'PENDING' ? 'yellow' : 'green');
 
         renderContent(status);
     } catch (e) {
