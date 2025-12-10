@@ -30,7 +30,7 @@ async function loadProfile() {
         if (status === 'NOT_CONFIRMED') {
             ring.classList.add('not-confirmed');
             text.textContent = 'Tasdiqlanmagan';
-        } else if (status === 'WAITING') {
+        } else if (status === 'PENDING') {
             ring.classList.add('waiting');
             text.textContent = 'Tekshiruvda';
         } else if (status === 'CONFIRMED') {

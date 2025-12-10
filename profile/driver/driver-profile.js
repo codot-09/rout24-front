@@ -9,6 +9,8 @@ const statusRing = document.getElementById('statusRing');
 
 let licenseUrl = '', passportUrl = '';
 
+// ... avvalgi kodlar ...
+
 async function init() {
     try {
         const res = await fetch('https://api.rout24.online/drivers/profile', {
@@ -22,11 +24,21 @@ async function init() {
         profileImg.onerror = () => profileImg.src = '/assets/default.png';
 
         const status = data.status;
+
+        // PROFILE CARD RANGINI O‘ZGARTIRISH
+        const card = document.querySelector('.profile-card');
+        card.classList.remove('not-confirmed', 'waiting', 'confirmed');
+        if (status === 'NOT_CONFIRMED') card.classList.add('not-confirmed');
+        else if (status === 'PENDING') card.classList.add('waiting');
+        else if (status === 'CONFIRMED') card.classList.add('confirmed');
+
+        // Status badge va ring
         statusBadge.textContent = status === 'NOT_CONFIRMED' ? 'To‘ldirish kerak' :
                                   status === 'PENDING' ? 'Tekshiruvda' : 'Faol';
 
-        statusRing.className = 'status-ring ' + (status === 'NOT_CONFIRMED' ? 'red' :
-                                 status === 'PENDING' ? 'yellow' : 'green');
+        statusRing.className = 'status-ring ' + 
+            (status === 'NOT_CONFIRMED' ? 'red' :
+             status === 'PENDING' ? 'yellow' : 'green');
 
         renderContent(status);
     } catch (e) {
