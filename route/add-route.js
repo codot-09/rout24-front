@@ -2,7 +2,7 @@ const token = localStorage.getItem('token');
 if (!token) location.href = 'login.html';
 
 let map, fromMarker, toMarker;
-let fromSelected = false, toSelected = false;
+let fromAddressSelected = false, toAddressSelected = false;
 
 function initMap() {
     map = L.map('map', {
@@ -11,68 +11,64 @@ function initMap() {
         zoomControl: false
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-    }).addTo(map);
-
-    const fromInput = document.getElementById('fromInput');
-    const toInput = document.getElementById('toInput');
-
-    fromInput.addEventListener('change', () => geocode(fromInput.value, true));
-    toInput.addEventListener('change', () => geocode(toInput.value, false));
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
     map.on('click', e => {
-        if (!fromSelected) setMarker(e.latlng, true);
-        else if (!toSelected) setMarker(e.latlng, false);
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        if (!fromAddressSelected) setMarker(lat, lng, true);
+        else if (!toAddressSelected) setMarker(lat, lng, false);
     });
 }
 
-async function geocode(query, isFrom) {
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+async function reverseGeocode(lat, lng, isFrom) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
     const data = await res.json();
-    if (!data.length) return;
 
-    const lat = parseFloat(data[0].lat);
-    const lng = parseFloat(data[0].lon);
+    const address = data.display_name.split(',').slice(0, 3).join(', ');
 
-    setMarker({ lat, lng }, isFrom);
-    document.getElementById(isFrom ? 'fromInput' : 'toInput').value = data[0].display_name.split(',')[0];
+    if (isFrom) {
+        document.getElementById('fromAddress').value = address;
+        document.getElementById('fromLat').value = lat;
+        document.getElementById('fromLng').value = lng;
+        fromAddressSelected = true;
+    } else {
+        document.getElementById('toAddress').value = address;
+        document.getElementById('toLat').value = lat;
+        document.getElementById('toLng').value = lng;
+        toAddressSelected = true;
+    }
+
+    checkForm();
 }
 
-function setMarker(latLng, isFrom) {
-    const m = isFrom ? fromMarker : toMarker;
-    if (m) map.removeLayer(m);
+function setMarker(lat, lng, isFrom) {
+    const marker = isFrom ? fromMarker : toMarker;
+    if (marker) map.removeLayer(marker);
 
-    const newMarker = L.marker([latLng.lat, latLng.lng], {
+    const newMarker = L.marker([lat, lng], {
         icon: L.icon({
             iconUrl: isFrom
                 ? 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png'
                 : 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
+            iconSize: [28, 28],
+            iconAnchor: [14, 28]
         })
     }).addTo(map);
 
-    if (isFrom) {
-        fromMarker = newMarker;
-        document.getElementById('fromLat').value = latLng.lat;
-        document.getElementById('fromLng').value = latLng.lng;
-        document.getElementById('fromAddress').value = document.getElementById('fromInput').value;
-        fromSelected = true;
-    } else {
-        toMarker = newMarker;
-        document.getElementById('toLat').value = latLng.lat;
-        document.getElementById('toLng').value = latLng.lng;
-        document.getElementById('toAddress').value = document.getElementById('toInput').value;
-        toSelected = true;
-    }
+    if (isFrom) fromMarker = newMarker;
+    else toMarker = newMarker;
 
-    map.panTo([latLng.lat, latLng.lng]);
-    checkForm();
+    reverseGeocode(lat, lng, isFrom);
+    map.panTo([lat, lng]);
 }
 
 function checkForm() {
-    const ready = fromSelected && toSelected &&
+    const ready =
+        fromAddressSelected &&
+        toAddressSelected &&
+        document.getElementById('fromSelect').value &&
+        document.getElementById('toSelect').value &&
         document.getElementById('seats').value > 0 &&
         document.getElementById('price').value > 0 &&
         document.getElementById('departure').value;
@@ -88,8 +84,8 @@ document.getElementById('submitBtn').onclick = async () => {
     btn.textContent = 'Yuborilmoqda...';
 
     const payload = {
-        from: document.getElementById('fromInput').value || "Belgilandi",
-        to: document.getElementById('toInput').value || "Belgilandi",
+        from: document.getElementById('fromSelect').value,
+        to: document.getElementById('toSelect').value,
         fromLat: parseFloat(document.getElementById('fromLat').value),
         fromLng: parseFloat(document.getElementById('fromLng').value),
         fromAddress: document.getElementById('fromAddress').value,
@@ -113,7 +109,7 @@ document.getElementById('submitBtn').onclick = async () => {
         const json = await res.json();
 
         if (json.success) {
-            alert('Reys muvaffaqiyatli yaratildi!');
+            alert('Reys yaratildi!');
             history.back();
         } else throw new Error(json.message || 'Xatolik');
     } catch (err) {
@@ -123,8 +119,7 @@ document.getElementById('submitBtn').onclick = async () => {
     }
 };
 
-document.querySelectorAll('#seats, #price, #departure').forEach(el => el.oninput = checkForm);
+document.querySelectorAll('#fromSelect, #toSelect, #seats, #price, #departure')
+    .forEach(el => el.oninput = checkForm);
 
-window.onload = () => {
-    setTimeout(initMap, 300);
-};
+window.onload = () => setTimeout(initMap, 300);

@@ -22,17 +22,52 @@
 
         <div class="form-group">
             <label>Qayerdan</label>
-            <input type="text" id="fromInput" placeholder="Joyni tanlang" readonly>
-            <input type="hidden" id="fromLat"><input type="hidden" id="fromLng">
+            <select id="fromInput">
+                <option value="">Tanlang</option>
+                <option>TOSHKENT</option>
+                <option>NAVOIY</option>
+                <option>SAMARKAND</option>
+                <option>BUXORO</option>
+                <option>QASHQADARYO</option>
+                <option>XORAZM</option>
+                <option>SURXONDARYO</option>
+                <option>JIZZAX</option>
+                <option>SIRDARYO</option>
+                <option>QORAQALPOGISTON</option>
+                <option>ANDIJON</option>
+                <option>NAMANGAN</option>
+                <option>FARGONA</option>
+            </select>
+            <input type="hidden" id="fromLat">
+            <input type="hidden" id="fromLng">
             <input type="hidden" id="fromAddress">
         </div>
 
         <div class="form-group">
             <label>Qayerga</label>
-            <input type="text" id="toInput" placeholder="Joyni tanlang" readonly>
-            <input type="hidden" id="toLat"><input type="hidden" id="toLng">
+            <select id="toInput">
+                <option value="">Tanlang</option>
+                <option>TOSHKENT</option>
+                <option>NAVOIY</option>
+                <option>SAMARKAND</option>
+                <option>BUXORO</option>
+                <option>QASHQADARYO</option>
+                <option>XORAZM</option>
+                <option>SURXONDARYO</option>
+                <option>JIZZAX</option>
+                <option>SIRDARYO</option>
+                <option>QORAQALPOGISTON</option>
+                <option>ANDIJON</option>
+                <option>NAMANGAN</option>
+                <option>FARGONA</option>
+            </select>
+            <input type="hidden" id="toLat">
+            <input type="hidden" id="toLng">
             <input type="hidden" id="toAddress">
         </div>
+
+        <p style="margin-top:10px;">Xaritadan aniq manzilni tanlang:</p>
+        <div id="map"></div>
 
         <div class="form-row">
             <div class="form-group">
@@ -49,8 +84,6 @@
             <label>Ketish vaqti</label>
             <input type="datetime-local" id="departure">
         </div>
-
-        <div id="map"></div>
 
         <button class="btn" id="submitBtn" disabled>Reys yaratish</button>
     </div>
