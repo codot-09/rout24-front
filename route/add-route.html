@@ -1,72 +1,64 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yangi reys yaratish</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        body { margin:0; font-family:system-ui,sans-serif; background:#f5f5f5; padding:20px 0; }
-        .container { max-width:560px; margin:0 auto; background:white; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.12); overflow:hidden; }
-        .header { background:#800000; color:white; padding:28px 24px; text-align:center; }
-        .header h1 { margin:0; font-size:24px; }
-        .form { padding:32px 28px; }
-        label { display:block; margin:16px 0 8px; font-weight:600; color:#333; }
-        select, input { width:100%; padding:14px; border:2px solid #ddd; border-radius:10px; font-size:16px; }
-        select:disabled, input:disabled { background:#f9f9f9; opacity:0.6; }
-        select:focus, input:focus { outline:none; border-color:#800000; }
-        #map { height:380px; margin:20px 0; border-radius:12px; border:2px solid #ddd; }
-        .hint {
-            text-align:center; padding:14px; background:#fff3cd; border-radius:10px; margin:16px 0; font-weight:600; color:#856404;
-        }
-        .address-box {
-            background:#f8f9fa; padding:12px 16px; border-radius:10px; margin-top:8px; font-size:15px; border-left:4px solid #800000;
-        }
-        button {
-            margin-top:32px; width:100%; padding:16px; background:#800000; color:white; border:none; border-radius:10px;
-            font-size:18px; font-weight:700; cursor:pointer;
-        }
-        button:disabled { background:#aaa; cursor:not-allowed; }
-        button:not(:disabled):hover { background:#a00000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yangi reys yaratish</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+body { margin:0; font-family:system-ui,sans-serif; background:#f5f5f5; padding:0; }
+.container { max-width:600px; margin:0 auto; background:white; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.12); overflow:hidden; margin-top:20px; margin-bottom:40px;}
+.header { background:#800000; color:white; padding:20px; display:flex; align-items:center; gap:12px; }
+.header h1 { margin:0; font-size:20px; font-weight:700; flex:1; text-align:center;}
+.back-btn { background:none; border:none; color:white; font-size:24px; cursor:pointer; }
+.form { padding:24px; }
+label { display:block; margin:12px 0 6px; font-weight:600; color:#333; }
+select, input { width:100%; padding:12px; border:2px solid #ddd; border-radius:10px; font-size:16px; }
+select:disabled, input:disabled { background:#f9f9f9; opacity:0.6; }
+select:focus, input:focus { outline:none; border-color:#800000; }
+#map { height:350px; margin:16px 0; border-radius:12px; border:2px solid #ddd; }
+.hint { text-align:center; padding:10px; background:#fff3cd; border-radius:10px; margin:8px 0; font-weight:600; color:#856404; }
+.address-box { background:#f8f9fa; padding:12px 16px; border-radius:10px; font-size:15px; border-left:4px solid #800000; margin-bottom:12px; }
+button { margin-top:24px; width:100%; padding:14px; background:#800000; color:white; border:none; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; }
+button:disabled { background:#aaa; cursor:not-allowed; }
+button:not(:disabled):hover { background:#a00000; }
+</style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>Yangi reys yaratish</h1>
+  <div class="header">
+    <button class="back-btn" onclick="history.back()">←</button>
+    <h1>Yangi reys yaratish</h1>
+  </div>
+
+  <div class="form">
+    <label>Qayerdan (viloyat)</label>
+    <select id="fromInput"></select>
+    <div id="fromMapSection" style="display:none;">
+      <div class="hint">Xaritada yashil nuqta uchun joyni bosing – bu Qayerdan</div>
+      <div id="map"></div>
+      <div class="address-box" id="fromAddress">-</div>
     </div>
 
-    <div class="form">
-        <label>Qayerdan (viloyat)</label>
-        <select id="fromInput"></select>
-
-        <div id="fromMapSection" style="display:none;">
-            <div class="hint">Xaritada yashil nuqta uchun joyni bosing – bu Qayerdan</div>
-            <div id="map"></div>
-            <div class="address-box" id="fromAddress">-</div>
-        </div>
-
-        <label>Qayerga (viloyat)</label>
-        <select id="toInput" disabled></select>
-
-        <div id="toMapSection" style="display:none;">
-            <div class="hint">Xaritada qizil nuqta uchun joyni bosing – bu Qayerga</div>
-            <div id="map" style="display:none;"></div>
-            <div class="address-box" id="toAddress">-</div>
-        </div>
-
-        <label>O‘rinlar soni</label>
-        <input type="number" id="seats" min="1" max="50" value="4" disabled>
-
-        <label>Narx (so‘m)</label>
-        <input type="number" id="price" min="10000" step="1000" placeholder="250000" disabled>
-
-        <label>Ketish sanasi va vaqti</label>
-        <input type="datetime-local" id="departure" disabled>
-
-        <button id="submitBtn" disabled>Reys yaratish</button>
+    <label>Qayerga (viloyat)</label>
+    <select id="toInput" disabled></select>
+    <div id="toMapSection" style="display:none;">
+      <div class="hint">Xaritada qizil nuqta uchun joyni bosing – bu Qayerga</div>
+      <div class="address-box" id="toAddress">-</div>
     </div>
+
+    <label>O‘rinlar soni</label>
+    <input type="number" id="seats" min="1" max="50" value="4" disabled>
+
+    <label>Narx (so‘m)</label>
+    <input type="number" id="price" min="10000" step="1000" placeholder="250000" disabled>
+
+    <label>Ketish sanasi va vaqti</label>
+    <input type="datetime-local" id="departure" disabled>
+
+    <button id="submitBtn" disabled>Reys yaratish</button>
+  </div>
 </div>
 
 <input type="hidden" id="fromLat"><input type="hidden" id="fromLng">
@@ -80,139 +72,127 @@ if (!token) location.href = 'login.html';
 const regions = ["TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO","XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON","ANDIJON","NAMANGAN","FARGONA"];
 
 const fromInput = document.getElementById('fromInput');
-const toInput   = document.getElementById('toInput');
+const toInput = document.getElementById('toInput');
 const seats     = document.getElementById('seats');
 const price     = document.getElementById('price');
 const departure = document.getElementById('departure');
 const submitBtn = document.getElementById('submitBtn');
 
-regions.forEach(r => {
-    const text = r.charAt(0) + r.slice(1).toLowerCase();
-    fromInput.add(new Option(text, r));
-    toInput.add(new Option(text, r));
+regions.forEach(r=>{
+  const text = r.charAt(0)+r.slice(1).toLowerCase();
+  fromInput.add(new Option(text,r));
+  toInput.add(new Option(text,r));
 });
 
 let map, fromMarker, toMarker;
-let step = 0; // 0: from viloyat → 1: from nuqta → 2: to viloyat → 3: to nuqta → 4: tayyor
+let step = 0;
 
-function initMap() {
-    map = L.map('map').setView([41.311081, 69.240562], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    map.on('click', e => {
-        if (step === 1) placeMarker(e.latlng, 'from');
-        if (step === 3) placeMarker(e.latlng, 'to');
-    });
+function initMap(){
+  map = L.map('map').setView([41.311081,69.240562],10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  map.on('click', e=>{
+    if(step===1) placeMarker(e.latlng,'from');
+    if(step===3) placeMarker(e.latlng,'to');
+  });
 }
 
-function placeMarker(latlng, type) {
-    const isFrom = type === 'from';
-    const markerRef = isFrom ? fromMarker : toMarker;
-    if (markerRef) markerRef.remove();
+function placeMarker(latlng,type){
+  const isFrom = type==='from';
+  const markerRef = isFrom ? fromMarker : toMarker;
+  if(markerRef) markerRef.remove();
 
-    const color = isFrom ? '#4caf50' : '#f44336';
-    const letter = isFrom ? 'F' : 'T';
+  const color = isFrom?'#4caf50':'#f44336';
+  const letter = isFrom?'F':'T';
+  const icon = L.divIcon({
+    html:`<div style="background:${color};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;border:3px solid white;box-shadow:0 3px 10px rgba(0,0,0,0.3)">${letter}</div>`,
+    iconSize:[36,36], iconAnchor:[18,36]
+  });
 
-    const icon = L.divIcon({
-        html: `<div style="background:${color};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;border:3px solid white;box-shadow:0 3px 10px rgba(0,0,0,0.3);">${letter}</div>`,
-        iconSize: [36,36], iconAnchor: [18,36]
-    });
+  const marker = L.marker(latlng,{icon}).addTo(map);
+  if(isFrom) fromMarker=marker; else toMarker=marker;
 
-    const marker = L.marker(latlng, {icon}).addTo(map);
-    if (isFrom) fromMarker = marker; else toMarker = marker;
-
-    reverseGeocode(latlng, type);
+  reverseGeocode(latlng,type);
 }
 
-async function reverseGeocode(latlng, type) {
-    try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18`);
-        const data = await res.json();
-        const addr = data.display_name || "Manzil topilmadi";
+async function reverseGeocode(latlng,type){
+  try{
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18`);
+    const data = await res.json();
+    const addr = data.display_name || "Manzil topilmadi";
 
-        if (type === 'from') {
-            document.getElementById('fromLat').value = latlng.lat.toFixed(6);
-            document.getElementById('fromLng').value = latlng.lng.toFixed(6);
-            document.getElementById('fromAddress').textContent = addr;
-
-            // Keyingi qadam: Qayerga viloyatni ochish
-            toInput.disabled = false;
-            step = 2;
-        } else {
-            document.getElementById('toLat').value = latlng.lat.toFixed(6);
-            document.getElementById('toLng').value = latlng.lng.toFixed(6);
-            document.getElementById('toAddress').textContent = addr;
-
-            // Hammasi tayyor → qolgan inputlar ochiladi
-            seats.disabled = price.disabled = departure.disabled = false;
-            step = 4;
-            checkReady();
-        }
-    } catch {
-        alert("Manzil aniqlanmadi. Internetni tekshiring.");
+    if(type==='from'){
+      document.getElementById('fromLat').value=latlng.lat.toFixed(6);
+      document.getElementById('fromLng').value=latlng.lng.toFixed(6);
+      document.getElementById('fromAddress').textContent=addr;
+      toInput.disabled=false;
+      step=2;
+    }else{
+      document.getElementById('toLat').value=latlng.lat.toFixed(6);
+      document.getElementById('toLng').value=latlng.lng.toFixed(6);
+      document.getElementById('toAddress').textContent=addr;
+      seats.disabled=price.disabled=departure.disabled=false;
+      step=4;
+      checkReady();
     }
+  }catch{
+    alert("Manzil aniqlanmadi. Internetni tekshiring.");
+  }
 }
 
-// 1-qadam: Qayerdan tanlandi
-fromInput.onchange = () => {
-    if (!fromInput.value) return;
-    document.getElementById('fromMapSection').style.display = 'block';
-    map.invalidateSize();
-    step = 1;
+fromInput.onchange=()=>{
+  if(!fromInput.value) return;
+  document.getElementById('fromMapSection').style.display='block';
+  map.invalidateSize();
+  step=1;
 };
 
-// 2-qadam: Qayerga tanlandi
-toInput.onchange = () => {
-    if (!toInput.value) return;
-    document.getElementById('toMapSection').style.display = 'block';
-    document.querySelectorAll('#map').forEach(m => m.style.display = 'block');
-    map.invalidateSize();
-    step = 3;
+toInput.onchange=()=>{
+  if(!toInput.value) return;
+  document.getElementById('toMapSection').style.display='block';
+  step=3;
 };
 
-// Yakuniy maydonlar o‘zgarishi
-seats.oninput = price.oninput = departure.oninput = checkReady;
+seats.oninput=price.oninput=departure.oninput=checkReady;
 
-function checkReady() {
-    const ready = seats.value >= 1 && price.value >= 10000 && departure.value;
-    submitBtn.disabled = !ready;
+function checkReady(){
+  const ready=seats.value>=1 && price.value>=10000 && departure.value;
+  submitBtn.disabled=!ready;
 }
 
-// Yuborish
-submitBtn.onclick = async () => {
-    if (submitBtn.disabled) return;
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Yuborilmoqda...";
+submitBtn.onclick=async()=>{
+  if(submitBtn.disabled) return;
+  submitBtn.disabled=true;
+  submitBtn.textContent="Yuborilmoqda...";
+  const payload={
+    from:fromInput.value,
+    to:toInput.value,
+    fromLat:parseFloat(document.getElementById('fromLat').value),
+    fromLng:parseFloat(document.getElementById('fromLng').value),
+    fromAddress:document.getElementById('fromAddress').textContent,
+    toLat:parseFloat(document.getElementById('toLat').value),
+    toLng:parseFloat(document.getElementById('toLng').value),
+    toAddress:document.getElementById('toAddress').textContent,
+    seatsCount:+seats.value,
+    price:+price.value,
+    departureDate:new Date(departure.value).toISOString()
+  };
 
-    const payload = {
-        from: fromInput.value,
-        to: toInput.value,
-        fromLat: parseFloat(document.getElementById('fromLat').value),
-        fromLng: parseFloat(document.getElementById('fromLng').value),
-        fromAddress: document.getElementById('fromAddress').textContent,
-        toLat: parseFloat(document.getElementById('toLat').value),
-        toLng: parseFloat(document.getElementById('toLng').value),
-        toAddress: document.getElementById('toAddress').textContent,
-        seatsCount: +seats.value,
-        price: +price.value,
-        departureDate: new Date(departure.value).toISOString()
-    };
-
-    try {
-        const res = await fetch("https://api.rout24.online/routes", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.success) {
-            alert("Reys muvaffaqiyatli yaratildi!");
-            location.href = "my-routes.html";
-        } else throw new Error(json.message || "Xato yuz berdi");
-    } catch (err) {
-        alert("Xatolik: " + err.message);
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Reys yaratish";
-    }
+  try{
+    const res = await fetch("https://api.rout24.online/routes/create",{
+      method:"POST",
+      headers:{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if(json.success){
+      alert("Reys muvaffaqiyatli yaratildi!");
+      location.href="my-routes.html";
+    }else throw new Error(json.message||"Xato yuz berdi");
+  }catch(err){
+    alert("Xatolik: "+err.message);
+    submitBtn.disabled=false;
+    submitBtn.textContent="Reys yaratish";
+  }
 };
 
 initMap();
