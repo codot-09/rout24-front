@@ -5,69 +5,77 @@ let map, fromMarker, toMarker;
 let fromSelected = false, toSelected = false;
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 41.311081, lng: 69.240562 },
-        zoom: 11,
-        disableDefaultUI: true,
-        styles: [{ featureType: "poi", stylers: [{ visibility: "off" }] }]
+    map = L.map('map', {
+        center: [41.311081, 69.240562],
+        zoom: 12,
+        zoomControl: false
     });
 
-    const fromSearch = new google.maps.places.Autocomplete(document.getElementById('fromInput'));
-    const toSearch = new google.maps.places.Autocomplete(document.getElementById('toInput'));
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
 
-    fromSearch.addListener('place_changed', () => setLocation(fromSearch, true));
-    toSearch.addListener('place_changed', () => setLocation(toSearch, false));
+    const fromInput = document.getElementById('fromInput');
+    const toInput = document.getElementById('toInput');
 
-    map.addListener('click', e => {
-        if (!fromSelected) setMarker(e.latLng, true);
-        else if (!toSelected) setMarker(e.latLng, false);
+    fromInput.addEventListener('change', () => geocode(fromInput.value, true));
+    toInput.addEventListener('change', () => geocode(toInput.value, false));
+
+    map.on('click', e => {
+        if (!fromSelected) setMarker(e.latlng, true);
+        else if (!toSelected) setMarker(e.latlng, false);
     });
 }
 
-function setLocation(searchBox, isFrom) {
-    const place = searchBox.getPlace();
-    if (!place.geometry) return;
+async function geocode(query, isFrom) {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    if (!data.length) return;
 
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
+    const lat = parseFloat(data[0].lat);
+    const lng = parseFloat(data[0].lon);
 
-    setMarker(new google.maps.LatLng(lat, lng), isFrom);
-    document.getElementById(isFrom ? 'fromInput' : 'toInput').value = place.formatted_address.split(',')[0];
+    setMarker({ lat, lng }, isFrom);
+    document.getElementById(isFrom ? 'fromInput' : 'toInput').value = data[0].display_name.split(',')[0];
 }
 
 function setMarker(latLng, isFrom) {
-    const marker = isFrom ? fromMarker : toMarker;
-    if (marker) marker.setMap(null);
+    const m = isFrom ? fromMarker : toMarker;
+    if (m) map.removeLayer(m);
 
-    const newMarker = new google.maps.Marker({
-        position: latLng,
-        map: map,
-        icon: { url: isFrom ? 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' : 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' }
-    });
+    const newMarker = L.marker([latLng.lat, latLng.lng], {
+        icon: L.icon({
+            iconUrl: isFrom
+                ? 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png'
+                : 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        })
+    }).addTo(map);
 
     if (isFrom) {
         fromMarker = newMarker;
-        document.getElementById('fromLat').value = latLng.lat();
-        document.getElementById('fromLng').value = latLng.lng();
+        document.getElementById('fromLat').value = latLng.lat;
+        document.getElementById('fromLng').value = latLng.lng;
         document.getElementById('fromAddress').value = document.getElementById('fromInput').value;
         fromSelected = true;
     } else {
         toMarker = newMarker;
-        document.getElementById('toLat').value = latLng.lat();
-        document.getElementById('toLng').value = latLng.lng();
+        document.getElementById('toLat').value = latLng.lat;
+        document.getElementById('toLng').value = latLng.lng;
         document.getElementById('toAddress').value = document.getElementById('toInput').value;
         toSelected = true;
     }
 
-    map.panTo(latLng);
+    map.panTo([latLng.lat, latLng.lng]);
     checkForm();
 }
 
 function checkForm() {
     const ready = fromSelected && toSelected &&
-                  document.getElementById('seats').value > 0 &&
-                  document.getElementById('price').value > 0 &&
-                  document.getElementById('departure').value;
+        document.getElementById('seats').value > 0 &&
+        document.getElementById('price').value > 0 &&
+        document.getElementById('departure').value;
 
     document.getElementById('submitBtn').disabled = !ready;
 }
@@ -103,6 +111,7 @@ document.getElementById('submitBtn').onclick = async () => {
             body: JSON.stringify(payload)
         });
         const json = await res.json();
+
         if (json.success) {
             alert('Reys muvaffaqiyatli yaratildi!');
             history.back();
@@ -114,10 +123,8 @@ document.getElementById('submitBtn').onclick = async () => {
     }
 };
 
-// Avto to‘ldirish va validatsiya
 document.querySelectorAll('#seats, #price, #departure').forEach(el => el.oninput = checkForm);
 
-// Google Maps API yuklanishi
 window.onload = () => {
-    setTimeout(initMap, 500);
+    setTimeout(initMap, 300);
 };
