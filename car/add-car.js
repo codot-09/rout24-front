@@ -8,28 +8,18 @@ const photoInput = document.getElementById('photoInput');
 const imagesGrid = document.getElementById('imagesGrid');
 const submitBtn = document.getElementById('submitBtn');
 const plateError = document.getElementById('plateError');
-const photoError = document.getElementById('photoError');
 
 let imageUrls = [];
 
-// O‘zbekiston davlat raqami validatsiyasi
 function validatePlate(plate) {
     plate = plate.toUpperCase().replace(/\s/g, '');
-    const patterns = [
-        /^\d{2}[A-Z]{1}\d{3}[A-Z]{2}$/,   // 01A234BC
-        /^\d{2}[A-Z]{3}\d{3}$/,           // 01ABC234
-        /^\d{3}[A-Z]{2}\d{3}$/,           // 123AB456
-        /^\d{2}[A-Z]{1}\d{5}$/            // 01A23456 (yangi format)
-    ];
+    const patterns = [/^\d{2}[A-Z]\d{3}[A-Z]{2}$/, /^\d{2}[A-Z]{3}\d{3}$/, /^\d{3}[A-Z]{2}\d{3}$/, /^\d{2}[A-Z]\d{5}$/];
     return patterns.some(p => p.test(plate));
 }
 
-// Raqamni formatlash
 plateInput.addEventListener('input', () => {
-    let val = plateInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    if (val.length > 9) val = val.slice(0, 9);
+    let val = plateInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0,9);
     plateInput.value = val;
-
     if (val && !validatePlate(val)) {
         plateError.textContent = 'Noto‘g‘ri raqam formati';
         submitBtn.disabled = true;
@@ -39,14 +29,10 @@ plateInput.addEventListener('input', () => {
     }
 });
 
-// Rasm qo‘shish
 document.getElementById('addPhoto').onclick = () => photoInput.click();
 photoInput.onchange = async () => {
     const files = Array.from(photoInput.files);
-    if (files.length + imageUrls.length > 6) {
-        alert('Maksimum 6 ta rasm');
-        return;
-    }
+    if (files.length + imageUrls.length > 6) return alert('Maksimum 6 ta rasm');
 
     for (const file of files) {
         const div = document.createElement('div');
@@ -56,15 +42,10 @@ photoInput.onchange = async () => {
         const remove = document.createElement('button');
         remove.textContent = '×';
         remove.className = 'remove-photo';
-        remove.onclick = () => {
-            div.remove();
-            imageUrls = imageUrls.filter(u => u !== div.dataset.url);
-            checkForm();
-        };
+        remove.onclick = () => { div.remove(); imageUrls = imageUrls.filter(u => u !== div.dataset.url); checkForm(); };
         div.append(img, remove);
         imagesGrid.appendChild(div);
 
-        // Yuklash
         const form = new FormData();
         form.append('file', file);
         try {
@@ -87,19 +68,14 @@ photoInput.onchange = async () => {
     photoInput.value = '';
 };
 
-// Form tekshiruvi
 function checkForm() {
-    const valid = validatePlate(plateInput.value) &&
-                  nameInput.value.trim() &&
-                  imageUrls.length > 0;
+    const valid = validatePlate(plateInput.value) && nameInput.value.trim() && imageUrls.length > 0;
     submitBtn.disabled = !valid;
 }
 [nameInput, typeSelect].forEach(el => el.oninput = checkForm);
 
-// Yuborish
 submitBtn.onclick = async () => {
     if (submitBtn.disabled) return;
-
     submitBtn.disabled = true;
     submitBtn.textContent = 'Yuborilmoqda...';
 
@@ -113,20 +89,14 @@ submitBtn.onclick = async () => {
     try {
         const res = await fetch('https://api.rout24.online/vehicles', {
             method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-
         const json = await res.json();
         if (json.success) {
             alert('Mashina muvaffaqiyatli qo‘shildi!');
             history.back();
-        } else {
-            throw new Error(json.message || 'Xatolik');
-        }
+        } else throw new Error(json.message || 'Xatolik');
     } catch (err) {
         alert('Xatolik: ' + err.message);
         submitBtn.disabled = false;

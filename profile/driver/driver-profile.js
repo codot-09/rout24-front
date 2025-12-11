@@ -193,7 +193,7 @@ function loadActions() {
         {
             text: "Chiqish",
             icon: "M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14",
-            onclick: "localStorage.removeItem('token');location.href='login.html'"
+            onclick: "localStorage.removeItem('token');location.href='/login"
         }
     ];
 
@@ -230,7 +230,7 @@ async function loadVehicle() {
         if (e === 404) {
             document.getElementById('vehicle').innerHTML = `
                 <p style="margin:30px 0;font-size:18px;opacity:0.8">Mashina qo‘shilmagan</p>
-                <button class="btn" onclick="alert('Tez orada')">Mashina qo‘shish</button>
+                <button class="btn" onclick="location.href="/add-car">Mashina qo‘shish</button>
             `;
         }
     }
