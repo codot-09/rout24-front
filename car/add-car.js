@@ -87,7 +87,7 @@ submitBtn.onclick = async () => {
     };
 
     try {
-        const res = await fetch('https://api.rout24.online/vehicles', {
+        const res = await fetch('https://api.rout24.online/vehicles/create', {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
