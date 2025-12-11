@@ -68,7 +68,7 @@ async function loadRoutes(from = '', to = '') {
                         </div>
                     </div>
                 </div>
-                <button class="details-btn" onclick="viewDetails('${route._id}')">Tafsilotlar</button>
+                <button class="details-btn" onclick="viewDetails('${route.id}')">Tafsilotlar</button>
             </div>
         `).join('');
     } catch (err) {
