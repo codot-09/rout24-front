@@ -11,10 +11,6 @@ body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,Bl
 .logo img{width:48px;height:48px;border-radius:14px}
 .notifications{position:relative;background:none;border:none;padding:10px}
 .notifications svg{width:28px;height:28px;fill:#800000}
-.notifications .badge{
-    position:absolute;top:8px;right:8px;width:18px;height:18px;
-    background:#ff1744;color:#fff;border-radius:50%;font-size:11px;font-weight:800;
-}
 
 /* Main */
 .main{padding:90px 20px 100px}

@@ -110,6 +110,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    const token = localStorage.getItem("token")
+    const role = localStorage.getItem("role")
+
+    if (token){
+       if (role == "DRIVER") location.href = "/driver/dashboard"
+       if (role == "CLIENT") location.href = "/client/dashboard"
+    }
+
     const swiper = new Swiper('.swiper', {
         speed: 920,
         allowTouchMove: true,
