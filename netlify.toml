@@ -25,6 +25,11 @@
   status = 200
 
 [[redirects]]
+  from = "/route/credentials"
+  to = "/route/route-credentials.html"
+  status = 200
+
+[[redirects]]
   from = "/add-route"
   to = "/route/add-route.html"
   status = 200

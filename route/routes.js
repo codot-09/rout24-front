@@ -7,18 +7,20 @@ const fromFilter = document.getElementById('fromFilter');
 const toFilter = document.getElementById('toFilter');
 
 const regions = [
-    "TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO",
-    "XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON",
-    "ANDIJON","NAMANGAN","FARGONA"
+    "TOSHKENT", "NAVOIY", "SAMARKAND", "BUXORO", "QASHQADARYO",
+    "XORAZM", "SURXONDARYO", "JIZZAX", "SIRDARYO", "QORAQALPOGISTON",
+    "ANDIJON", "NAMANGAN", "FARGONA"
 ];
 
 regions.forEach(r => {
     const opt1 = document.createElement('option');
     const opt2 = document.createElement('option');
     opt1.value = opt2.value = r;
-    opt1.textContent = opt2.textContent = r.charAt(0) + r.slice(1).toLowerCase().replace('qalpog‘iston','qalpog‘iston');
+    // Correct capitalization and fix for Qoraqalpog'iston
+    const formatted = r.charAt(0) + r.slice(1).toLowerCase().replace('qalpog‘iston', 'qalpog‘iston');
+    opt1.textContent = opt2.textContent = formatted;
     fromFilter.appendChild(opt1);
-    toFilter.appendChild(opt2.cloneNode(true));
+    toFilter.appendChild(opt2);
 });
 
 async function loadRoutes(from = '', to = '') {
@@ -30,8 +32,9 @@ async function loadRoutes(from = '', to = '') {
         const res = await fetch(url, {
             headers: { Authorization: `Bearer ${token}` }
         });
+        if (!res.ok) throw new Error('Network response was not ok');
         const { success, data } = await res.json();
-        if (!success || !data) throw new Error();
+        if (!success || !Array.isArray(data)) throw new Error('Invalid data');
 
         if (data.length === 0) {
             routesList.style.display = 'none';
@@ -41,17 +44,22 @@ async function loadRoutes(from = '', to = '') {
 
         routesList.style.display = 'grid';
         emptyState.style.display = 'none';
-
         routesList.innerHTML = data.map(route => `
             <div class="route-card">
                 <div class="route-header">
                     <h3>${route.from} → ${route.to}</h3>
-                    <div class="price">${route.price.toLocaleString()} so‘m</div>
+                    <div class="price">${route.price.toLocaleString('uz-UZ')} so‘m</div>
                 </div>
                 <div class="route-body">
                     <div class="route-info">
-                        <div><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg> ${new Date(route.departureDate).toLocaleDateString('uz-UZ')}</div>
-                        <div><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg> ${new Date(route.departureDate).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'})}</div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+                            <span>${new Date(route.departureDate).toLocaleDateString('uz-UZ', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        </div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                            <span>${new Date(route.departureDate).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
                     </div>
                     <div class="route-footer">
                         <div class="seats">${route.seatsCount} o‘rin</div>
@@ -60,11 +68,17 @@ async function loadRoutes(from = '', to = '') {
                         </div>
                     </div>
                 </div>
+                <button class="details-btn" onclick="viewDetails('${route._id}')">Tafsilotlar</button>
             </div>
         `).join('');
-    } catch {
-        routesList.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px">Reyslar yuklanmadi</p>';
+    } catch (err) {
+        console.error(err);
+        routesList.innerHTML = '<p style="text-align:center;color:#999;margin-top:40px">Reyslar yuklanmadi. Iltimos, qayta urinib ko‘ring.</p>';
     }
+}
+
+function viewDetails(routeId) {
+    window.location.href = `/route/credentials?id=${routeId}`;
 }
 
 fromFilter.onchange = toFilter.onchange = () => {
