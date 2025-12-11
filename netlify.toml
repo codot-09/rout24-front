@@ -35,7 +35,7 @@
   status = 200
 
 [[redirects]]
-  from = "/client/credentiprofileals"
+  from = "/client/profile"
   to = "/profile/rouclient/client-profile.html"
   status = 200
 
