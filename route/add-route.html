@@ -6,115 +6,28 @@
     <title>Yangi reys yaratish</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
+        body { margin:0; font-family:system-ui,sans-serif; background:#f5f5f5; padding:20px 0; }
+        .container { max-width:560px; margin:0 auto; background:white; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.12); overflow:hidden; }
+        .header { background:#800000; color:white; padding:28px 24px; text-align:center; }
+        .header h1 { margin:0; font-size:24px; }
+        .form { padding:32px 28px; }
+        label { display:block; margin:16px 0 8px; font-weight:600; color:#333; }
+        select, input { width:100%; padding:14px; border:2px solid #ddd; border-radius:10px; font-size:16px; }
+        select:disabled, input:disabled { background:#f9f9f9; opacity:0.6; }
+        select:focus, input:focus { outline:none; border-color:#800000; }
+        #map { height:380px; margin:20px 0; border-radius:12px; border:2px solid #ddd; }
+        .hint {
+            text-align:center; padding:14px; background:#fff3cd; border-radius:10px; margin:16px 0; font-weight:600; color:#856404;
         }
-        .container {
-            max-width: 560px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            animation: fadeIn 0.6s ease-out;
+        .address-box {
+            background:#f8f9fa; padding:12px 16px; border-radius:10px; margin-top:8px; font-size:15px; border-left:4px solid #800000;
         }
-        @keyframes fadeIn { from {opacity:0; transform:translateY(30px)} to {opacity:1; transform:none} }
-
-        .header {
-            background: linear-gradient(135deg, #800000, #b71c1c);
-            color: white;
-            padding: 32px 24px;
-            text-align: center;
+        button {
+            margin-top:32px; width:100%; padding:16px; background:#800000; color:white; border:none; border-radius:10px;
+            font-size:18px; font-weight:700; cursor:pointer;
         }
-        .header h1 { font-size: 26px; font-weight: 800; }
-        .header p { opacity: 0.9; margin-top: 8px; font-size: 15px; }
-
-        .form {
-            padding: 32px 28px;
-        }
-        .step {
-            margin-bottom: 28px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease;
-        }
-        .step.active {
-            opacity: 1;
-            transform: none;
-        }
-        label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #800000;
-            font-size: 16px;
-        }
-        select, input, button {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 2px solid #eee;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        select:focus, input:focus {
-            outline: none;
-            border-color: #800000;
-            box-shadow: 0 0 0 4px rgba(128,0,0,0.1);
-        }
-        #map {
-            height: 360px;
-            border-radius: 16px;
-            margin: 20px 0;
-            border: 3px solid #ddd;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        .marker-hint {
-            text-align: center;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            font-weight: 600;
-            margin: 16px 0;
-            color: #555;
-        }
-        .marker-hint.from { border-left: 5px solid #4caf50; }
-        .marker-hint.to { border-left: 5px solid #f44336; }
-
-        button#submitBtn {
-            margin-top: 32px;
-            background: #800000;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 16px;
-        }
-        button#submitBtn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        button#submitBtn:not(:disabled):hover {
-            background: #a00000;
-            transform: translateY(-2px);
-        }
-
-        .address-display {
-            background: #f8f9fa;
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-top: 10px;
-            font-size: 15px;
-            color: #333;
-            border-left: 4px solid #800000;
-        }
-
-        .hidden { display: none !important; }
+        button:disabled { background:#aaa; cursor:not-allowed; }
+        button:not(:disabled):hover { background:#a00000; }
     </style>
 </head>
 <body>
@@ -122,57 +35,40 @@
 <div class="container">
     <div class="header">
         <h1>Yangi reys yaratish</h1>
-        <p>Birinchi “Qayerdan”, keyin “Qayerga” belgilang</p>
     </div>
 
     <div class="form">
-        <!-- 1-qadam: Qayerdan -->
-        <div class="step" id="stepFromRegion">
-            <label>Qayerdan (viloyat)</label>
-            <select id="fromInput"></select>
-        </div>
+        <label>Qayerdan (viloyat)</label>
+        <select id="fromInput"></select>
 
-        <!-- Xarita + Qayerdan nuqtasi -->
-        <div class="step hidden" id="stepFromMap">
-            <div class="marker-hint from">
-                Xaritada <strong>yashil nuqta</strong> joyini bosing — bu <strong>Qayerdan</strong>
-            </div>
+        <div id="fromMapSection" style="display:none;">
+            <div class="hint">Xaritada yashil nuqta uchun joyni bosing – bu Qayerdan</div>
             <div id="map"></div>
-            <div class="address-display" id="fromAddressDisplay">Belgilanyapti...</div>
+            <div class="address-box" id="fromAddress">-</div>
         </div>
 
-        <!-- 2-qadam: Qayerga -->
-        <div class="step hidden" id="stepToRegion">
-            <label>Qayerga (viloyat)</label>
-            <select id="toInput"></select>
+        <label>Qayerga (viloyat)</label>
+        <select id="toInput" disabled></select>
+
+        <div id="toMapSection" style="display:none;">
+            <div class="hint">Xaritada qizil nuqta uchun joyni bosing – bu Qayerga</div>
+            <div id="map" style="display:none;"></div>
+            <div class="address-box" id="toAddress">-</div>
         </div>
 
-        <!-- Qayerga nuqtasi -->
-        <div class="step hidden" id="stepToMap">
-            <div class="marker-hint to">
-                Xaritada <strong>qizil nuqta</strong> joyini bosing — bu <strong>Qayerga</strong>
-            </div>
-            <div id="map2" class="hidden"></div>
-            <div class="address-display" id="toAddressDisplay">Belgilanyapti...</div>
-        </div>
+        <label>O‘rinlar soni</label>
+        <input type="number" id="seats" min="1" max="50" value="4" disabled>
 
-        <!-- Qolgan maydonlar -->
-        <div class="step hidden" id="finalFields">
-            <label>O‘rinlar soni</label>
-            <input type="number" id="seats" min="1" max="50" value="4">
+        <label>Narx (so‘m)</label>
+        <input type="number" id="price" min="10000" step="1000" placeholder="250000" disabled>
 
-            <label>Narx (so‘m)</label>
-            <input type="number" id="price" min="10000" step="1000" placeholder="masalan: 250000">
+        <label>Ketish sanasi va vaqti</label>
+        <input type="datetime-local" id="departure" disabled>
 
-            <label>Ketish sanasi va vaqti</label>
-            <input type="datetime-local" id="departure">
-        </div>
-
-        <button id="submitBtn" disabled>Yuborilmoqda...</button>
+        <button id="submitBtn" disabled>Reys yaratish</button>
     </div>
 </div>
 
-<!-- Hidden inputs -->
 <input type="hidden" id="fromLat"><input type="hidden" id="fromLng">
 <input type="hidden" id="toLat"><input type="hidden" id="toLng">
 
@@ -182,8 +78,12 @@ const token = localStorage.getItem('token');
 if (!token) location.href = 'login.html';
 
 const regions = ["TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO","XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON","ANDIJON","NAMANGAN","FARGONA"];
+
 const fromInput = document.getElementById('fromInput');
-const toInput = document.getElementById('toInput');
+const toInput   = document.getElementById('toInput');
+const seats     = document.getElementById('seats');
+const price     = document.getElementById('price');
+const departure = document.getElementById('departure');
 const submitBtn = document.getElementById('submitBtn');
 
 regions.forEach(r => {
@@ -192,108 +92,90 @@ regions.forEach(r => {
     toInput.add(new Option(text, r));
 });
 
-// Elementlar
-const steps = {
-    fromRegion: document.getElementById('stepFromRegion'),
-    fromMap: document.getElementById('stepFromMap'),
-    toRegion: document.getElementById('stepToRegion'),
-    toMap: document.getElementById('stepToMap'),
-    final: document.getElementById('finalFields')
-};
-
 let map, fromMarker, toMarker;
-let currentStep = 'fromRegion';
-let selectedType = null;
+let step = 0; // 0: from viloyat → 1: from nuqta → 2: to viloyat → 3: to nuqta → 4: tayyor
 
-// Xarita yaratish
 function initMap() {
-    map = L.map("map").setView([41.311081, 69.240562], 10);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-    map.on('click', onMapClick);
+    map = L.map('map').setView([41.311081, 69.240562], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    map.on('click', e => {
+        if (step === 1) placeMarker(e.latlng, 'from');
+        if (step === 3) placeMarker(e.latlng, 'to');
+    });
 }
 
-// Xarita bosilganda
-function onMapClick(e) {
-    if (!selectedType) return;
+function placeMarker(latlng, type) {
+    const isFrom = type === 'from';
+    const markerRef = isFrom ? fromMarker : toMarker;
+    if (markerRef) markerRef.remove();
 
-    const latlng = e.latlng;
-    placeMarker(latlng);
-    reverseGeocode(latlng);
-}
-
-function placeMarker(latlng) {
-    if (selectedType === 'from' && fromMarker) fromMarker.remove();
-    if (selectedType === 'to' && toMarker) toMarker.remove();
+    const color = isFrom ? '#4caf50' : '#f44336';
+    const letter = isFrom ? 'F' : 'T';
 
     const icon = L.divIcon({
-        html: selectedType === 'from'
-            ? '<div style="background:#4caf50;color:white;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;border:4px solid white;box-shadow:0 4px 15px rgba(0,0,0,0.3);">F</div>'
-            : '<div style="background:#f44336;color:white;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;border:4px solid white;box-shadow:0 4px 15px rgba(0,0,0,0.3);">T</div>',
-        iconSize: [38, 38],
-        iconAnchor: [19, 38]
+        html: `<div style="background:${color};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;border:3px solid white;box-shadow:0 3px 10px rgba(0,0,0,0.3);">${letter}</div>`,
+        iconSize: [36,36], iconAnchor: [18,36]
     });
 
-    const marker = L.marker(latlng, { icon }).addTo(map);
-    if (selectedType === 'from') fromMarker = marker;
-    else toMarker = marker;
+    const marker = L.marker(latlng, {icon}).addTo(map);
+    if (isFrom) fromMarker = marker; else toMarker = marker;
+
+    reverseGeocode(latlng, type);
 }
 
-async function reverseGeocode(latlng) {
+async function reverseGeocode(latlng, type) {
     try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18&addressdetails=1`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18`);
         const data = await res.json();
         const addr = data.display_name || "Manzil topilmadi";
 
-        if (selectedType === 'from') {
+        if (type === 'from') {
             document.getElementById('fromLat').value = latlng.lat.toFixed(6);
             document.getElementById('fromLng').value = latlng.lng.toFixed(6);
-            document.getElementById('fromAddressDisplay').textContent = addr;
-            nextStep('toRegion');
+            document.getElementById('fromAddress').textContent = addr;
+
+            // Keyingi qadam: Qayerga viloyatni ochish
+            toInput.disabled = false;
+            step = 2;
         } else {
             document.getElementById('toLat').value = latlng.lat.toFixed(6);
             document.getElementById('toLng').value = latlng.lng.toFixed(6);
-            document.getElementById('toAddressDisplay').textContent = addr;
-            nextStep('final');
+            document.getElementById('toAddress').textContent = addr;
+
+            // Hammasi tayyor → qolgan inputlar ochiladi
+            seats.disabled = price.disabled = departure.disabled = false;
+            step = 4;
+            checkReady();
         }
     } catch {
-        alert("Internet aloqasi yo‘q yoki manzil aniqlanmadi");
+        alert("Manzil aniqlanmadi. Internetni tekshiring.");
     }
 }
 
-function nextStep(stepName) {
-    Object.values(steps).forEach(s => s.classList.remove('active'));
-    steps[stepName].classList.add('active');
-    currentStep = stepName;
-
-    if (stepName === 'final') {
-        document.getElementById('submitBtn').disabled = false;
-        document.getElementById('submitBtn').textContent = "Reys yaratish";
-    }
-}
-
-// Qayerdan tanlandi
+// 1-qadam: Qayerdan tanlandi
 fromInput.onchange = () => {
     if (!fromInput.value) return;
-    selectedType = 'from';
-    nextStep('fromMap');
+    document.getElementById('fromMapSection').style.display = 'block';
+    map.invalidateSize();
+    step = 1;
 };
 
-// Qayerga tanlandi
+// 2-qadam: Qayerga tanlandi
 toInput.onchange = () => {
     if (!toInput.value) return;
-    selectedType = 'to';
-    nextStep('toMap');
+    document.getElementById('toMapSection').style.display = 'block';
+    document.querySelectorAll('#map').forEach(m => m.style.display = 'block');
+    map.invalidateSize();
+    step = 3;
 };
 
 // Yakuniy maydonlar o‘zgarishi
-document.getElementById('seats').oninput =
-document.getElementById('price').oninput =
-document.getElementById('departure').oninput = () => {
-    const ready = document.getElementById('seats').value >= 1 &&
-                  document.getElementById('price').value >= 10000 &&
-                  document.getElementById('departure').value;
+seats.oninput = price.oninput = departure.oninput = checkReady;
+
+function checkReady() {
+    const ready = seats.value >= 1 && price.value >= 10000 && departure.value;
     submitBtn.disabled = !ready;
-};
+}
 
 // Yuborish
 submitBtn.onclick = async () => {
@@ -306,26 +188,26 @@ submitBtn.onclick = async () => {
         to: toInput.value,
         fromLat: parseFloat(document.getElementById('fromLat').value),
         fromLng: parseFloat(document.getElementById('fromLng').value),
-        fromAddress: document.getElementById('fromAddressDisplay').textContent,
+        fromAddress: document.getElementById('fromAddress').textContent,
         toLat: parseFloat(document.getElementById('toLat').value),
         toLng: parseFloat(document.getElementById('toLng').value),
-        toAddress: document.getElementById('toAddressDisplay').textContent,
-        seatsCount: parseInt(document.getElementById('seats').value),
-        price: parseInt(document.getElementById('price').value),
-        departureDate: new Date(document.getElementById('departure').value).toISOString()
+        toAddress: document.getElementById('toAddress').textContent,
+        seatsCount: +seats.value,
+        price: +price.value,
+        departureDate: new Date(departure.value).toISOString()
     };
 
     try {
-        const res = await fetch("https://api.rout24.online/routes/create", {
+        const res = await fetch("https://api.rout24.online/routes", {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
         const json = await res.json();
         if (json.success) {
             alert("Reys muvaffaqiyatli yaratildi!");
             location.href = "my-routes.html";
-        } else throw new Error(json.message || "Xato");
+        } else throw new Error(json.message || "Xato yuz berdi");
     } catch (err) {
         alert("Xatolik: " + err.message);
         submitBtn.disabled = false;
@@ -333,9 +215,7 @@ submitBtn.onclick = async () => {
     }
 };
 
-// Boshlash
 initMap();
-steps.fromRegion.classList.add('active');
 </script>
 </body>
 </html>
