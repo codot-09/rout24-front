@@ -87,7 +87,7 @@ html, body {
     border-radius: 20px;
     padding: 20px 20px 24px;
     box-shadow: 0 10px 35px rgba(0, 0, 0, .1);
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 
     max-height: 0;
     overflow: hidden;
