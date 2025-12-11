@@ -45,6 +45,11 @@
   status = 200
 
 [[redirects]]
+  from = "/client/dashboard"
+  to = "/dashboard/client/client-dashboard.html"
+  status = 200
+
+[[redirects]]
   from = "/routes"
   to = "/route/routes.html"
   status = 200

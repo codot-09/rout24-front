@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rout24 – Bosh sahifa</title>
+    <link rel="stylesheet" href="/dashboard/client/client-dashboard.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <img src="/assets/icon.png" alt="Rout24">
+        <span>Rout24</span>
+    </div>
+    <h1>Rout24</h1>
+    <div class="profile-btn" id="profileBtn">
+        <img id="profileAvatar" src="" alt="Profil">
+    </div>
+</header>
+
+<main class="main">
+
+    <section class="hero-profile">
+        <img id="heroAvatar" src="" alt="Avatar" class="hero-avatar">
+        <h2 id="heroName">Yuklanmoqda...</h2>
+        <p>Xush kelibsiz!</p>
+    </section>
+
+    <section class="search-section">
+        <div class="search-card">
+            <div class="inputs">
+                <select id="fromFilter">
+                    <option value="">Qayerdan</option>
+                </select>
+                <select id="toFilter">
+                    <option value="">Qayerga</option>
+                </select>
+            </div>
+            <div class="inputs">
+                <input type="number" id="minPrice" placeholder="Min narx">
+                <input type="number" id="maxPrice" placeholder="Max narx">
+            </div>
+            <button id="searchBtn">Qidirish</button>
+        </div>
+    </section>
+
+    <section class="routes-section">
+        <h2 class="section-title">Mavjud reyslar</h2>
+        <div id="routesList"></div>
+        <div id="emptyState" class="empty">Hech narsa topilmadi</div>
+    </section>
+
+    <section class="banners-section">
+        <div id="banners"></div>
+    </section>
+
+</main>
+
+<script src="/dashboard/client/client-dashboard.js"></script>
+</body>
+</html>
