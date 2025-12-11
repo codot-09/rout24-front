@@ -9,7 +9,6 @@ body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,Bl
 }
 .logo{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:900}
 .logo img{width:48px;height:48px;border-radius:14px}
-.notifications{position:relative;background:none;border:none;padding:10px}
 .notifications svg{width:28px;height:28px;fill:#800000}
 
 /* Main */
