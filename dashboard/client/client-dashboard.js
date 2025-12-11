@@ -4,28 +4,19 @@ if (!token) location.href = 'login.html';
 const regions = ["TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO","XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON","ANDIJON","NAMANGAN","FARGONA"];
 
 const fromFilter = document.getElementById('fromFilter');
-const toFilter   = document.getElementById('toFilter');
+const toFilter = document.getElementById('toFilter');
+const minPrice = document.getElementById('minPrice');
+const maxPrice = document.getElementById('maxPrice');
+const routesList = document.getElementById('routesList');
+const emptyState = document.getElementById('emptyState');
+const toggleBtn = document.getElementById('toggleBtn');
+const searchSection = document.getElementById('searchSection');
 
 regions.forEach(r => {
     const txt = r[0] + r.slice(1).toLowerCase();
     fromFilter.add(new Option(txt, r));
     toFilter.add(new Option(txt, r));
 });
-
-async function loadProfile() {
-    try {
-        const res = await fetch('https://api.rout24.online/users/profile', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        const { success, data } = await res.json();
-        if (success && data) {
-            document.getElementById('heroName').textContent = data.fullName || 'Foydalanuvchi';
-            const src = data.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName||'U')}&background=800000&color=fff&size=100&bold=true`;
-            document.getElementById('heroAvatar').src = src;
-            document.getElementById('profileAvatar').src = src;
-        }
-    } catch {}
-}
 
 async function loadRoutes() {
     const params = new URLSearchParams();
@@ -41,23 +32,19 @@ async function loadRoutes() {
             headers: { Authorization: `Bearer ${token}` }
         });
         const { success, data } = await res.json();
-        const list = document.getElementById('routesList');
-        const empty = document.getElementById('emptyState');
-
         if (!success || !data?.content?.length) {
-            list.innerHTML = '';
-            empty.style.display = 'block';
+            routesList.innerHTML = '';
+            emptyState.style.display = 'block';
             return;
         }
-
-        empty.style.display = 'none';
-        list.innerHTML = data.content.map(r => `
+        emptyState.style.display = 'none';
+        routesList.innerHTML = data.content.map(r => `
             <div class="route-card" onclick="location.href='route-credentials.html?id=${r.id}'">
-                <div class="route-card-header">
+                <div class="route-header">
                     <h3>${r.from} → ${r.to}</h3>
                     <p>${new Date(r.departureDate).toLocaleString('uz-UZ',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</p>
                 </div>
-                <div class="route-card-body">
+                <div class="route-body">
                     <div class="route-info">
                         <div><strong>Narx:</strong> ${r.price.toLocaleString()} so‘m</div>
                         <div><strong>O‘rin:</strong> ${r.seatsCount} ta</div>
@@ -70,8 +57,8 @@ async function loadRoutes() {
             </div>
         `).join('');
     } catch {
-        document.getElementById('emptyState').textContent = 'Xatolik yuz berdi';
-        document.getElementById('emptyState').style.display = 'block';
+        emptyState.textContent = 'Xatolik yuz berdi';
+        emptyState.style.display = 'block';
     }
 }
 
@@ -89,9 +76,21 @@ async function loadBanners() {
     } catch {}
 }
 
-document.getElementById('profileBtn').onclick = () => location.href = 'client-profile.html';
+toggleBtn.onclick = () => {
+    searchSection.classList.toggle('open');
+    const isOpen = searchSection.classList.contains('open');
+    toggleBtn.innerHTML = `
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        ${isOpen ? 'Filtrlarni yashirish' : 'Qidirish filtrlari'}
+    `;
+};
+
 document.getElementById('searchBtn').onclick = loadRoutes;
 
-loadProfile();
+// boshida yashirin bo'lsin
+searchSection.classList.remove('open');
+
+document.getElementById('searchBtn').onclick = loadRoutes;
+
 loadRoutes();
 loadBanners();

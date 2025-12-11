@@ -13,21 +13,24 @@
         <img src="/assets/icon.png" alt="Rout24">
         <span>Rout24</span>
     </div>
-    <h1>Rout24</h1>
-    <div class="profile-btn" id="profileBtn">
-        <img id="profileAvatar" src="" alt="Profil">
-    </div>
 </header>
 
 <main class="main">
 
-    <section class="hero-profile">
-        <img id="heroAvatar" src="" alt="Avatar" class="hero-avatar">
-        <h2 id="heroName">Yuklanmoqda...</h2>
+    <section class="profile-card">
+        <div class="profile-icon">P</div>
+        <h2>Profil</h2>
         <p>Xush kelibsiz!</p>
     </section>
 
-    <section class="search-section">
+    <section class="search-toggle">
+        <button id="toggleBtn" class="toggle-btn">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            Qidirish filtrlari
+        </button>
+    </section>
+
+    <section class="search-section" id="searchSection">
         <div class="search-card">
             <div class="inputs">
                 <select id="fromFilter">
@@ -46,7 +49,7 @@
     </section>
 
     <section class="routes-section">
-        <h2 class="section-title">Mavjud reyslar</h2>
+        <h2 class="section-title">Reyslar</h2>
         <div id="routesList"></div>
         <div id="emptyState" class="empty">Hech narsa topilmadi</div>
     </section>
@@ -56,6 +59,12 @@
     </section>
 
 </main>
+
+<nav class="nav-bar">
+    <button class="active">Asosiy</button>
+    <button onclick="location.href='orders.html'">Buyurtmalar</button>
+    <button onclick="location.href='client-profile.html'">Profil</button>
+</nav>
 
 <script src="/dashboard/client/client-dashboard.js"></script>
 </body>
