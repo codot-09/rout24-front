@@ -12,7 +12,7 @@
         .back-btn:active{transform:scale(.92);background:rgba(255,255,255,.12)}
         .back-btn svg{width:28px;height:28px;fill:#fff}
         .header h1{font:900 23px/1 system-ui;margin-left:10px}
-        .main{padding:90px 20px 100px}
+        .main{padding:90px 20px 40px}
         .profile-card{background:#fff;border-radius:28px;padding:28px 24px;margin-bottom:32px;box-shadow:0 15px 45px rgba(0,0,0,.1);display:flex;align-items:center;gap:20px;cursor:pointer;transition:transform .3s}
         .profile-card:active{transform:scale(.98)}
         .avatar{width:76px;height:76px;border:4px solid #fff;border-radius:50%;object-fit:cover;box-shadow:0 8px 25px rgba(128,0,0,.25)}
@@ -21,7 +21,7 @@
         .user-role{font:600 16px/1 system-ui;color:#64748b}
         .menu{margin-top:8px}
         .menu-item{display:flex;align-items:center;padding:20px 0;border-bottom:1px solid #e2e8f0;transition:all .3s;cursor:pointer}
-        .menu-item:last-child{border:none}
+        .menu-item:last-child{border-bottom:none}
         .menu-item:active{background:#fdfdfd;padding-left:8px;padding-right:8px;border-radius:16px}
         .menu-icon{width:26px;height:26px;fill:#800000;margin-right:18px;flex-shrink:0}
         .menu-title{font:600 17px/1 system-ui;flex:1}
@@ -52,11 +52,11 @@
 </main>
 
 <nav class="bottom-nav">
-    <button class="nav-item" onclick="location.href='client-dashboard.html'">
+    <button class="nav-item" onclick="location.href='/client/dashboard'">
         <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
         Asosiy
     </button>
-    <button class="nav-item" onclick="location.href='orders.html'">
+    <button class="nav-item" onclick="location.href='/orders'">
         <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 5H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
         Buyurtmalar
     </button>
