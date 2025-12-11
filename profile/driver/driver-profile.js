@@ -1,15 +1,14 @@
 const token = localStorage.getItem('token');
-if (!token) location.href = 'login.html';
+if (!token) location.href = '/login';
 
 const content = document.getElementById('content');
 const fullNameEl = document.getElementById('fullName');
 const profileImg = document.getElementById('profileImg');
 const statusBadge = document.getElementById('statusBadge');
 const statusRing = document.getElementById('statusRing');
+const card = document.querySelector('.profile-card');
 
 let licenseUrl = '', passportUrl = '';
-
-// ... avvalgi kodlar ...
 
 async function init() {
     try {
@@ -17,7 +16,7 @@ async function init() {
             headers: { Authorization: `Bearer ${token}` }
         });
         const { success, data } = await res.json();
-        if (!success) throw new Error();
+        if (!success || !data) throw new Error();
 
         fullNameEl.textContent = data.fullName || 'Haydovchi';
         profileImg.src = data.imageUrl || '/assets/default.png';
@@ -25,24 +24,22 @@ async function init() {
 
         const status = data.status;
 
-        // PROFILE CARD RANGINI O‘ZGARTIRISH
-        const card = document.querySelector('.profile-card');
-        card.classList.remove('not-confirmed', 'waiting', 'confirmed');
+        // Card rangi
+        card.className = 'profile-card';
         if (status === 'NOT_CONFIRMED') card.classList.add('not-confirmed');
-        else if (status === 'PENDING') card.classList.add('waiting');
+        else if (status === 'WAITING' || status === 'PENDING') card.classList.add('waiting');
         else if (status === 'CONFIRMED') card.classList.add('confirmed');
 
-        // Status badge va ring
+        // Badge va ring
         statusBadge.textContent = status === 'NOT_CONFIRMED' ? 'To‘ldirish kerak' :
-                                  status === 'PENDING' ? 'Tekshiruvda' : 'Faol';
+                                  status === 'WAITING' || status === 'PENDING' ? 'Tekshiruvda' : 'Faol';
 
-        statusRing.className = 'status-ring ' + 
+        statusRing.className = 'status-ring ' +
             (status === 'NOT_CONFIRMED' ? 'red' :
-             status === 'PENDING' ? 'yellow' : 'green');
+             status === 'WAITING' || status === 'PENDING' ? 'yellow' : 'green');
 
         renderContent(status);
-    } catch (e) {
-        console.error(e);
+    } catch {
         alert('Profil yuklanmadi');
     }
 }
@@ -81,23 +78,20 @@ function renderContent(status) {
                 <button class="btn" id="submitBtn" disabled>Yuborish</button>
             </div>
         `;
-    
+
         document.getElementById('licenseBox').onclick = () => document.getElementById('licenseInput').click();
         document.getElementById('passportBox').onclick = () => document.getElementById('passportInput').click();
         document.getElementById('licenseInput').onchange = e => uploadImage(e, 'license');
         document.getElementById('passportInput').onchange = e => uploadImage(e, 'passport');
-    
-        // **Tugmaga event listener qo‘shish**
         document.getElementById('submitBtn').onclick = submitVerification;
     }
-    
-    else if (status === 'WAITING') {
+    else if (status === 'WAITING' || status === 'PENDING') {
         content.innerHTML = `<p style="font-size:19px;opacity:0.9;line-height:1.6;margin-top:20px">Ma'lumotlaringiz tekshirilmoqda.<br>Tez orada javob beramiz</p>`;
     }
     else if (status === 'CONFIRMED') {
-        content.innerHTML = `<div class="action-list" id="actions"></div><div id="vehicle"></div>`;
-        loadActions();
+        content.innerHTML = `<div id="vehicle"></div><div class="action-list" id="actions"></div>`;
         loadVehicle();
+        loadActions();
     }
 }
 
@@ -119,32 +113,23 @@ async function uploadImage(e, type) {
             headers: { Authorization: `Bearer ${token}` },
             body: form
         });
-
-        const url = await res.text(); // string qaytadi
+        const url = await res.text();
         if (res.ok && url.startsWith('http')) {
             if (type === 'license') licenseUrl = url;
             if (type === 'passport') passportUrl = url;
-
-            if (licenseUrl && passportUrl && document.getElementById('birthDate').value && document.getElementById('gender').value) {
+            if (licenseUrl && passportUrl && document.getElementById('birthDate')?.value && document.getElementById('gender')?.value) {
                 document.getElementById('submitBtn').disabled = false;
             }
-        } else {
-            alert('Rasm yuklashda xatolik');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Internet aloqasi yo‘q yoki server xatosi');
+        } else throw new Error();
+    } catch {
+        alert('Rasm yuklashda xatolik');
     }
 }
 
-// YUBORISH TUGMASI – 100% ISHLAYDI
 window.submitVerification = async function () {
     const birthDate = document.getElementById('birthDate').value;
     const gender = document.getElementById('gender').value;
-
-    if (!licenseUrl || !passportUrl || !birthDate || !gender) {
-        return alert('Barcha maydonlarni to‘ldiring');
-    }
+    if (!licenseUrl || !passportUrl || !birthDate || !gender) return alert('Barcha maydonlarni to‘ldiring');
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -153,28 +138,16 @@ window.submitVerification = async function () {
     try {
         const res = await fetch('https://api.rout24.online/drivers/finish-account', {
             method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                driverLicense: licenseUrl,
-                passportId: passportUrl,
-                birthDate: birthDate,
-                gender: gender
-            })
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ driverLicense: licenseUrl, passportId: passportUrl, birthDate, gender })
         });
-
         const result = await res.json();
         if (result.success) {
-            alert('Ma‘lumotlar muvaffaqiyatli yuborildi! Tekshiruvga yuborildi');
+            alert('Ma‘lumotlar yuborildi! Tekshiruvga yuborildi');
             location.reload();
-        } else {
-            throw new Error(result.message || 'Xatolik');
-        }
+        } else throw new Error(result.message || 'Xatolik');
     } catch (err) {
-        console.error(err);
-        alert('Yuborishda xatolik: ' + err.message);
+        alert('Yuborishda xatolik');
         btn.disabled = false;
         btn.textContent = 'Yuborish';
     }
@@ -182,39 +155,30 @@ window.submitVerification = async function () {
 
 function loadActions() {
     const actions = [
-        {
-            text: "Mashina qo‘shish",
-            icon: "M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9h14v2H7V9z",
-            onclick: "goAddCar()"
-        },
-        {text:"Shartlar",icon:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"},
-        {text:"Xavfsizlik",icon:"M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"},
-        {text:"Yordam",icon:"M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"},
-        {
-            text: "Chiqish",
-            icon: "M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14",
-            onclick: "localStorage.removeItem('token');location.href='/login"
-        }
+        { text: "Mashina qo‘shish", icon: "M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9h14v2H7V9z", onclick: "location.href='/add-car.html'" },
+        { text: "Shartlar", icon: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" },
+        { text: "Xavfsizlik", icon: "M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" },
+        { text: "Yordam", icon: "M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" },
+        { text: "Chiqish", icon: "M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14", onclick: "localStorage.removeItem('token');location.href='login.html'" }
     ];
 
-    document.getElementById('actions').innerHTML = actions.map(a => `
-        <div class="action-item" ${a.onclick ? `onclick="${a.onclick}"` : ''}>
+    document.getElementById('actions').innerHTML = actions
+        .filter(a => document.getElementById('vehicle').innerHTML || a.text !== "Mashina qo‘shish")
+        .map(a => `<div class="action-item" ${a.onclick?`onclick="${a.onclick}"`:''}>
             <span>${a.text}</span>
             <svg viewBox="0 0 24 24"><path d="${a.icon}"/></svg>
-        </div>
-    `).join('');
-}
-
-function goAddCar() {
-    location.href = "/add-car";
+        </div>`).join('');
 }
 
 async function loadVehicle() {
     try {
-        const res = await fetch('https://api.rout24.online/vehicles/my', { headers: { Authorization: `Bearer ${token}` }});
+        const res = await fetch('https://api.rout24.online/vehicles/my', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         if (res.status === 404) throw 404;
         const json = await res.json();
-        if (!json.success) throw new Error();
+        if (!json.success || !json.data) throw new Error();
+
         const v = json.data;
         document.getElementById('vehicle').innerHTML = `
             <div class="vehicle-card">
@@ -229,8 +193,9 @@ async function loadVehicle() {
     } catch (e) {
         if (e === 404) {
             document.getElementById('vehicle').innerHTML = `
-                <p style="margin:30px 0;font-size:18px;opacity:0.8">Mashina qo‘shilmagan</p>
-                <button class="btn" onclick="location.href="/add-car">Mashina qo‘shish</button>
+                <button class="btn" onclick="location.href='add-car.html'" style="margin-top:20px">
+                    Mashina qo‘shish
+                </button>
             `;
         }
     }
