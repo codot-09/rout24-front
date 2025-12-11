@@ -26,7 +26,7 @@
 
 [[redirects]]
   from = "/set-credentials"
-  to = "/set-credentials.html"
+  to = "/login/set-credentials.html"
   status = 200
 
 # === API Proxy ===
