@@ -16,7 +16,6 @@ regions.forEach(r => {
     const opt1 = document.createElement('option');
     const opt2 = document.createElement('option');
     opt1.value = opt2.value = r;
-    // Correct capitalization and fix for Qoraqalpog'iston
     const formatted = r.charAt(0) + r.slice(1).toLowerCase().replace('qalpog‘iston', 'qalpog‘iston');
     opt1.textContent = opt2.textContent = formatted;
     fromFilter.appendChild(opt1);
@@ -45,7 +44,7 @@ async function loadRoutes(from = '', to = '') {
         routesList.style.display = 'grid';
         emptyState.style.display = 'none';
         routesList.innerHTML = data.map(route => `
-            <div class="route-card">
+            <div class="route-card" onclick="viewDetails('${route.id}')">
                 <div class="route-header">
                     <h3>${route.from} → ${route.to}</h3>
                     <div class="price">${route.price.toLocaleString('uz-UZ')} so‘m</div>
@@ -68,7 +67,6 @@ async function loadRoutes(from = '', to = '') {
                         </div>
                     </div>
                 </div>
-                <button class="details-btn" onclick="viewDetails('${route.id}')">Tafsilotlar</button>
             </div>
         `).join('');
     } catch (err) {
