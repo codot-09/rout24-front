@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mashina qo‘shish</title>
+    <link rel="stylesheet" href="/car/add-car.css">
+</head>
+<body>
+
+<header class="header">
+    <button class="back" onclick="history.back()">Back</button>
+    <h1>Mashina qo‘shish</h1>
+</header>
+
+<main class="main">
+    <div class="form">
+
+        <div class="form-group">
+            <label>Davlat raqami</label>
+            <input type="text" id="plate" placeholder="01A234BC" maxlength="9" required>
+            <small id="plateError" class="error"></small>
+        </div>
+
+        <div class="form-group">
+            <label>Mashina nomi</label>
+            <input type="text" id="name" placeholder="Masalan: Gentra" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mashina turi</label>
+            <select id="type">
+                <option value="SEDAN">Sedan</option>
+                <option value="SUV">Yo‘ltanlamas</option>
+                <option value="HATCHBACK">Xetchbek</option>
+                <option value="MINIVAN">Miniven</option>
+                <option value="COUPE">Kupe</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Rasmlar (kamida 1 ta)</label>
+            <div class="images-grid" id="imagesGrid"></div>
+            <button type="button" class="add-photo" id="addPhoto">
+                Add Photo
+                <input type="file" id="photoInput" accept="image/*" multiple hidden>
+            </button>
+            <small id="photoError" class="error"></small>
+        </div>
+
+        <button class="btn" id="submitBtn" disabled>Qo'shish</button>
+    </div>
+</main>
+
+<script src="/car/add-car.js"></script>
+</body>
+</html>

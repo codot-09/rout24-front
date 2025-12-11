@@ -20,6 +20,11 @@
   status = 200
 
 [[redirects]]
+  from = "/add-car"
+  to = "/car/add-car.html"
+  status = 200
+
+[[redirects]]
   from = "/set-credentials"
   to = "/set-credentials.html"
   status = 200
