@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Yangi reys yaratish</title>
+    <title>Yangi reys qo'shish</title>
     <link rel="stylesheet" href="/route/add-route.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 
@@ -13,67 +12,57 @@
     <button class="back-btn" onclick="history.back()">
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
     </button>
-    <h1>Yangi reys yaratish</h1>
+    <h1>Yangi reys</h1>
 </header>
 
 <main class="main">
     <div class="card">
-        <div class="form">
+        <form class="form" id="routeForm">
 
             <div class="section">
-                <div class="section-title">Yo‘nalish</div>
+                <div class="section-title">Yo'nalish</div>
 
                 <label>Qayerdan</label>
-                <select id="fromInput" required>
+                <select id="from" required>
                     <option value="">Viloyatni tanlang</option>
                 </select>
 
                 <label>Qayerga</label>
-                <select id="toInput" required>
+                <select id="to" required>
                     <option value="">Viloyatni tanlang</option>
                 </select>
             </div>
 
             <div class="section">
-                <div class="section-title">Joylashuvni belgilang</div>
-                <div class="map-hint" id="mapHint">
-                    Xaritada avval <strong style="color:#2e7d32">ketish joyi</strong>, keyin <strong style="color:#c62828">yetib borish joyi</strong>ni bosing
-                </div>
-                <div id="map"></div>
+                <div class="section-title">Aniq manzillar</div>
 
-                <div class="address-box from">
-                    <strong>Ketish manzili:</strong> <span id="fromAddress">Hali tanlanmadi</span>
-                </div>
-                <div class="address-box to">
-                    <strong>Yetib borish manzili:</strong> <span id="toAddress">Hali tanlanmadi</span>
-                </div>
+                <label>Ketish manzili</label>
+                <input type="text" id="fromAddress" placeholder="Masalan: Chilonzor, 15-uy" required maxlength="200">
+
+                <label>Yetib borish manzili</label>
+                <input type="text" id="toAddress" placeholder="Masalan: Yunusobod, Ahmad Donish ko'chasi" required maxlength="200">
             </div>
 
             <div class="section">
                 <div class="section-title">Reys ma'lumotlari</div>
 
-                <label>O‘rinlar soni</label>
+                <label>O'rinlar soni</label>
                 <input type="number" id="seats" min="1" max="50" value="4" required>
 
-                <label>Narx (so‘m)</label>
+                <label>Narx (so'm)</label>
                 <input type="number" id="price" min="10000" step="1000" placeholder="250 000" required>
 
                 <label>Ketish sanasi va vaqti</label>
                 <input type="datetime-local" id="departure" required>
             </div>
 
-            <button id="submitBtn" class="submit-btn" disabled>
+            <button type="submit" class="submit-btn" id="submitBtn">
                 Reys yaratish
             </button>
-        </div>
+        </form>
     </div>
 </main>
 
-<!-- Hidden koordinatalar -->
-<input type="hidden" id="fromLat"><input type="hidden" id="fromLng">
-<input type="hidden" id="toLat"><input type="hidden" id="toLng">
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/route/add-route.js"></script>
 </body>
 </html>
