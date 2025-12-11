@@ -29,6 +29,11 @@
   to = "/login/set-credentials.html"
   status = 200
 
+[[redirects]]
+  from = "/routes"
+  to = "/route/routes.html"
+  status = 200
+
 # === API Proxy ===
 [[redirects]]
   from = "/api/*"
