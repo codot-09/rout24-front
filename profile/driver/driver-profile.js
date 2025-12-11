@@ -193,7 +193,7 @@ async function loadVehicle() {
     } catch (e) {
         if (e === 404) {
             document.getElementById('vehicle').innerHTML = `
-                <button class="btn" onclick="location.href='add-car.html'" style="margin-top:20px">
+                <button class="btn" onclick="location.href='/add-car'" style="margin-top:20px">
                     Mashina qo‘shish
                 </button>
             `;
