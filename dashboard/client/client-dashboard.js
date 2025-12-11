@@ -45,13 +45,18 @@ function clearLoading() {
     routesList.innerHTML = '';
 }
 
-/* FETCH HELPERS */
+/* API GET */
 async function apiGet(url) {
     const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error("Server xatosi");
     return res.json();
+}
+
+/* OPEN ROUTE DETAILS */
+function openRoute(id) {
+    location.href = `https://rout24.online/route/credentials?id=${id}`;
 }
 
 /* RENDER ROUTE CARD */
@@ -65,7 +70,7 @@ function renderRouteCard(route) {
     });
 
     return `
-        <div class="route" onclick="location.href='route-credentials.html?id=${route.id}'">
+        <div class="route" onclick="openRoute('${route.id}')">
             <div class="route-header">
                 <h3>${route.from} → ${route.to}</h3>
                 <p>${date}</p>
@@ -102,7 +107,7 @@ async function loadRoutes() {
 
     try {
         const { success, data } = await apiGet(`${API_BASE}/routes/search?${params}`);
-        
+
         clearLoading();
 
         if (!success || !data?.content?.length) {
@@ -139,6 +144,6 @@ async function loadBanners() {
 /* EVENTS */
 document.getElementById('searchBtn').onclick = loadRoutes;
 
-/* INITIAL DATA */
+/* INIT */
 loadRoutes();
 loadBanners();
