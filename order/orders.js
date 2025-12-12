@@ -8,8 +8,8 @@ let token = '';
 document.addEventListener('DOMContentLoaded', () => {
   token = localStorage.getItem('token');
   if (!token) {
-    alert('Iltimos, tizimga qayta kiring');
-    return location.href = 'login.html';
+    alert('Tizimga kirish kerak');
+    return location.href = '/login.html';
   }
 
   loadOrders();
@@ -21,17 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   document.getElementById('prevPage').onclick = () => {
-    if (currentPage > 0) {
-      currentPage--;
-      renderOrders();
-    }
+    if (currentPage > 0) { currentPage--; renderOrders(); }
   };
 
   document.getElementById('nextPage').onclick = () => {
-    if (currentPage < totalPages - 1) {
-      currentPage++;
-      renderOrders();
-    }
+    if (currentPage < totalPages - 1) { currentPage++; renderOrders(); }
   };
 });
 
@@ -41,51 +35,35 @@ async function loadOrders() {
 
   try {
     const res = await fetch(`https://api.rout24.online/orders/own?page=0&size=1000`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': '*/*'
-      }
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': '*/*' }
     });
 
     const json = await res.json();
-
     if (!json.success) throw new Error(json.message || 'Xatolik');
 
     allOrders = json.data?.content || [];
-    totalPages = Math.ceil(allOrders.length / pageSize);
-    currentPage = 0;
-
-    currentPage = 0;
-
+    totalPages = Math.ceil(allOrders.length / pageSize) || 1;
     renderOrders();
-    updatePagination();
   } catch (err) {
-    alert('Buyurtmalarni yuklashda xatolik: ' + err.message);
+    alert('Buyurtmalarni yuklab bo‘lmadi: ' + err.message);
   } finally {
     loader.style.display = 'none';
   }
 }
 
 function renderOrders() {
-  const filtered = currentFilter === 'ALL' 
-    ? allOrders 
-    : allOrders.filter(o => o.status === currentFilter);
-
+  const filtered = currentFilter === 'ALL' ? allOrders : allOrders.filter(o => o.status === currentFilter);
   const start = currentPage * pageSize;
   const end = start + pageSize;
   const pageOrders = filtered.slice(start, end);
 
-  totalPages = Math.ceil(filtered.length / pageSize);
-  if (currentPage >= totalPages && totalPages > 0) currentPage = totalPages - 1;
+  totalPages = Math.ceil(filtered.length / pageSize) || 1;
+  if (currentPage >= totalPages) currentPage = totalPages - 1;
 
   const list = document.getElementById('ordersList');
-  list.innerHTML = '';
-
-  if (pageOrders.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Buyurtmalar mavjud emas</div>';
-    updatePagination();
-    return;
-  }
+  list.innerHTML = pageOrders.length === 0
+    ? '<div style="text-align:center;padding:60px;color:#888;font-size:17px">Buyurtmalar mavjud emas</div>'
+    : '';
 
   pageOrders.forEach(order => {
     const statusClass = order.status.toLowerCase();
@@ -98,8 +76,8 @@ function renderOrders() {
       </div>
       <div class="order-details">
         <div><span>Sana:</span> <strong>${new Date(order.orderDate).toLocaleString('uz-UZ')}</strong></div>
-        <div><span>Toʻlov turi:</span> <strong>${order.paymentType === 'CARD' ? 'Karta' : 'Naqd'}</strong></div>
-        <div><span>Toʻlov holati:</span> <strong>${order.paymentStatus === 'PAID' ? 'Toʻlangan' : 'Toʻlanmagan'}</strong></div>
+        <div><span>Toʻlov:</span> <strong>${order.paymentType === 'CARD' ? 'Karta' : 'Naqd'}</strong></div>
+        <div><span>Holati:</span> <strong>${order.paymentStatus === 'PAID' ? 'Toʻlangan' : 'Kutilmoqda'}</strong></div>
         <div><span>Narx:</span> <strong>${order.price.toLocaleString('uz-UZ')} soʻm</strong></div>
         <div><span>Joylar:</span> <strong>${order.seatsCount} ta</strong></div>
       </div>
@@ -111,31 +89,24 @@ function renderOrders() {
     list.appendChild(card);
   });
 
-  updatePagination();
-}
-
-function updatePagination() {
-  document.getElementById('pageInfo').textContent = `${currentPage + 1} / ${totalPages || 1}`;
+  document.getElementById('pageInfo').textContent = `${currentPage + 1} / ${totalPages}`;
   document.getElementById('prevPage').disabled = currentPage === 0;
   document.getElementById('nextPage').disabled = currentPage >= totalPages - 1;
 }
 
 async function cancelOrder(billingNumber) {
   if (!confirm('Buyurtmani bekor qilmoqchimisiz?')) return;
-
   try {
     const res = await fetch(`https://api.rout24.online/orders/cancel/${billingNumber}`, {
       method: 'PATCH',
       headers: { 'Authorization': `Bearer ${token}` }
     });
-
     const json = await res.json();
-    if (!json.success) throw new Error('Bekor qilishda xato');
-
-    alert('Buyurtma muvaffaqiyatli bekor qilindi');
+    if (!json.success) throw new Error(json.message);
+    alert('Buyurtma bekor qilindi');
     loadOrders();
-  } catch (err) {
-    alert('Xatolik: ' + err.message);
+  } catch (e) {
+    alert('Xatolik: ' + e.message);
   }
 }
 
@@ -149,7 +120,7 @@ function closeQrModal() {
   document.getElementById('qrModal').style.display = 'none';
 }
 
-function getStatusText(status) {
+function getStatusText(s) {
   const map = { WAITING: 'Kutilmoqda', PAID: 'Toʻlangan', CANCELLED: 'Bekor qilingan' };
-  return map[status] || status;
+  return map[s] || s;
 }
