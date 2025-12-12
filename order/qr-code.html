@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QR Skaner</title>
+    <link rel="stylesheet" href="/dashboard/driver/driver-dashboard.css">
+    <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+    <style>
+        .scanner-wrapper {padding: 20px 20px 100px}
+        .title {text-align:center; font-size:24px; font-weight:900; margin-bottom:30px}
+        .scanner-box {position:relative; max-width:420px; margin:0 auto; border-radius:24px; overflow:hidden; box-shadow:0 12px 40px rgba(128,0,0,.18)}
+        #video {width:100%; display:block}
+        .scan-frame {position:absolute; inset:0; border:3px solid #800000; box-sizing:border-box; pointer-events:none}
+        .manual {margin-top:32px; text-align:center}
+        .manual input {width:100%; max-width:320px; padding:14px 18px; border:2px solid #800000; border-radius:16px; font-size:17px; background:#fff; color:#800000}
+        .manual button {margin-top:12px; background:#800000; color:#fff; border:none; padding:14px 32px; border-radius:16px; font-size:17px; font-weight:600; cursor:pointer}
+        .msg {margin-top:20px; font-size:16px; text-align:center; min-height:24px}
+        .error {color:#c62828}
+        .success {color:#43a047}
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <img src="/assets/icon.png" alt="Rout24">
+        <span>Rout24</span>
+    </div>
+    <button onclick="history.back()" style="background:none;border:none">
+        <svg width="28" height="28" fill="#800000" viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6"/>
+        </svg>
+    </button>
+</header>
+
+<main class="main scanner-wrapper">
+    <h2 class="title">QR kodni skanerlang</h2>
+
+    <div class="scanner-box">
+        <video id="video" autoplay playsinline muted></video>
+        <div class="scan-frame"></div>
+        <canvas id="canvas" style="display:none"></canvas>
+    </div>
+
+    <div class="manual">
+        <input type="text" id="billing" placeholder="Yoki billing raqamini kiriting">
+        <button id="sendBtn">Tasdiqlash</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+</main>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const msg = document.getElementById('msg');
+    const billingInput = document.getElementById('billing');
+    const sendBtn = document.getElementById('sendBtn');
+
+    let scanning = false;
+
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" }
+            });
+            video.srcObject = stream;
+            video.play();
+            scanning = true;
+            tick();
+        } catch (e) {
+            showMsg('Kamera ochilmadi', 'error');
+        }
+    }
+
+    function tick() {
+        if (!scanning) return;
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imgData.data, imgData.width, imgData.height);
+            if (code) {
+                const url = code.data.trim();
+                if (url.startsWith('https://i.ibb.co')) {
+                    scanning = false;
+                    verify(url);
+                    return;
+                }
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+
+    async function verify(value) {
+        showMsg('Tekshirilmoqda…');
+        try {
+            const res = await fetch('https://api.rout24.online/orders/verify/' + encodeURIComponent(value), {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const json = await res.json();
+            if (json.success) {
+                showMsg(json.message || 'Muvaffaqiyatli!', 'success');
+            } else {
+                showMsg(json.message || json.errors?.join(', ') || 'Xato', 'error');
+                setTimeout(() => scanning = true && tick(), 2000);
+            }
+        } catch (e) {
+            showMsg('Ulanish xatosi', 'error');
+            setTimeout(() => scanning = true && tick(), 2000);
+        }
+    }
+
+    sendBtn.onclick = () => {
+        const val = billingInput.value.trim();
+        if (val) verify(val);
+    };
+
+    function showMsg(text, type = '') {
+        msg.textContent = text;
+        msg.className = 'msg ' + type;
+    }
+
+    window.onload = startCamera;
+</script>
+
+</body>
+</html>

@@ -1,22 +1,58 @@
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    background: #fff;
+    color: #800000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
 /* Header */
-.header{
-    position:fixed;top:0;left:0;right:0;height:74px;padding:0 20px;
-    display:flex;align-items:center;justify-content:space-between;
-    background:#fff;z-index:100;box-shadow:0 4px 20px rgba(128,0,0,0.09);
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 74px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(128, 0, 0, 0.09);
 }
-.logo{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:900}
-.logo img{width:48px;height:48px;border-radius:14px}
-.notifications svg{width:28px;height:28px;fill:#800000}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.logo img {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+}
+
+.notifications svg {
+    width: 28px;
+    height: 28px;
+    fill: #800000;
+}
 
 /* Main */
-.main{padding:90px 20px 100px}
+.main {
+    padding: 90px 20px 100px;
+}
 
 /* Creative Profile Card */
-/* Profile Card – Status bo‘yicha rang o‘zgaradi */
-/* PROFILE CARD – Status bo‘yicha rang o‘zgaradi */
 .profile-card {
     position: relative;
     border-radius: 32px;
@@ -35,12 +71,16 @@ body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,Bl
     transition: background 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Status ranglari – to‘g‘ri ishlaydi */
-.profile-card.not-confirmed .profile-bg{background:linear-gradient(135deg,#e91e1e,#c62828)}
+/* Status ranglari */
+.profile-card.not-confirmed .profile-bg {
+    background: linear-gradient(135deg, #e91e1e, #c62828);
+}
+
 .profile-card.waiting .profile-bg,
 .profile-card.pending .profile-bg {
     background: linear-gradient(135deg, #ffb300, #ff8f00);
 }
+
 .profile-card.confirmed .profile-bg {
     background: linear-gradient(135deg, #4caf50, #43a047);
 }
@@ -66,7 +106,7 @@ body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,Bl
     100% { transform: scale(1.35); opacity: 0; }
 }
 
-/* Ichki kontent – har doim oq matn */
+/* Ichki kontent */
 .profile-content {
     position: relative;
     z-index: 2;
@@ -131,35 +171,141 @@ body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,Bl
 }
 
 /* Statistics 2+1 */
-.stats-container{margin-bottom:32px}
-.stats-row{display:grid;gap:16px;margin-bottom:16px}
-.stats-row:first-child{grid-template-columns:1fr 1fr}
-.stats-row:last-child{grid-template-columns:1fr}
-.stat-big,.stat-full{
-    background:#fff;border-radius:28px;padding:24px;text-align:center;
-    box-shadow:0 14px 36px rgba(128,0,0,0.12);
+.stats-container {
+    margin-bottom: 32px;
 }
-.stat-value{font-size:34px;font-weight:900;margin-bottom:8px}
-.stat-label{font-size:15px;opacity:0.85}
+
+.stats-row {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.stats-row:first-child {
+    grid-template-columns: 1fr 1fr;
+}
+
+.stats-row:last-child {
+    grid-template-columns: 1fr;
+}
+
+.stat-big, .stat-full {
+    background: #fff;
+    border-radius: 28px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 14px 36px rgba(128,0,0,0.12);
+}
+
+.stat-value {
+    font-size: 34px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 15px;
+    opacity: 0.85;
+}
 
 /* Banners */
-.banners-section .swiper{border-radius:28px;overflow:hidden;box-shadow:0 16px 40px rgba(128,0,0,0.16)}
-.swiper-slide img{width:100%;height:190px;object-fit:cover}
+.banners-section .swiper {
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(128,0,0,0.16);
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
 
 /* Bottom Navigation */
-.bottom-nav{
-    position:fixed;bottom:0;left:0;right:0;height:84px;
-    background:#fff;display:flex;border-top:1px solid rgba(128,0,0,0.1);
-    box-shadow:0 -4px 20px rgba(128,0,0,0.1);z-index:100;
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 84px;
+    background: #fff;
+    display: flex;
+    border-top: 1px solid rgba(128,0,0,0.1);
+    box-shadow: 0 -4px 20px rgba(128,0,0,0.1);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
 }
-.nav-item{
-    flex:1;background:none;border:none;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:6px;color:#800000;font-size:13px;
-    transition:all .3s;position:relative;
+
+/* Umumiy nav-item stillari (oldingi kodda yo‘q edi, lekin kerak) */
+.nav-item {
+    flex: 1;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #800000;
+    font-size: 13px;
+    transition: all .3s;
+    position: relative;
 }
-.nav-item svg{width:26px;height:26px;fill:#800000}
-.nav-item.active{color:#800000;font-weight:800}
-.nav-item.active::before{
-    content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-    width:40px;height:4px;background:#800000;border-radius:2px;
+
+.nav-item svg {
+    width: 26px;
+    height: 26px;
+    fill: #800000;
+}
+
+.nav-item.active {
+    color: #800000;
+    font-weight: 800;
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: #800000;
+    border-radius: 2px;
+}
+
+/* O‘rtadagi QR tugmasi */
+.qr-center-btn {
+    transform: translateY(-20px);
+}
+
+.qr-center-btn .qr-fab {
+    width: 64px;
+    height: 64px;
+    background: #800000;
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(128,0,0,0.3);
+    margin-bottom: 8px;
+}
+
+.qr-center-btn svg {
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: white;
+    stroke-width: 2.2;
+}
+
+.nav-item span {
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.qr-center-btn.active::before {
+    display: none;
 }
