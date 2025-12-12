@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const paymentType = document.querySelector('.payment-option.active').dataset.type;
 
     try {
-      const res = await fetch('https://api.rout24.online/routes/create', {
+      const res = await fetch('https://api.rout24.online/orders/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
