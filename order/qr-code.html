@@ -52,80 +52,104 @@
 </main>
 
 <script>
+    const API_URL = 'https://api.rout24.online/orders/verify/';
+    const TOKEN = localStorage.getItem('token')
+
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const msg = document.getElementById('msg');
+    const msgEl = document.getElementById('msg');
     const billingInput = document.getElementById('billing');
     const sendBtn = document.getElementById('sendBtn');
 
     let scanning = false;
+    let stream = null;
 
-    async function startCamera() {
+    async function initScanner() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: "environment" }
-            });
+            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             video.srcObject = stream;
-            video.play();
+            await video.play();
             scanning = true;
-            tick();
-        } catch (e) {
-            showMsg('Kamera ochilmadi', 'error');
+            requestAnimationFrame(scanFrame);
+        } catch (err) {
+            showMessage('Kamera ochishda xato: ' + err.message, 'error');
         }
     }
 
-    function tick() {
-        if (!scanning) return;
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
-            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imgData.data, imgData.width, imgData.height);
-            if (code) {
-                const url = code.data.trim();
-                if (url.startsWith('https://i.ibb.co')) {
-                    scanning = false;
-                    verify(url);
-                    return;
-                }
+    function scanFrame() {
+        if (!scanning || video.readyState !== video.HAVE_ENOUGH_DATA) {
+            requestAnimationFrame(scanFrame);
+            return;
+        }
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+        if (code) {
+            const value = code.data.trim();
+            if (value.startsWith('https://i.ibb.co')) {
+                scanning = false;
+                verifyOrder(value);
             }
         }
-        requestAnimationFrame(tick);
+
+        requestAnimationFrame(scanFrame);
     }
 
-    async function verify(value) {
-        showMsg('Tekshirilmoqda…');
+    async function verifyOrder(value) {
+        showMessage('Tasdiqlanmoqda...');
         try {
-            const res = await fetch('https://api.rout24.online/orders/verify/' + encodeURIComponent(value), {
+            const response = await fetch(API_URL + encodeURIComponent(value), {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Accept': '*/*',
+                    'Authorization': `Bearer ${TOKEN}`,
+                    'Content-Type': 'application/json'
+                }
             });
-            const json = await res.json();
-            if (json.success) {
-                showMsg(json.message || 'Muvaffaqiyatli!', 'success');
-            } else {
-                showMsg(json.message || json.errors?.join(', ') || 'Xato', 'error');
-                setTimeout(() => scanning = true && tick(), 2000);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-        } catch (e) {
-            showMsg('Ulanish xatosi', 'error');
-            setTimeout(() => scanning = true && tick(), 2000);
+
+            const data = await response.json();
+            if (data.success) {
+                showMessage(data.message || 'Muvaffaqiyatli tasdiqlandi!', 'success');
+            } else {
+                showMessage(data.message || (data.errors ? data.errors.join(', ') : 'Nomaʼlum xato'), 'error');
+                setTimeout(() => { scanning = true; }, 2000);
+            }
+        } catch (err) {
+            showMessage('Ulanish xatosi: ' + err.message, 'error');
+            setTimeout(() => { scanning = true; }, 2000);
         }
     }
 
-    sendBtn.onclick = () => {
-        const val = billingInput.value.trim();
-        if (val) verify(val);
-    };
+    sendBtn.addEventListener('click', () => {
+        const value = billingInput.value.trim();
+        if (value) {
+            verifyOrder(value);
+        } else {
+            showMessage('Billing raqamini kiriting!', 'error');
+        }
+    });
 
-    function showMsg(text, type = '') {
-        msg.textContent = text;
-        msg.className = 'msg ' + type;
+    function showMessage(text, type = '') {
+        msgEl.textContent = text;
+        msgEl.className = `msg ${type}`;
     }
 
-    window.onload = startCamera;
+    window.addEventListener('load', initScanner);
+
+    window.addEventListener('beforeunload', () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    });
 </script>
 
 </body>
