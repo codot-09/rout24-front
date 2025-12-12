@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mening buyurtmalarim</title>
+<link rel="stylesheet" href="/order/orders.css">
+</head>
+<body>
+
+<header class="header">
+  <button class="back-btn" onclick="history.back()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+    </svg>
+  </button>
+  <h1>Mening buyurtmalarim</h1>
+</header>
+
+<main class="main">
+  <div class="filter-section">
+    <label>Holati bo'yicha filter:</label>
+    <select id="statusFilter">
+      <option value="ALL">Barchasi</option>
+      <option value="WAITING">Kutilmoqda</option>
+      <option value="PAID">To'langan</option>
+      <option value="CANCELLED">Bekor qilingan</option>
+      <!-- Qo'shimcha statuslar API bo'yicha qo'shilishi mumkin -->
+    </select>
+  </div>
+
+  <div id="ordersList" class="orders-list"></div>
+
+  <div class="pagination">
+    <button id="prevPage" disabled>Oldingi</button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextPage" disabled>Keyingi</button>
+  </div>
+
+  <div class="loader" id="loader">Yuklanmoqda...</div>
+</main>
+
+<!-- QR MODAL -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal">
+    <h2>Onlayn chek</h2>
+    <p><strong>Buyurtma raqami:</strong> <span id="billingNumber"></span></p>
+    <img id="qrCodeImg" src="" alt="QR Code">
+    <button class="btn-secondary" onclick="closeQrModal()">Yopish</button>
+  </div>
+</div>
+
+<script src="/order/orders.js"></script>
+</body>
+</html>
