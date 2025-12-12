@@ -40,6 +40,16 @@
   status = 200
 
 [[redirects]]
+  from = "/orders/new-order"
+  to = "/order/order-create.html"
+  status = 200
+
+[[redirects]]
+  from = "/orders"
+  to = "/order/orders.html"
+  status = 200
+
+[[redirects]]
   from = "/add-route"
   to = "/route/add-route.html"
   status = 200

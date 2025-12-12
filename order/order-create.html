@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chipta bron qilish</title>
+<link rel="stylesheet" href="/order/order-create.css">
+</head>
+<body>
+
+<header class="header">
+  <button class="back-btn" onclick="history.back()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+    </svg>
+  </button>
+  <h1>Chipta bron qilish</h1>
+</header>
+
+<main class="main">
+  <div class="card">
+    <div class="route-info">
+      <div class="cities">
+        <div class="city"><strong id="fromCity">Toshkent</strong><small>Ketish</small></div>
+        <div class="arrow">→</div>
+        <div class="city"><strong id="toCity">Samarqand</strong><small>Borish</small></div>
+      </div>
+      <div class="details">
+        <div><span>Sana:</span> <strong id="date"></strong></div>
+        <div><span>Vaqt:</span> <strong id="time"></strong></div>
+        <div><span>Narx:</span> <strong id="price"></strong> so‘m</div>
+        <div><span>Bo‘sh joy:</span> <strong id="seatsAvailable"></strong> ta</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Joylar soni</h3>
+    <div class="seats-selector">
+      <button class="minus" onclick="changeSeats(-1)">–</button>
+      <span class="count" id="seatsCount">1</span>
+      <button class="plus" onclick="changeSeats(1)">+</button>
+    </div>
+    <div class="total-price">
+      Jami: <strong id="totalPrice">0</strong> so‘m
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>To‘lov turi</h3>
+    <label class="payment-option active" data-type="CARD">
+      <input type="radio" name="payment" value="CARD" checked hidden>
+      <span>Karta orqali (onlayn)</span>
+    </label>
+    <label class="payment-option" data-type="CASH">
+      <input type="radio" name="payment" value="CASH" hidden>
+      <span>Naqd pul (haydovchiga)</span>
+    </label>
+  </div>
+
+  <button class="book-btn" id="submitBtn">Bron qilish</button>
+</main>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <svg class="success-icon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#10b981"/>
+      <path fill="white" d="M9 12l2 2 4-4"/>
+    </svg>
+    <h2>Buyurtma muvaffaqiyatli yaratildi!</h2>
+    <p id="modalMessage">Chiptangiz bron qilindi.</p>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="location.href='/orders'">Mening buyurtmalarim</button>
+      <button class="btn-secondary" onclick="history.back()">Yakunlash</button>
+    </div>
+  </div>
+</div>
+
+<script src="/order/order-create.js"></script>
+</body>
+</html>
