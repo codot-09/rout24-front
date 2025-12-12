@@ -7,49 +7,45 @@
     <link rel="stylesheet" href="/dashboard/driver/driver-dashboard.css">
     <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
     <style>
-        .scanner-wrapper {padding:20px 20px 120px}
-        .title {text-align:center;font-size:24px;font-weight:900;margin-bottom:30px}
-        .scanner-box {position:relative;max-width:420px;margin:0 auto;border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(128,0,0,.18);overflow:hidden}
-        #video {width:100%;display:block}
-        .scan-frame {position:absolute;inset:0;border:3px solid #800000;box-sizing:border-box;pointer-events:none}
-        .manual {margin-top:32px;text-align:center}
-        .manual input {width:100%;max-width:320px;padding:14px 18px;border:2px solid #800000;border-radius:16px;font-size:17px;background:#fff;color:#800000}
-        .manual button {margin-top:12px;background:#800000;color:#fff;border:none;padding:14px 32px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer}
-        .msg {margin-top:20px;font-size:16px;text-align:center;min-height:24px}
-        .error {color:#c62828}
-        success {color:#43a047}
-
-        /* Muvaffaqiyatli modal */
-        .modal-overlay {position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000}
-        .modal {background:#fff;border-radius:24px;padding:32px 24px;width:90%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modalShow .4s ease}
-        .modal-icon {width:80px;height:80px;background:#43a047;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center}
-        .modal-icon svg {width:48px;height:48px;fill:#fff}
-        .modal h3 {font-size:22px;font-weight:900;margin:0 0 12px}
-        .modal p {font-size:15px;color:#555;margin-bottom:24px}
-        .modal button {background:#800000;color:#fff;border:none;padding:14px 40px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer}
-        @keyframes modalShow {from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+        .scanner-wrapper{padding:20px 20px 120px}
+        .title{text-align:center;font-size:24px;font-weight:900;margin-bottom:30px}
+        .scanner-box{position:relative;max-width:420px;margin:0 auto;border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(128,0,0,.18)}
+        #video{width:100%;display:block}
+        .scan-frame{position:absolute;inset:20%;border:3px solid #800000;border-radius:16px;box-sizing:border-box;pointer-events:none;animation:pulse 2s infinite}
+        .detected-url{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;padding:10px 20px;border-radius:12px;font-size:14px;max-width:90%;word-break:break-all;opacity:0;transition:opacity .4s}
+        .detected-url.show{opacity:1}
+        .manual{margin-top:32px;text-align:center}
+        .manual input{width:100%;max-width:320px;padding:14px 18px;border:2px solid #800000;border-radius:16px;font-size:17px;background:#fff;color:#800000}
+        .manual button{margin-top:12px;background:#800000;color:#fff;border:none;padding:14px 32px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer}
+        .msg{margin-top:20px;font-size:16px;text-align:center;min-height:24px}
+        .error{color:#c62828}
+        .success{color:#43a047}
+        @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(128,0,0,.4)}50%{box-shadow:0 0 0 12px rgba(128,0,0,0)}}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000}
+        .modal{background:#fff;border-radius:24px;padding:32px 24px;width:90%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:a .4s}
+        .modal-icon{width:80px;height:80px;background:#43a047;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center}
+        .modal-icon svg{width:48px;height:48px;fill:#fff}
+        .modal h3{font-size:22px;font-weight:900;margin:0 0 12px}
+        .modal p{font-size:15px;color:#555;margin-bottom:24px}
+        .modal button{background:#800000;color:#fff;border:none;padding:14px 40px;border-radius:16px;font-size:17px;font-weight:600;cursor:pointer}
+        @keyframes a{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
     </style>
 </head>
 <body>
 
 <header class="header">
-    <div class="logo">
-        <img src="/assets/icon.png" alt="Rout24">
-        <span>Rout24</span>
-    </div>
+    <div class="logo"><img src="/assets/icon.png" alt="Rout24"><span>Rout24</span></div>
     <button onclick="history.back()" style="background:none;border:none">
-        <svg width="28" height="28" fill="#800000" viewBox="0 0 24 24">
-            <path d="M15 18l-6-6 6-6"/>
-        </svg>
+        <svg width="28" height="28" fill="#800000" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
 </header>
 
 <main class="main scanner-wrapper">
     <h2 class="title">QR kodni skanerlang</h2>
-
     <div class="scanner-box">
         <video id="video" autoplay playsinline muted></video>
         <div class="scan-frame"></div>
+        <div class="detected-url" id="urlPreview"></div>
         <canvas id="canvas" style="display:none"></canvas>
     </div>
 
@@ -57,158 +53,145 @@
         <input type="text" id="billing" placeholder="Yoki billing raqamini kiriting">
         <button id="sendBtn">Tasdiqlash</button>
     </div>
-
     <div id="msg" class="msg"></div>
 </main>
 
-<!-- Muvaffaqiyatli modal -->
-<div class="modal-overlay" id="successModal">
+<div class="modal-overlay" id="modal">
     <div class="modal">
         <div class="modal-icon">
-            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            <svg viewBox="0 0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
         </div>
         <h3>Buyurtma tasdiqlandi!</h3>
-        <p id="modalMessage">Muvaffaqiyatli amalga oshirildi</p>
-        <button onclick="location.href='/dashboard/driver'">Asosiy sahifaga qaytish</button>
+        <p id="modalText">Muvaffaqiyatli amalga oshirildi</p>
+        <button onclick="location.href='/dashboard/driver'">Asosiy sahifaga</button>
     </div>
 </div>
 
 <script>
-    const video   = document.getElementById('video');
-    const canvas  = document.getElementById('canvas');
-    const ctx     = canvas.getContext('2d');
-    const msgEl   = document.getElementById('msg');
-    const billing = document.getElementById('billing');
-    const sendBtn = document.getElementById('sendBtn');
-    const modal   = document.getElementById('successModal');
-    const modalMsg= document.getElementById('modalMessage');
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const urlPreview = document.getElementById('urlPreview');
+const msg = document.getElementById('msg');
+const billingInput = document.getElementById('billing');
+const sendBtn = document.getElementById('sendBtn');
+const modal = document.getElementById('modal');
+const modalText = document.getElementById('modalText');
 
-    let scanning = false;
-    let stream   = null;
+const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3NjU1NjY0MTYsImV4cCI6MTc2ODE1ODQxNn0.guQ4140RygVsxvWaGiAE9Ph2ikxLjJsln5IiQrAI2ECo1F26hiMTwvWroLA_1FKYpGISpnA8w-vxcVfJq9nItg';
 
-    const TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3NjU1NjY0MTYsImV4cCI6MTc2ODE1ODQxNn0.guQ4140RygVsxvWaGiAE9Ph2ikxLjJsln5IiQrAI2ECo1F26hiMTwvWroLA_1FKYpGISpnA8w-vxcVfJq9nItg';
+let stream = null;
+let lastDetected = '';
+let detectTimeout = null;
 
-    async function startCamera() {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-            video.srcObject = stream;
-            await video.play();
-            scanning = true;
-            requestAnimationFrame(scan);
-        } catch (e) {
-            showMsg('Kamera ochilmadi', 'error');
+async function start() {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    video.srcObject = stream;
+    await video.play();
+    requestAnimationFrame(tick);
+}
+
+function tick() {
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+        requestAnimationFrame(tick);
+        return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: "dontInvert" });
+
+    if (code) {
+        const url = code.data.trim();
+        if (url.startsWith('https://i.ibb.co') && url !== lastDetected) {
+            lastDetected = url;
+            urlPreview.textContent = url;
+            urlPreview.classList.add('show');
+            clearTimeout(detectTimeout);
+            detectTimeout = setTimeout(() => verifyQR(url), 1200);
+        }
+    } else {
+        if (lastDetected) {
+            lastDetected = '';
+            urlPreview.classList.remove('show');
+            clearTimeout(detectTimeout);
         }
     }
 
-    function scan() {
-        if (!scanning) return;
+    requestAnimationFrame(tick);
+}
 
-        if (video.readyState === video.HAVE_ENOUGH_DATA) {
-            canvas.width  = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-            if (code) {
-                const value = code.data.trim();
-                if (value.startsWith('https://i.ibb.co')) {
-                    scanning = false;
-                    verifyByQR(value);
-                    return;
-                }
-            }
-        }
-        requestAnimationFrame(scan);
-    }
-
-    async function verifyByQR(url) {
-        showMsg('QR tekshirilmoqda…');
-        try {
-            const res = await fetch('https://api.rout24.online/orders/verify/qr', {
-                method: 'PATCH',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ url })
-            });
-
-            const data = await res.json();
-            handleResponse(data, 'QR kod orqali');
-        } catch (e) {
-            showMsg('Ulanish xatosi', 'error');
-            resumeScanning();
-        }
-    }
-
-    async function verifyByBilling(number) {
-        showMsg('Billing tekshirilmoqda…');
-        try {
-            const res = await fetch(`https://api.rout24.online/orders/verify/billing/${encodeURIComponent(number)}`, {
-                method: 'PATCH',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${TOKEN}`
-                }
-            });
-
-            const data = await res.json();
-            handleResponse(data, 'Billing orqali');
-        } catch (e) {
-            showMsg('Ulanish xatosi', 'error');
-            resumeScanning();
-        }
-    }
-
-    function handleResponse(data, type) {
+async function verifyQR(url) {
+    msg.textContent = 'Tasdiqlanmoqda…';
+    try {
+        const res = await fetch('https://api.rout24.online/orders/verify/qr', {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url })
+        });
+        const data = await res.json();
         if (data.success) {
-            modalMsg.textContent = data.message || `${type} tasdiqlandi`;
+            modalText.textContent = data.message || 'QR orqali tasdiqlandi';
             modal.style.display = 'flex';
-            stopCamera();
+            stop();
         } else {
-            const err = data.message || (data.errors ? data.errors.join(', ') : 'Xato');
-            showMsg(err, 'error');
-            resumeScanning();
+            msg.textContent = data.message || 'QR xato';
+            msg.className = 'msg error';
+            setTimeout(reset, 2000);
         }
+    } catch {
+        msg.textContent = 'Ulanish xatosi';
+        msg.className = 'msg error';
+        setTimeout(reset, 2000);
     }
+}
 
-    function showMsg(text, type = '') {
-        msgEl.textContent = text;
-        msgEl.className = `msg ${type}`;
-    }
+async function verifyBilling() {
+    const num = billingInput.value.trim();
+    if (!num) return msg.textContent = 'Raqam kiriting', msg.className = 'msg error';
 
-    function resumeScanning() {
-        setTimeout(() => {
-            if (!modal.style.display || modal.style.display === 'none') {
-                scanning = true;
-                requestAnimationFrame(scan);
-            }
-        }, 2500);
-    }
-
-    function stopCamera() {
-        if (stream) {
-            stream.getTracks().forEach(t => t.stop());
-            stream = null;
-        }
-        scanning = false;
-    false;
-    }
-
-    sendBtn.onclick = () => {
-        const val = billing.value.trim();
-        if (val) {
-            scanning = false;
-            verifyByBilling(val);
+    msg.textContent = 'Tasdiqlanmoqda…';
+    try {
+        const res = await fetch(`https://api.rout24.online/orders/verify/billing/${encodeURIComponent(num)}`, {
+            method: 'PATCH',
+            headers: { 'Authorization': `Bearer ${TOKEN}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+            modalText.textContent = data.message || 'Billing orqali tasdiqlandi';
+            modal.style.display = 'flex';
+            stop();
         } else {
-            showMsg('Billing raqamini kiriting', 'error');
+            msg.textContent = data.message || 'Billing xato';
+            msg.className = 'msg error';
         }
-    };
+    } catch {
+        msg.textContent = 'Ulanish xatosi';
+        msg.className = 'msg error';
+    }
+}
 
-    window.onload = startCamera;
-    window.onbeforeunload = () => stopCamera();
+function reset() {
+    lastDetected = '';
+    urlPreview.classList.remove('show');
+    msg.textContent = '';
+    msg.className = 'msg';
+}
+
+function stop() {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+}
+
+sendBtn.onclick = verifyBilling;
+window.onload = start;
+window.onbeforeunload = stop;
 </script>
 </body>
 </html>
