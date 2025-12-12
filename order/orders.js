@@ -55,8 +55,8 @@ async function loadOrders() {
 }
 
 function renderOrders() {
-  const filtered = currentFilter === 'ALL' 
-    ? allOrders 
+  const filtered = currentFilter === 'ALL'
+    ? allOrders
     : allOrders.filter(o => o.status === currentFilter);
 
   const start = currentPage * pageSize;
@@ -76,8 +76,8 @@ function renderOrders() {
   }
 
   pageOrders.forEach(order => {
-    const billing = order.billingNumber || '—';
-    const statusClass = (order.status || 'WAITING').toLowerCase();
+    const billing = order.billingNumber ?? '—';
+    const statusKey = (order.status || 'WAITING').toUpperCase();
 
     const card = document.createElement('div');
     card.className = 'order-card';
@@ -85,15 +85,20 @@ function renderOrders() {
     card.innerHTML = `
       <div class="order-header">
         <h3>Buyurtma #${billing}</h3>
-        <span class="status-badge ${statusClass}">${getStatusText(order.status)}</span>
+        <span class="status-badge ${getOrderStatusClass(statusKey)}">
+          ${getOrderStatusText(statusKey)}
+        </span>
       </div>
+
       <div class="order-details">
         <div><span>Sana:</span> <strong>${new Date(order.orderDate).toLocaleString('uz-UZ')}</strong></div>
+        <div><span>F.I.Sh.:</span> <strong>${order.clientName || '—'}</strong></div>
         <div><span>Toʻlov turi:</span> <strong>${order.paymentType === 'CARD' ? 'Karta' : 'Naqd'}</strong></div>
-        <div><span>Toʻlov holati:</span> <strong>${order.paymentStatus === 'PAID' ? 'Toʻlangan' : 'Kutilmoqda'}</strong></div>
+        <div><span>Toʻlov holati:</span> <strong>${getPaymentStatusText(order.paymentStatus)}</strong></div>
         <div><span>Narx:</span> <strong>${(order.price || 0).toLocaleString('uz-UZ')} soʻm</strong></div>
         <div><span>Joylar:</span> <strong>${order.seatsCount || 0} ta</strong></div>
       </div>
+
       <div class="order-actions">
         ${order.status === 'WAITING' ? `<button class="btn-cancel" onclick="cancelOrder('${order.id}')">Bekor qilish</button>` : ''}
         ${order.qrCode ? `<button class="btn-check" onclick="showQrModal('${order.qrCode}', '${billing}')">Onlayn chek</button>` : ''}
@@ -113,35 +118,29 @@ function updatePagination() {
 }
 
 async function cancelOrder(orderId) {
-    if (!orderId) { 
-      alert('Order ID topilmadi'); 
-      return; 
-    }
-  
-    if (!confirm('Buyurtmani bekor qilmoqchimisiz?')) return;
-  
-    try {
-      const res = await fetch(`https://api.rout24.online/orders/cancel/${orderId}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': '*/*'
-        }
-      });
-  
-      const json = await res.json();
-  
-      if (!json.success) {
-        throw new Error(json.message || json.errors?.[0] || 'Bekor qilishda xatolik');
+  if (!confirm('Buyurtmani bekor qilinsinmi?')) return;
+
+  try {
+    const res = await fetch(`https://api.rout24.online/orders/cancel/${orderId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': '*/*'
       }
-  
-      alert(json.message || 'Buyurtma muvaffaqiyatli bekor qilindi');
-      loadOrders();
-    } catch (err) {
-      alert('Xatolik: ' + err.message);
+    });
+
+    const json = await res.json();
+
+    if (!json.success) {
+      throw new Error(json.message || json.errors?.[0] || 'Xatolik yuz berdi');
     }
+
+    alert(json.message || 'Buyurtma muvaffaqiyatli bekor qilindi');
+    loadOrders();
+  } catch (err) {
+    alert('Xatolik: ' + err.message);
   }
-  
+}
 
 function showQrModal(qrCode, billingNumber) {
   document.getElementById('billingNumber').textContent = billingNumber;
@@ -153,11 +152,32 @@ function closeQrModal() {
   document.getElementById('qrModal').style.display = 'none';
 }
 
-function getStatusText(status) {
+// Order holati (WAITING, CANCELED, FINISHED)
+function getOrderStatusText(status) {
   const map = {
     WAITING: 'Kutilmoqda',
-    PAID: 'Toʻlangan',
-    CANCELLED: 'Bekor qilingan'
+    CANCELED: 'Bekor qilingan',
+    FINISHED: 'Yakunlangan'
   };
-  return map[status] || status || 'Noma’lum';
+  return map[status] || status;
+}
+
+function getOrderStatusClass(status) {
+  const classes = {
+    WAITING: 'waiting',
+    CANCELED: 'cancelled',
+    FINISHED: 'paid'
+  };
+  return classes[status] || 'waiting';
+}
+
+// To'lov holati (PAID, UNPAID, IN_PROGRESS, REFUNDED)
+function getPaymentStatusText(status) {
+  const map = {
+    PAID: 'Toʻlangan',
+    UNPAID: 'Toʻlanmagan',
+    IN_PROGRESS: 'Jarayonda',
+    REFUNDED: 'Qaytarilgan'
+  };
+  return map[status] || 'Noma’lum';
 }
