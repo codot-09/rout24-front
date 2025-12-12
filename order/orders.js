@@ -113,29 +113,35 @@ function updatePagination() {
 }
 
 async function cancelOrder(orderId) {
-  if (!confirm('Buyurtmani bekor qilmoqchimisiz?')) return;
-
-  try {
-    const res = await fetch(`https://api.rout24.online/orders/cancel/${orderId}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': '*/*'
-      }
-    });
-
-    const json = await res.json();
-
-    if (!json.success) {
-      throw new Error(json.message || json.errors?.[0] || 'Bekor qilishda xatolik');
+    if (!orderId) { 
+      alert('Order ID topilmadi'); 
+      return; 
     }
-
-    alert(json.message || 'Buyurtma muvaffaqiyatli bekor qilindi');
-    loadOrders();
-  } catch (err) {
-    alert('Xatolik: ' + err.message);
+  
+    if (!confirm('Buyurtmani bekor qilmoqchimisiz?')) return;
+  
+    try {
+      const res = await fetch(`https://api.rout24.online/orders/cancel/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': '*/*'
+        }
+      });
+  
+      const json = await res.json();
+  
+      if (!json.success) {
+        throw new Error(json.message || json.errors?.[0] || 'Bekor qilishda xatolik');
+      }
+  
+      alert(json.message || 'Buyurtma muvaffaqiyatli bekor qilindi');
+      loadOrders();
+    } catch (err) {
+      alert('Xatolik: ' + err.message);
+    }
   }
-}
+  
 
 function showQrModal(qrCode, billingNumber) {
   document.getElementById('billingNumber').textContent = billingNumber;
