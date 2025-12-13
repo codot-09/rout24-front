@@ -29,9 +29,11 @@ function populateRegions() {
 }
 populateRegions();
 
+// Filter toggle
 filterToggle.addEventListener('click', () => {
-    const open = searchCard.classList.toggle('show');
-    filterToggle.setAttribute('aria-expanded', open);
+    const isOpen = searchCard.classList.toggle('show');
+    filterToggle.setAttribute('aria-expanded', isOpen);
+    searchCard.hidden = !isOpen;
 });
 
 async function authFetch(url, options = {}) {
@@ -58,11 +60,8 @@ function clearRoutes() {
 
 function renderRouteCard(route) {
     const date = new Date(route.departureDate).toLocaleString('uz-UZ', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit'
+        weekday: 'short', day: 'numeric', month: 'short',
+        hour: '2-digit', minute: '2-digit'
     }).replace(',', '');
 
     return `
@@ -87,7 +86,6 @@ async function loadRoutes(withFilters = false) {
     showLoading();
 
     const params = new URLSearchParams({ page: 0, size: 30 });
-
     if (withFilters) {
         if (fromFilter.value) params.set('from', fromFilter.value);
         if (toFilter.value) params.set('to', toFilter.value);
@@ -124,14 +122,12 @@ async function loadBanners() {
 }
 
 searchBtn.addEventListener('click', () => loadRoutes(true));
-
-[minPrice, maxPrice].forEach(i => {
-    i.addEventListener('keydown', e => {
-        if (e.key === 'Enter') loadRoutes(true);
-    });
-});
+[minPrice, maxPrice].forEach(i => i.addEventListener('keydown', e => {
+    if (e.key === 'Enter') loadRoutes(true);
+}));
 
 document.addEventListener('DOMContentLoaded', () => {
+    searchCard.hidden = true;
     loadRoutes(false);
     loadBanners();
 });
