@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support • Rout24</title>
+    <style>
+        /* RESET */
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        
+        /* ROOT */
+        :root{
+            --primary:#800000;
+            --primary-dark:#6a0000;
+            --primary-light:#a00000;
+            --accent:#4CAF50;
+            --bg:#f0f2f5;
+            --card-bg:#ffffff;
+            --text:#1c2e4a;
+            --muted:#6c757d;
+            --radius-xl:24px;
+            --radius-lg:20px;
+            --radius-md:16px;
+            --radius-sm:12px;
+            --shadow-sm:0 4px 12px rgba(0,0,0,.08);
+            --shadow-md:0 12px 36px rgba(0,0,0,.15);
+            --transition:.3s cubic-bezier(.25,.46,.45,.94);
+        }
+
+        html,body{
+            height:100%;
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:var(--bg);
+            color:var(--text);
+            line-height:1.6;
+            -webkit-tap-highlight-color:transparent;
+        }
+
+        a{text-decoration:none;color:inherit}
+
+        /* HEADER */
+        .header{
+            position:fixed;
+            top:0;left:0;right:0;
+            height:70px;
+            background:var(--primary);
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 4px 20px rgba(0,0,0,.15);
+            z-index:1000;
+        }
+        .header h1{font-size:22px;font-weight:900;letter-spacing:-0.5px;}
+
+        /* MAIN */
+        .main{
+            padding:100px 16px 40px;
+            max-width:600px;
+            margin:0 auto;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+        }
+
+        .support-card{
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 30px 24px;
+            box-shadow: var(--shadow-md);
+            margin-top:20px;
+            transition: var(--transition);
+        }
+        .support-card:hover{
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(128,0,0,.25);
+        }
+
+        .support-card p{
+            font-size:16px;
+            color:var(--text);
+            margin-bottom:24px;
+        }
+
+        .support-buttons{
+            display:flex;
+            gap:16px;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+
+        .support-buttons a{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:14px 24px;
+            background:var(--primary);
+            color:#fff;
+            font-weight:700;
+            font-size:15px;
+            border-radius: var(--radius-md);
+            box-shadow:0 10px 28px rgba(128,0,0,.25);
+            transition:var(--transition);
+        }
+        .support-buttons a:hover{
+            background:var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow:0 14px 36px rgba(128,0,0,.3);
+        }
+        .support-buttons a svg{
+            width:20px;
+            height:20px;
+            fill:#fff;
+        }
+
+        /* FOOTER NOTE */
+        .footer-note{
+            margin-top:32px;
+            font-size:14px;
+            color:var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <h1>Support • Rout24</h1>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <div class="support-card">
+            <p>Agar sizga yordam kerak bo‘lsa yoki biron-bir savol bo‘lsa, biz bilan quyidagi usullar orqali bog‘lanishingiz mumkin.</p>
+            <div class="support-buttons">
+                <a href="mailto:onabiyev626@gmail.com">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    Email
+                </a>
+                <a href="https://t.me/rout24bot" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H8.9v-2.89h1.54V9.73c0-1.53.91-2.37 2.3-2.37.66 0 1.35.12 1.35.12v1.48h-.76c-.75 0-.98.46-.98.94v1.13h1.67l-.27 2.89h-1.4v6.99C18.34 21.12 22 16.99 22 12c0-5.52-4.48-10-10-10z"/></svg>
+                    Telegram
+                </a>
+            </div>
+        </div>
+        <div class="footer-note">
+            Bizning support jamoamiz 24/7 sizga yordam berishga tayyor.
+        </div>
+    </main>
+
+</body>
+</html>
