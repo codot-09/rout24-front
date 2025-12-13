@@ -120,7 +120,7 @@ async function loadBanners() {
         bannersBox.innerHTML = `
             <div class="banner-track">
                 ${res.data.map(b =>
-                    `<div class="banner-slide">
+                    `<div class="banner-slide" data-id="${b.id}">
                         <img src="${b.coverImage}" loading="lazy">
                     </div>`
                 ).join('')}
@@ -141,11 +141,13 @@ async function loadBanners() {
             dots.forEach((d, i) => d.classList.toggle('active', i === index));
         };
 
+        // Auto-slide
         setInterval(() => {
             index = (index + 1) % total;
             update();
         }, 4000);
 
+        // Touch swipe
         let startX = 0;
         bannersBox.addEventListener('touchstart', e => startX = e.touches[0].clientX);
         bannersBox.addEventListener('touchend', e => {
@@ -156,7 +158,17 @@ async function loadBanners() {
             }
         });
 
-    } catch {}
+        // Click on banner -> go to /banner/{id}
+        bannersBox.querySelectorAll('.banner-slide').forEach(slide => {
+            slide.addEventListener('click', () => {
+                const id = slide.getAttribute('data-id');
+                if (id) window.location.href = `/banner/${id}`;
+            });
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 searchBtn.addEventListener('click', () => loadRoutes(true));
