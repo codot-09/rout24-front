@@ -45,7 +45,7 @@ async function loadProfile() {
         // Profil rasmi
         const profileImg = document.getElementById('profileImg');
         if (profileImg) {
-            const defaultImg = '/assets/default-avatar.jpg';
+            const defaultImg = '/assets/default.png';
             profileImg.src = imageUrl || defaultImg;
 
             // Rasm yuklanmasa defaultga o‘tish

@@ -34,7 +34,7 @@ async function loadProfile() {
         // Umumiy ma'lumotlar
         fullNameEl.textContent = data.fullName || 'Haydovchi';
 
-        const defaultAvatar = '/assets/default-avatar.jpg';
+        const defaultAvatar = '/assets/default.png';
         profileImg.src = data.imageUrl || defaultAvatar;
         profileImg.onerror = () => { profileImg.src = defaultAvatar; };
 
