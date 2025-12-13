@@ -159,43 +159,47 @@ html,body{
 </main>
 
 <script>
-const API_BASE='https://api.rout24.online';
-const params=new URLSearchParams(location.search);
-const bannerId=params.get('id');
-const app=document.getElementById('app');
+const API_BASE = 'https://api.rout24.online';
+const app = document.getElementById('app');
 
-if(!bannerId){
-    app.innerHTML='<div class="error">❌ Banner topilmadi</div>';
-}else{
+const pathParts = location.pathname.split('/').filter(Boolean);
+const bannerId = pathParts[pathParts.length - 1];
+
+if (!bannerId || bannerId === 'banner') {
+    app.innerHTML = '<div class="error">❌ Banner topilmadi</div>';
+} else {
     fetch(`${API_BASE}/banners/${bannerId}`)
-        .then(r=>r.json())
-        .then(res=>{
-            if(!res.success||!res.data){
-                app.innerHTML='<div class="error">❌ Maʼlumot yuklanmadi</div>';
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success || !res.data) {
+                app.innerHTML = '<div class="error">❌ Maʼlumot yuklanmadi</div>';
                 return;
             }
 
-            const b=res.data;
+            const b = res.data;
 
-            app.innerHTML=`
+            app.innerHTML = `
                 <section class="banner-cover">
-                    <img src="${b.coverImage}" alt="">
+                    <img src="${b.coverImage || ''}" alt="">
                 </section>
 
                 <section class="banner-card">
-                    <h1 class="banner-title">${b.title}</h1>
-                    <div class="banner-date">📅 ${new Date(b.createdAt).toLocaleDateString('uz-UZ')}</div>
-                    <div class="banner-desc">${b.description||''}</div>
+                    <h1 class="banner-title">${b.title || ''}</h1>
+                    <div class="banner-date">
+                        📅 ${new Date(b.createdAt).toLocaleDateString('uz-UZ')}
+                    </div>
+                    <div class="banner-desc">${b.description || ''}</div>
 
-                    ${b.externalLink?`
-                    <a href="${b.externalLink}" target="_blank" class="action-btn">
-                        🌐 Batafsil o‘tish
-                    </a>`:''}
+                    ${b.externalLink ? `
+                        <a href="${b.externalLink}" target="_blank" class="action-btn">
+                            🌐 Batafsil o‘tish
+                        </a>
+                    ` : ''}
                 </section>
             `;
         })
-        .catch(()=>{
-            app.innerHTML='<div class="error">⚠️ Server bilan bog‘lanib bo‘lmadi</div>';
+        .catch(() => {
+            app.innerHTML = '<div class="error">⚠️ Server bilan bog‘lanib bo‘lmadi</div>';
         });
 }
 </script>
