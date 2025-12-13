@@ -21,11 +21,7 @@
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -61,27 +57,12 @@ body {
   transition: background 0.2s, transform 0.1s;
 }
 
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
+.back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+.back-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.92); }
 
-.back-btn:active {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(0.92);
-}
+.header h1 { font-size: 19px; font-weight: 700; margin-left: 14px; }
 
-.header h1 {
-  font-size: 19px;
-  font-weight: 700;
-  margin-left: 14px;
-}
-
-.main {
-  padding: 16px;
-  padding-bottom: 100px;
-  max-width: 600px;
-  margin: 0 auto;
-}
+.main { padding: 16px; padding-bottom: 100px; max-width: 600px; margin: 0 auto; }
 
 .card {
   background: var(--card-bg);
@@ -91,9 +72,7 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-.route-info {
-  text-align: center;
-}
+.route-info { text-align: center; }
 
 .cities {
   display: flex;
@@ -105,22 +84,9 @@ body {
   font-weight: 600;
 }
 
-.cities .city {
-  text-align: center;
-}
-
-.cities small {
-  display: block;
-  font-size: 13px;
-  color: var(--gray-600);
-  margin-top: 4px;
-}
-
-.arrow {
-  font-size: 28px;
-  font-weight: bold;
-  color: var(--main);
-}
+.cities .city { text-align: center; }
+.cities small { display: block; font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+.arrow { font-size: 28px; font-weight: bold; color: var(--main); }
 
 .details div {
   display: flex;
@@ -130,16 +96,9 @@ body {
   font-size: 15px;
 }
 
-.details div:last-child {
-  border: none;
-}
+.details div:last-child { border: none; }
 
-h3 {
-  font-size: 17px;
-  color: var(--main);
-  margin-bottom: 16px;
-  font-weight: 700;
-}
+h3 { font-size: 17px; color: var(--main); margin-bottom: 16px; font-weight: 700; }
 
 .seats-selector {
   display: flex;
@@ -161,32 +120,13 @@ h3 {
   transition: transform 0.15s;
 }
 
-.seats-selector button:hover {
-  background: var(--main-light);
-}
+.seats-selector button:hover { background: var(--main-light); }
+.seats-selector button:active { transform: scale(0.9); }
 
-.seats-selector button:active {
-  transform: scale(0.9);
-}
+.count { font-size: 32px; font-weight: 800; min-width: 60px; text-align: center; }
 
-.count {
-  font-size: 32px;
-  font-weight: 800;
-  min-width: 60px;
-  text-align: center;
-}
-
-.total-price {
-  text-align: center;
-  font-size: 18px;
-  margin-top: 16px;
-}
-
-.total-price strong {
-  font-size: 24px;
-  color: var(--main);
-  font-weight: 800;
-}
+.total-price { text-align: center; font-size: 18px; margin-top: 16px; }
+.total-price strong { font-size: 24px; color: var(--main); font-weight: 800; }
 
 .payment-option {
   display: block;
@@ -198,21 +138,9 @@ h3 {
   transition: all 0.3s ease;
 }
 
-.payment-option:hover {
-  border-color: var(--main);
-  background: #fff5f5;
-}
-
-.payment-option.active {
-  border-color: var(--main);
-  background: #fff0f0;
-  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.1);
-}
-
-.payment-option span {
-  font-size: 16px;
-  font-weight: 600;
-}
+.payment-option:hover { border-color: var(--main); background: #fff5f5; }
+.payment-option.active { border-color: var(--main); background: #fff0f0; box-shadow: 0 4px 12px rgba(128, 0, 0, 0.1); }
+.payment-option span { font-size: 16px; font-weight: 600; }
 
 .book-btn {
   width: 100%;
@@ -240,6 +168,7 @@ h3 {
   box-shadow: 0 4px 12px rgba(128, 0, 0, 0.25);
 }
 
+/* MODAL - Yangilangan versiya */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -280,86 +209,54 @@ h3 {
   width: 80px;
   height: 80px;
   margin-bottom: 20px;
-  filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.2));
+  filter: drop-shadow(0 4px 8px rgba(128, 0, 0, 0.15));
 }
 
 .modal h2 {
   font-size: 20px;
   font-weight: 900;
-  color: var(--success);
+  color: var(--main);
   margin-bottom: 12px;
 }
 
 .modal p {
   font-size: 15px;
   color: var(--text);
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   line-height: 1.6;
 }
 
 .modal-actions {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 
 .modal-actions button {
-  padding: 14px 28px;
+  padding: 14px 40px;
   border: none;
   border-radius: var(--radius-md);
   font-weight: 700;
   cursor: pointer;
-  min-width: 140px;
-  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.btn-primary {
-  background: var(--success);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
-}
-
-.btn-primary:hover {
-  background: var(--success-light);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);
-}
-
-.btn-primary:active {
-  transform: translateY(0) scale(0.97);
-  background: var(--success-dark);
-}
-
-.btn-secondary {
+  min-width: 160px;
   background: var(--main);
   color: var(--white);
   box-shadow: 0 8px 20px rgba(128, 0, 0, 0.25);
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.btn-secondary:hover {
+.modal-actions button:hover {
   background: var(--main-light);
   transform: translateY(-3px);
   box-shadow: 0 12px 28px rgba(128, 0, 0, 0.35);
 }
 
-.btn-secondary:active {
+.modal-actions button:active {
   transform: translateY(0) scale(0.97);
   background: var(--main-dark);
 }
 
 @media (max-width: 480px) {
-  .modal {
-    padding: 28px 20px;
-  }
-
-  .modal-actions button {
-    padding: 12px 24px;
-    font-size: 15px;
-    flex: 1 1 120px;
-  }
-
-  .seats-selector {
-    gap: 16px;
-  }
+  .modal { padding: 28px 20px; }
+  .modal-actions button { padding: 12px 32px; font-size: 15px; min-width: 140px; }
+  .seats-selector { gap: 16px; }
 }
