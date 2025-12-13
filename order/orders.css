@@ -279,14 +279,17 @@ body {
   color: var(--white);
 }
 
-/* PREMIUM BOTTOM NAVBAR */
+/* ================================== */
+/* BOTTOM NAVBAR (ROOT'DAN ALOHIDA)  */
+/* ================================== */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 84px;
-  background: var(--surface);
+  /* Ranglar aniq qiymatlar bilan belgilandi (var(--white)) */
+  background: #fff;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -295,7 +298,6 @@ body {
   border-top-right-radius: 28px;
   z-index: 1000;
   padding-bottom: env(safe-area-inset-bottom);
-  backdrop-filter: blur(12px);
 }
 
 .nav-item {
@@ -308,11 +310,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: var(--text-muted);
+  /* Rangi var(--gray-600) ga moslab qo'yildi */
+  color: #64748b; 
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: 0.3s cubic-bezier(.25, .8, .25, 1);
 }
 
 .nav-item svg {
@@ -322,11 +325,13 @@ body {
 }
 
 .nav-item.active {
-  color: var(--primary);
+  /* Rang var(--main) ga moslab qo'yildi */
+  color: #800000;
   background: rgba(128, 0, 0, 0.08);
   border-radius: 24px;
 }
 
 .nav-item.active svg {
-  fill: var(--primary);
+  /* Rang var(--main) ga moslab qo'yildi */
+  fill: #800000;
 }
