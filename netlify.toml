@@ -60,7 +60,7 @@
   status = 200
 
 [[redirects]]
-  from = "/banner"
+  from = "/banner/*"
   to = "/banner-info.html"
   status = 200
 
