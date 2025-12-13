@@ -102,6 +102,18 @@
 
 <script>
 const termsCheckbox = document.getElementById('terms');
+const loginBox = document.getElementById('loginBox');
+
+function updateLoginState(){
+    if(termsCheckbox.checked){
+        loginBox.classList.remove('disabled');
+    }else{
+        loginBox.classList.add('disabled');
+    }
+}
+
+termsCheckbox.addEventListener('change',updateLoginState);
+window.addEventListener('load',updateLoginState);
 
 function onTelegramAuth(user) {
     if (!termsCheckbox.checked) {
@@ -122,12 +134,14 @@ function onTelegramAuth(user) {
     .then(res => {
         if (res.success && res.data?.token) {
             localStorage.setItem('token', res.data.token);
-            localStorage.setItem('role',res.data.role)
+            localStorage.setItem('role', res.data.role || '');
             const role = res.data.role;
             if (!role) location.href = '/set-credentials';
             else if (role === 'DRIVER') location.href = '/driver/dashboard';
             else if (role === 'CLIENT') location.href = '/client/dashboard';
-        } else alert('Kirishda xatolik');
+        } else {
+            alert(res.message || 'Kirishda xatolik');
+        }
     })
     .catch(() => alert('Internet aloqasini tekshiring'));
 }
