@@ -1,5 +1,5 @@
 const token = localStorage.getItem('token');
-if (!token) location.href = 'login.html';
+if (!token) location.href = '/login';
 
 const regions = ["TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO","XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON","ANDIJON","NAMANGAN","FARGONA"];
 
@@ -43,7 +43,7 @@ document.getElementById('routeForm').addEventListener('submit', async e => {
 
         if (json.success) {
             alert('Reys muvaffaqiyatli yaratildi!');
-            location.href = 'my-routes.html';
+            location.href = '/routes';
         } else {
             throw new Error(json.message || 'Xato yuz berdi');
         }

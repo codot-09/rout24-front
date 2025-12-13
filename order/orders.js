@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   token = localStorage.getItem('token');
   if (!token) {
     alert('Iltimos, tizimga qayta kiring');
-    return location.href = '/login.html';
+    return location.href = '/login';
   }
 
   loadOrders();
