@@ -1,43 +1,77 @@
 /* RESET */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-/* ROOT: Yangi ranglar va chuqurlik uchun o'zgarishlar */
+/* ROOT VARIABLES */
 :root{
-    /* Asosiy ranglar */
-    --primary:#800000; /* To'q Qizil/Bordo */
+    --primary:#800000;
     --primary-dark:#6a0000;
     --primary-light:#a00000;
-    --secondary:#007bff; /* Ikkinchi darajali rang (Moviy) */
-    --accent:#4CAF50; /* Kichik aksentlar uchun rang (Yashil - O'rindiqlar) */
-
-    /* Fon va Matn */
-    --bg:#f0f2f5; /* Yengilroq fon */
-    --card-bg:#ffffff;
-    --text:#1c2e4a; /* To'qroq matn */
+    --secondary:#007bff;
+    --accent:#4CAF50;
+    
+    --bg:#f0f2f5;
+    --card-bg:#fff;
+    --text:#1c2e4a;
     --muted:#6c757d;
-
-    /* Radius va Soyalar: Yumshoq va chuqurroq soyalar */
+    
     --radius-xl:24px;
     --radius-lg:20px;
     --radius-md:16px;
     --radius-sm:12px;
+    
     --shadow-sm:0 4px 12px rgba(0,0,0,.08);
     --shadow-md:0 12px 36px rgba(0,0,0,.15);
-    --shadow-route-hover:0 18px 40px rgba(128,0,0,.25); /* Marshrut kartasi uchun maxsus soya */
-    --transition:.3s cubic-bezier(.25,.46,.45,.94); /* Yaxshilangan animatsiya egri chizig'i */
+    --shadow-route-hover:0 18px 40px rgba(128,0,0,.25);
+    
+    --transition:.3s cubic-bezier(.25,.46,.45,.94);
 }
 
 /* BASE */
-html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;line-height:1.6}
+html,body{
+    height:100%;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-tap-highlight-color:transparent;
+    line-height:1.6;
+}
 .hidden{display:none!important}
 
 /* HEADER */
-.header{position:fixed;top:0;left:0;right:0;height:70px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:1000}
-.logo{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:900;letter-spacing:-0.5px}
-.logo img{width:46px;height:46px;border-radius:12px;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header{
+    position:fixed;
+    top:0;left:0;right:0;
+    height:70px;
+    background:var(--primary);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.15);
+    z-index:1000;
+}
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-size:26px;
+    font-weight:900;
+    letter-spacing:-0.5px;
+}
+.logo img{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    object-fit:cover;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
 
 /* MAIN */
-.main{padding:88px 16px 120px;max-width:850px;margin:0 auto}
+.main{
+    padding:88px 16px 140px;
+    max-width:900px;
+    margin:0 auto;
+}
 
 /* FILTER TOGGLE */
 .filter-toggle{
@@ -58,9 +92,10 @@ html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Sego
     cursor:pointer;
     transition:var(--transition);
 }
-.filter-toggle:hover{box-shadow:0 6px 16px rgba(128,0,0,.15)}
-.filter-toggle:active{transform:scale(.98)}
-.filter-toggle svg{width:24px;height:24px;fill:currentColor}
+.filter-toggle:hover{box-shadow:0 6px 18px rgba(128,0,0,.15);}
+.filter-toggle:active{transform:scale(.98);}
+.filter-toggle svg{width:24px;height:24px;fill:currentColor;transition:transform var(--transition);}
+.filter-toggle.show svg{transform:rotate(180deg);}
 
 /* SEARCH CARD */
 .search-card{
@@ -75,14 +110,40 @@ html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Sego
     pointer-events:none;
     transition:max-height .4s ease-in-out,opacity .4s ease,transform .4s ease;
 }
-.search-card.show{max-height:600px;opacity:1;transform:translateY(0);pointer-events:auto}
+.search-card.show{
+    max-height:600px;
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+}
 
 /* FORM */
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:20px;
+}
 @media(max-width:480px){.row{grid-template-columns:1fr}}
-select,input{width:100%;padding:15px 18px;border:1px solid #e5e7eb;border-radius:var(--radius-sm);font-size:16px;background:#f9fafb;color:var(--text);transition:var(--transition);box-shadow:inset 0 1px 3px rgba(0,0,0,.05)}
-select:focus,input:focus{outline:none;border-color:var(--primary);background:var(--card-bg);box-shadow:0 0 0 4px rgba(128,0,0,.1)}
+select,input{
+    width:100%;
+    padding:15px 18px;
+    border:1px solid #e5e7eb;
+    border-radius:var(--radius-sm);
+    font-size:16px;
+    background:#f9fafb;
+    color:var(--text);
+    transition:var(--transition);
+    box-shadow:inset 0 1px 3px rgba(0,0,0,.05);
+}
+select:focus,input:focus{
+    outline:none;
+    border-color:var(--primary);
+    background:var(--card-bg);
+    box-shadow:0 0 0 4px rgba(128,0,0,.1);
+}
 
+/* SEARCH BUTTON */
 #searchBtn{
     width:100%;
     padding:16px;
@@ -97,13 +158,13 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     transition:var(--transition);
     letter-spacing:1px;
 }
-#searchBtn:hover{background:var(--primary-light);box-shadow:0 12px 30px rgba(128,0,0,.25)}
-#searchBtn:active{transform:scale(.97);background:var(--primary-dark)}
+#searchBtn:hover{background:var(--primary-light);box-shadow:0 12px 30px rgba(128,0,0,.25);}
+#searchBtn:active{transform:scale(.97);background:var(--primary-dark);}
 
-/* ROUTES */
-.routes{display:grid;gap:20px}
+/* ROUTES GRID */
+.routes{display:grid;gap:24px;}
 
-/* ROUTE CARD (YANADA KREATIV VA PROFESSIONAL DIZAYN) */
+/* ROUTE CARD */
 .route{
     background:var(--card-bg);
     border-radius:var(--radius-xl);
@@ -111,29 +172,42 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     box-shadow:var(--shadow-md);
     cursor:pointer;
     transition:var(--transition);
-    position:relative; /* Pseudo elementlar uchun */
+    position:relative;
 }
-.route:hover{transform:translateY(-6px);box-shadow:var(--shadow-route-hover)}
-.route:active{transform:scale(.99);box-shadow:var(--shadow-md)}
+.route:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-route-hover);
+}
+.route:active{
+    transform:scale(.99);
+    box-shadow:var(--shadow-md);
+}
 
-
-/* ROUTE HEADER: Yassi rang o'rniga Gradient va Geometrik shakl */
+/* ROUTE HEADER */
 .route-header{
     background:linear-gradient(135deg, var(--primary), var(--primary-dark));
     color:#fff;
-    padding:20px 16px 30px; /* Pastki qismini kattaroq qilish */
+    padding:20px 16px 30px;
     text-align:center;
-    /* Kreativ Shakl: Pastki burchaklarni to'lqinli yoki burchakli qilish */
-    clip-path:polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+    clip-path:polygon(0 0,100% 0,100% 80%,50% 100%,0 80%);
     transition:var(--transition);
 }
-.route-header h3{font-size:22px;font-weight:900;letter-spacing:-0.5px}
-.route-header p{font-size:15px;opacity:.95;margin-top:6px;font-weight:500}
+.route-header h3{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:-0.5px;
+}
+.route-header p{
+    font-size:15px;
+    opacity:.95;
+    margin-top:6px;
+    font-weight:500;
+}
 
-/* ROUTE BODY: Qat'iy ajratuvchilar */
-.route-body{padding:20px;position:relative}
-
-/* Yo'nalish va Vaqt */
+/* ROUTE BODY */
+.route-body{
+    padding:20px;
+}
 .route-details{
     display:flex;
     justify-content:space-between;
@@ -141,8 +215,6 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     margin-bottom:16px;
     position:relative;
 }
-
-/* Yo'nalish nuqtalari uchun (Circle/Dots) */
 .route-details::before{
     content:'';
     position:absolute;
@@ -150,8 +222,8 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     top:0;
     bottom:0;
     width:2px;
-    background:linear-gradient(to bottom, var(--primary) 0%, var(--primary) 50%, transparent 50%, transparent 100%);
-    background-size:100% 16px; /* Chiziqni nuqtalarga aylantirish */
+    background:linear-gradient(to bottom,var(--primary) 0%,var(--primary) 50%,transparent 50%,transparent 100%);
+    background-size:100% 16px;
     transform:translateX(-50%);
 }
 .route-details > div{
@@ -170,20 +242,19 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     border:3px solid var(--card-bg);
     z-index:1;
 }
-.route-details .start::before{left:50%;transform:translateX(-50%);}
-.route-details .end::before{left:50%;transform:translateX(-50%);background:var(--secondary);} /* Yetib borish nuqtasi boshqa rangda */
+.route-details .end::before{background:var(--secondary);}
 
-.route-details h4{font-size:16px;font-weight:700;color:var(--text)}
-.route-details small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.route-details h4{font-size:16px;font-weight:700;color:var(--text);}
+.route-details small{display:block;color:var(--muted);font-size:13px;margin-top:4px;}
 
 .duration{
     position:absolute;
     top:50%;
     left:50%;
-    transform:translate(-50%, -50%);
+    transform:translate(-50%,-50%);
     background:var(--primary);
     color:#fff;
-    padding:4px 10px;
+    padding:4px 12px;
     border-radius:var(--radius-sm);
     font-size:13px;
     font-weight:600;
@@ -191,8 +262,7 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     z-index:2;
 }
 
-
-/* NARX VA O'RINDIQLAR */
+/* PRICE & SEATS */
 .route-footer{
     display:flex;
     justify-content:space-between;
@@ -207,8 +277,12 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     display:flex;
     align-items:baseline;
 }
-.price span{font-size:16px;font-weight:600;margin-right:2px;color:var(--muted)} /* Valyuta */
-
+.price span{
+    font-size:16px;
+    font-weight:600;
+    margin-right:2px;
+    color:var(--muted);
+}
 .seats{
     padding:8px 18px;
     background:var(--accent);
@@ -220,16 +294,37 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     box-shadow:0 4px 10px rgba(76,175,80,.3);
 }
 
-/* EMPTY */
-.empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:17px;transition:var(--transition);background:var(--card-bg);border-radius:var(--radius-lg);margin-top:20px;box-shadow:var(--shadow-sm)}
+/* EMPTY STATE */
+.empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-size:17px;
+    background:var(--card-bg);
+    border-radius:var(--radius-lg);
+    margin-top:20px;
+    box-shadow:var(--shadow-sm);
+    transition:var(--transition);
+}
 
 /* BANNERS */
-.banners{display:grid;gap:16px;margin:32px 0}
-.banners img{width:100%;height:180px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow-md)}
+.banners{
+    display:grid;
+    gap:16px;
+    margin:32px 0;
+}
+.banners img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-md);
+}
 
 /* BOTTOM NAV */
 .bottom-nav{
-    position:fixed;bottom:0;left:0;right:0;
+    position:fixed;
+    bottom:0;left:0;right:0;
     height:80px;
     background:#fff;
     display:flex;
@@ -237,12 +332,28 @@ select:focus,input:focus{outline:none;border-color:var(--primary);background:var
     align-items:center;
     box-shadow:0 -8px 24px rgba(0,0,0,.08);
     border-radius:28px 28px 0 0;
-    z-index:1000
+    z-index:1000;
 }
 .nav-item{
-    width:80px;height:74px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-    background:none;border:none;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition)
+    width:80px;
+    height:74px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    background:none;
+    border:none;
+    color:#64748b;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    transition:var(--transition);
 }
-.nav-item svg{width:28px;height:28px;fill:currentColor}
-.nav-item.active{color:var(--primary);background:rgba(128,0,0,.1);border-radius:20px;transform:translateY(-4px)}
+.nav-item svg{width:28px;height:28px;fill:currentColor;}
+.nav-item.active{
+    color:var(--primary);
+    background:rgba(128,0,0,.1);
+    border-radius:20px;
+    transform:translateY(-4px);
+}
