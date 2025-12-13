@@ -113,11 +113,49 @@ async function loadRoutes(withFilters = false) {
 async function loadBanners() {
     try {
         const res = await authFetch(`${API_BASE}/banners`);
-        if (res.success && Array.isArray(res.data)) {
-            bannersBox.innerHTML = res.data
-                .map(b => `<img src="${b.coverImage || ''}" loading="lazy">`)
-                .join('');
-        }
+        if (!res.success || !res.data?.length) return;
+
+        let index = 0;
+
+        bannersBox.innerHTML = `
+            <div class="banner-track">
+                ${res.data.map(b =>
+                    `<div class="banner-slide">
+                        <img src="${b.coverImage}" loading="lazy">
+                    </div>`
+                ).join('')}
+            </div>
+            <div class="banner-dots">
+                ${res.data.map((_, i) =>
+                    `<span class="banner-dot ${i === 0 ? 'active' : ''}"></span>`
+                ).join('')}
+            </div>
+        `;
+
+        const track = bannersBox.querySelector('.banner-track');
+        const dots = bannersBox.querySelectorAll('.banner-dot');
+        const total = dots.length;
+
+        const update = () => {
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        };
+
+        setInterval(() => {
+            index = (index + 1) % total;
+            update();
+        }, 4000);
+
+        let startX = 0;
+        bannersBox.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        bannersBox.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) {
+                index = diff > 0 ? (index + 1) % total : (index - 1 + total) % total;
+                update();
+            }
+        });
+
     } catch {}
 }
 

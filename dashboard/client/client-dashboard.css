@@ -26,26 +26,54 @@
     --transition:.3s cubic-bezier(.25,.46,.45,.94);
 }
 
-.banners-section .swiper {
-    border-radius: var(--radius-md);
+.banner-slider {
+    position: relative;
+    width: 100%;
+    height: 160px;
     overflow: hidden;
-    box-shadow: 0 16px 40px rgba(128, 0, 0, 0.16);
+    border-radius: 16px;
+    margin: 16px 0;
+    background: #f4f4f4;
 }
 
-.swiper-slide img {
+.banner-track {
+    display: flex;
+    height: 100%;
+    transition: transform .6s ease;
+}
+
+.banner-slide {
+    min-width: 100%;
+    height: 100%;
+}
+
+.banner-slide img {
     width: 100%;
-    height: 190px;
+    height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.swiper-pagination-bullet {
-    background: var(--primary);
-    opacity: 0.4;
+.banner-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
 }
 
-.swiper-pagination-bullet-active {
-    opacity: 1;
+.banner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    transition: .3s;
+}
+
+.banner-dot.active {
+    background: #fff;
+    transform: scale(1.4);
 }
 
 /* BASE */
