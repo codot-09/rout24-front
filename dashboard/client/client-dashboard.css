@@ -26,6 +26,28 @@
     --transition:.3s cubic-bezier(.25,.46,.45,.94);
 }
 
+.banners-section .swiper {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(128, 0, 0, 0.16);
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+}
+
+.swiper-pagination-bullet {
+    background: var(--primary);
+    opacity: 0.4;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1;
+}
+
 /* BASE */
 html,body{
     height:100%;

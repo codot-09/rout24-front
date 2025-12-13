@@ -298,11 +298,9 @@ body, html {
     right: 0;
     height: 84px;
     background: var(--bg);
+    display: flex;
     border-top: 1px solid var(--border);
     box-shadow: 0 -4px 20px rgba(128, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom);
     backdrop-filter: blur(12px);
@@ -310,13 +308,13 @@ body, html {
 
 .nav-item {
     flex: 1;
+    background: none;
+    border: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    background: none;
-    border: none;
     color: var(--text-primary);
     font-size: 13px;
     font-weight: 600;
@@ -329,10 +327,6 @@ body, html {
     width: 26px;
     height: 26px;
     fill: currentColor;
-}
-
-.nav-item span {
-    font-size: 11.5px;
 }
 
 .nav-item.active {
