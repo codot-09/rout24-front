@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // URL parametri va token tekshiruvi
+  // URL va token tekshiruvi
   const urlParams = new URLSearchParams(location.search);
   const routeId = urlParams.get('id');
 
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // DOM elementlar (cache qilish)
-  const elements = {
+  // DOM elementlarni cache qilish
+  const els = {
     fromCity: document.getElementById('fromCity'),
     toCity: document.getElementById('toCity'),
     date: document.getElementById('date'),
@@ -36,59 +36,60 @@ document.addEventListener('DOMContentLoaded', () => {
     paymentOptions: document.querySelectorAll('.payment-option')
   };
 
-  // State
+  // Holat (state)
   let seatsCount = 1;
   let pricePerSeat = 0;
   let maxSeats = 1;
 
   // Orqaga qaytish
-  elements.backBtn.addEventListener('click', () => history.back());
+  els.backBtn.addEventListener('click', () => history.back());
 
   // Joylar sonini o'zgartirish
   const updateSeatsCount = (delta) => {
     const newCount = seatsCount + delta;
     if (newCount < 1 || newCount > maxSeats) return;
     seatsCount = newCount;
-    elements.seatsCount.textContent = seatsCount;
+    els.seatsCount.textContent = seatsCount;
     updateTotalPrice();
   };
 
-  elements.minusBtn.addEventListener('click', () => updateSeatsCount(-1));
-  elements.plusBtn.addEventListener('click', () => updateSeatsCount(1));
+  els.minusBtn.addEventListener('click', () => updateSeatsCount(-1));
+  els.plusBtn.addEventListener('click', () => updateSeatsCount(1));
 
   // Umumiy narxni yangilash
   const updateTotalPrice = () => {
     const total = seatsCount * pricePerSeat;
-    elements.totalPrice.textContent = total.toLocaleString('uz-UZ');
+    els.totalPrice.textContent = total.toLocaleString('uz-UZ');
   };
 
-  // To'lov usulini faollashtirish
-  elements.paymentOptions.forEach(option => {
+  // To'lov usulini tanlash
+  els.paymentOptions.forEach(option => {
     option.addEventListener('click', () => {
-      elements.paymentOptions.forEach(o => o.classList.remove('active'));
+      els.paymentOptions.forEach(o => o.classList.remove('active'));
       option.classList.add('active');
     });
   });
 
-  // Modalni boshqarish
+  // Modal boshqaruvi (CSS .show klassidan foydalanamiz – animatsiya uchun)
   const showSuccessModal = (message) => {
-    elements.modalMessage.textContent = message;
-    elements.modalOverlay.style.display = 'flex';
+    els.modalMessage.textContent = message;
+    els.modalOverlay.classList.add('show');
   };
 
   const hideModal = () => {
-    elements.modalOverlay.style.display = 'none';
+    els.modalOverlay.classList.remove('show');
   };
 
-  elements.modalOk.addEventListener('click', () => {
+  els.modalOk.addEventListener('click', () => {
     hideModal();
     history.back(); // OK bosilganda orqaga qaytish
   });
 
-  elements.modalCancel.addEventListener('click', hideModal);
+  els.modalCancel.addEventListener('click', hideModal);
 
-  elements.modalOverlay.addEventListener('click', (e) => {
-    if (e.target === elements.modalOverlay) hideModal();
+  // Overlay tashqarisiga bosilganda yopish
+  els.modalOverlay.addEventListener('click', (e) => {
+    if (e.target === els.modalOverlay) hideModal();
   });
 
   // Reys ma'lumotlarini yuklash
@@ -98,40 +99,44 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      if (!res.ok) throw new Error('Server javobi xato');
+
       const json = await res.json();
 
-      if (!json.success) throw new Error('Maʼlumot topilmadi');
+      if (!json.success) throw new Error(json.message || 'Maʼlumot topilmadi');
 
       const d = json.data;
 
-      pricePerSeat = d.price || 0;
-      maxSeats = d.seatsCount || 1;
+      pricePerSeat = Number(d.price) || 0;
+      maxSeats = Number(d.seatsCount) || 1;
 
-      // Ma'lumotlarni UI ga joylashtirish
-      elements.fromCity.textContent = d.from;
-      elements.toCity.textContent = d.to;
+      // UI ni to'ldirish
+      els.fromCity.textContent = d.from || '-';
+      els.toCity.textContent = d.to || '-';
 
       const departureDate = new Date(d.departureDate);
-      elements.date.textContent = departureDate.toLocaleDateString('uz-UZ', {
+      els.date.textContent = departureDate.toLocaleDateString('uz-UZ', {
         weekday: 'long',
         day: 'numeric',
         month: 'long'
       });
-      elements.time.textContent = departureDate.toLocaleTimeString('uz-UZ', {
+      els.time.textContent = departureDate.toLocaleTimeString('uz-UZ', {
         hour: '2-digit',
         minute: '2-digit'
       });
 
-      elements.price.textContent = pricePerSeat.toLocaleString('uz-UZ');
-      elements.seatsAvailable.textContent = maxSeats;
+      els.price.textContent = pricePerSeat.toLocaleString('uz-UZ');
+      els.seatsAvailable.textContent = maxSeats;
 
-      // Boshlang'ich holatda joylar soni va narxni yangilash
-      seatsCount = 1; // maxSeats ga qarab cheklash uchun
-      elements.seatsCount.textContent = seatsCount;
+      // Boshlang'ich qiymatlar
+      seatsCount = 1;
+      if (seatsCount > maxSeats) seatsCount = maxSeats;
+      els.seatsCount.textContent = seatsCount;
       updateTotalPrice();
 
     } catch (err) {
       alert('Reys maʼlumotlarini yuklab bo‘lmadi');
+      console.error(err);
       history.back();
     }
   };
@@ -144,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const activePayment = document.querySelector('.payment-option.active');
-    const paymentType = activePayment ? activePayment.dataset.type : 'CARD';
+    const paymentType = activePayment?.dataset.type || 'CARD';
 
-    // Tugmani vaqtincha o'chirib qo'yish (duplicate submit oldini olish)
-    elements.submitBtn.disabled = true;
-    elements.submitBtn.textContent = 'Kuting...';
+    // Tugmani bloklash
+    els.submitBtn.disabled = true;
+    els.submitBtn.textContent = 'Kuting...';
 
     try {
       const res = await fetch('https://api.rout24.online/orders/create', {
@@ -166,28 +171,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const result = await res.json();
 
+      // 400 – allaqachon bron qilingan
       if (res.status === 400) {
         alert('Siz allaqachon ushbu reys uchun bron qilgansiz!');
         return;
       }
 
+      // Muvaffaqiyatli bron
       if (result.success) {
-        // Faqat success bo'lganda modal ochiladi
         showSuccessModal(result.message || 'Chipta muvaffaqiyatli bron qilindi!');
       } else {
-        alert(result.errors?.join('\n') || 'Xatolik yuz berdi');
+        // Xato bo'lsa
+        const errorMsg = result.errors?.join('\n') || result.message || 'Xatolik yuz berdi';
+        alert(errorMsg);
       }
     } catch (err) {
-      alert('Internet aloqasi yo‘q yoki server xatosi');
+      alert('Internet aloqasi yo‘q yoki server xatosi. Iltimos, qayta urinib ko‘ring.');
+      console.error(err);
     } finally {
-      // Tugmani qayta faollashtirish
-      elements.submitBtn.disabled = false;
-      elements.submitBtn.textContent = 'Bron qilish';
+      // Har doim tugmani qayta faollashtirish
+      els.submitBtn.disabled = false;
+      els.submitBtn.textContent = 'Bron qilish';
     }
   };
 
-  elements.submitBtn.addEventListener('click', handleBooking);
+  els.submitBtn.addEventListener('click', handleBooking);
 
-  // Boshlang'ich yuklash
+  // Boshlash
   loadRouteDetails();
 });
