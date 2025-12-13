@@ -9,7 +9,7 @@
 <body>
 
 <header class="header">
-  <button class="back-btn" onclick="history.back()">
+  <button class="back-btn" id="backBtn">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
       <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
     </svg>
@@ -18,38 +18,40 @@
 </header>
 
 <main class="main">
-  <div class="card">
-    <div class="route-info">
-      <div class="cities">
-        <div class="city"><strong id="fromCity">Toshkent</strong><small>Ketish</small></div>
-        <div class="arrow">→</div>
-        <div class="city"><strong id="toCity">Samarqand</strong><small>Borish</small></div>
-      </div>
-      <div class="details">
-        <div><span>Sana:</span> <strong id="date"></strong></div>
-        <div><span>Vaqt:</span> <strong id="time"></strong></div>
-        <div><span>Narx:</span> <strong id="price"></strong> so‘m</div>
-        <div><span>Bo‘sh joy:</span> <strong id="seatsAvailable"></strong> ta</div>
-      </div>
+
+  <!-- Route info -->
+  <div class="card route-info-card">
+    <div class="cities">
+      <div class="city"><strong id="fromCity">Toshkent</strong><small>Ketish</small></div>
+      <div class="arrow">→</div>
+      <div class="city"><strong id="toCity">Samarqand</strong><small>Borish</small></div>
+    </div>
+    <div class="details">
+      <div><span>Sana:</span> <strong id="date"></strong></div>
+      <div><span>Vaqt:</span> <strong id="time"></strong></div>
+      <div><span>Narx:</span> <strong id="price"></strong> so‘m</div>
+      <div><span>Bo‘sh joy:</span> <strong id="seatsAvailable"></strong> ta</div>
     </div>
   </div>
 
+  <!-- Seats selector -->
   <div class="card">
     <h3>Joylar soni</h3>
     <div class="seats-selector">
-      <button class="minus" onclick="changeSeats(-1)">–</button>
-      <span class="count" id="seatsCount">1</span>
-      <button class="plus" onclick="changeSeats(1)">+</button>
+      <button id="minusBtn">–</button>
+      <span id="seatsCount">1</span>
+      <button id="plusBtn">+</button>
     </div>
     <div class="total-price">
       Jami: <strong id="totalPrice">0</strong> so‘m
     </div>
   </div>
 
+  <!-- Payment options -->
   <div class="card">
     <h3>To‘lov turi</h3>
     <label class="payment-option active" data-type="CARD">
-      <input type="radio" name="payment" value="CARD" checked hidden>
+      <input type="radio" name="payment" value="CARD" hidden checked>
       <span>Karta orqali (onlayn)</span>
     </label>
     <label class="payment-option" data-type="CASH">
@@ -59,18 +61,19 @@
   </div>
 
   <button class="book-btn" id="submitBtn">Bron qilish</button>
+
 </main>
 
-<!-- SUCCESS MODAL -->
+<!-- Success Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-      <img src="/assets/success.svg" alt="Success" class="success-icon">
-      <h2>Muvaffaqiyatli!</h2>
-      <p>Sizning murojaatingiz yuborildi. Tez orada siz bilan bog‘lanamiz.</p>
-      <div class="modal-actions">
-          <button class="btn-primary" onclick="closeModal()">OK</button>
-          <button class="btn-secondary" onclick="closeModal()">Bekor qilish</button>
-      </div>
+    <img src="/assets/success.svg" alt="Success" class="success-icon">
+    <h2>Muvaffaqiyatli!</h2>
+    <p id="modalMessage">Sizning murojaatingiz yuborildi. Tez orada siz bilan bog‘lanamiz.</p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="modalOk">OK</button>
+      <button class="btn-secondary" id="modalCancel">Bekor qilish</button>
+    </div>
   </div>
 </div>
 
