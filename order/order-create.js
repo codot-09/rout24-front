@@ -5,8 +5,23 @@ let seatsCount = 1;
 let pricePerSeat = 0;
 let maxSeats = 1;
 
+const fromCityEl = document.getElementById('fromCity');
+const toCityEl = document.getElementById('toCity');
+const dateEl = document.getElementById('date');
+const timeEl = document.getElementById('time');
+const priceEl = document.getElementById('price');
+const seatsAvailableEl = document.getElementById('seatsAvailable');
+const seatsCountEl = document.getElementById('seatsCount');
+const totalPriceEl = document.getElementById('totalPrice');
+const submitBtn = document.getElementById('submitBtn');
+const modalOverlay = document.getElementById('modalOverlay');
+
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!routeId) return alert('Reys topilmadi');
+  if (!routeId) {
+    alert('Reys topilmadi');
+    history.back();
+    return;
+  }
 
   const token = localStorage.getItem('token');
   if (!token) return location.href = '/login';
@@ -16,51 +31,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     const json = await res.json();
-    if (!json.success) throw 0;
+    if (!json.success) throw new Error('Maʼlumot topilmadi');
 
     const d = json.data;
     pricePerSeat = d.price || 0;
     maxSeats = d.seatsCount || 1;
 
-    document.getElementById('fromCity').textContent = d.from;
-    document.getElementById('toCity').textContent = d.to;
-    document.getElementById('date').textContent = new Date(d.departureDate).toLocaleDateString('uz-UZ', {weekday:'long', day:'numeric', month:'long'});
-    document.getElementById('time').textContent = new Date(d.departureDate).toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'});
-    document.getElementById('price').textContent = (d.price || 0).toLocaleString('uz-UZ');
-    document.getElementById('seatsAvailable').textContent = d.seatsCount;
+    fromCityEl.textContent = d.from;
+    toCityEl.textContent = d.to;
+    dateEl.textContent = new Date(d.departureDate).toLocaleDateString('uz-UZ', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    });
+    timeEl.textContent = new Date(d.departureDate).toLocaleTimeString('uz-UZ', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    priceEl.textContent = pricePerSeat.toLocaleString('uz-UZ');
+    seatsAvailableEl.textContent = maxSeats;
 
-    // Seats initial display
-    document.getElementById('seatsCount').textContent = seatsCount;
     updateTotal();
-  } catch (e) {
+  } catch (err) {
     alert('Reys maʼlumotlarini yuklab bo‘lmadi');
     history.back();
   }
 
-  // Payment options
+  // Payment option
   const paymentOptions = document.querySelectorAll('.payment-option');
-  if(paymentOptions.length) paymentOptions[0].classList.add('active'); // Default first option
-  paymentOptions.forEach(el => {
-    el.addEventListener('click', () => {
-      paymentOptions.forEach(x => x.classList.remove('active'));
-      el.classList.add('active');
+  paymentOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      paymentOptions.forEach(o => o.classList.remove('active'));
+      option.classList.add('active');
     });
   });
 
-  // Seats change buttons
-  document.getElementById('increaseSeats').onclick = () => changeSeats(1);
-  document.getElementById('decreaseSeats').onclick = () => changeSeats(-1);
-
-  // Order submit
-  document.getElementById('submitBtn').onclick = async () => {
-    if (seatsCount > maxSeats) return alert(`Faqat ${maxSeats} ta joy qoldi!`);
+  // Booking
+  submitBtn.addEventListener('click', async () => {
+    if (seatsCount > maxSeats) {
+      alert(`Faqat ${maxSeats} ta joy qoldi!`);
+      return;
+    }
 
     const activePayment = document.querySelector('.payment-option.active');
-    if(!activePayment) return alert('Iltimos, to‘lov turini tanlang');
-    const paymentType = activePayment.dataset.type;
-
-    document.getElementById('submitBtn').disabled = true;
-    document.getElementById('submitBtn').textContent = 'Jarayon davom etmoqda...';
+    const paymentType = activePayment ? activePayment.dataset.type : 'CARD';
 
     try {
       const res = await fetch('https://api.rout24.online/orders/create', {
@@ -71,46 +85,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         body: JSON.stringify({
           routId: routeId,
-          seatsCount: seatsCount,
-          paymentType: paymentType
+          seatsCount,
+          paymentType
         })
       });
-
       const result = await res.json();
 
       if (result.success) {
-        // Open modal with message
-        document.getElementById('modalMessage').textContent = result.message || 'Chipta muvaffaqiyatli bron qilindi!';
-        document.getElementById('modalOverlay').classList.add('show');
+        openModal(result.message || 'Chipta muvaffaqiyatli bron qilindi!');
       } else {
         alert(result.errors?.join('\n') || 'Xatolik yuz berdi');
       }
-    } catch (err) {
+    } catch {
       alert('Internet aloqasi yo‘q yoki server xatosi');
-    } finally {
-      document.getElementById('submitBtn').disabled = false;
-      document.getElementById('submitBtn').textContent = 'Bron qilish';
     }
-  };
+  });
 });
 
+// Seats selector
 function changeSeats(delta) {
   const newCount = seatsCount + delta;
   if (newCount < 1 || newCount > maxSeats) return;
   seatsCount = newCount;
-  document.getElementById('seatsCount').textContent = seatsCount;
+  seatsCountEl.textContent = seatsCount;
   updateTotal();
 }
 
+// Update total price
 function updateTotal() {
-  const total = seatsCount * pricePerSeat;
-  document.getElementById('totalPrice').textContent = total.toLocaleString('uz-UZ');
+  totalPriceEl.textContent = (seatsCount * pricePerSeat).toLocaleString('uz-UZ');
 }
 
 // Modal functions
-function openModal() {
-  document.getElementById('modalOverlay').classList.add('show');
+function openModal(message) {
+  modalOverlay.querySelector('h2').textContent = 'Muvaffaqiyatli!';
+  modalOverlay.querySelector('p').textContent = message;
+  modalOverlay.style.display = 'flex';
 }
+
 function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('show');
+  modalOverlay.style.display = 'none';
+  history.back(); // sahifani avtomatik yopish yoki boshqa sahifaga yo'naltirish
 }
+
+// Close modal on overlay click
+modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) closeModal();
+});
