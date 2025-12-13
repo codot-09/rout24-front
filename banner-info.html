@@ -162,13 +162,21 @@ html,body{
 const API_BASE = 'https://api.rout24.online';
 const app = document.getElementById('app');
 
+const token = localStorage.getItem('token');
+
 const pathParts = location.pathname.split('/').filter(Boolean);
 const bannerId = pathParts[pathParts.length - 1];
 
 if (!bannerId || bannerId === 'banner') {
     app.innerHTML = '<div class="error">❌ Banner topilmadi</div>';
+} else if (!token) {
+    app.innerHTML = '<div class="error">🔒 Avtorizatsiya talab qilinadi</div>';
 } else {
-    fetch(`${API_BASE}/banners/${bannerId}`)
+    fetch(`${API_BASE}/banners/${bannerId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
         .then(r => r.json())
         .then(res => {
             if (!res.success || !res.data) {
