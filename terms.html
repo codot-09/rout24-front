@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xavfsizlik va Oferta Shartlari</title>
+<style>
+  :root {
+    --primary: #800000;
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #1c1c1c;
+    --muted: #555555;
+    --radius-lg: 16px;
+    --shadow-sm: 0 4px 12px rgba(0,0,0,.08);
+    --shadow-md: 0 8px 24px rgba(0,0,0,.12);
+    --transition: 0.3s ease-in-out;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  h1, h2 { color: var(--primary); }
+  h1 { font-size: 24px; margin-bottom: 16px; }
+  h2 { font-size: 20px; margin: 12px 0; }
+  p { margin-bottom: 12px; }
+  ul { margin-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 8px; }
+
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+  }
+  .back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 16px;
+  }
+  .back-btn svg { fill: #fff; }
+
+  main {
+    padding: 80px 16px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .warning {
+    color: #b00020;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <button class="back-btn" onclick="history.back()">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+    </svg>
+  </button>
+  <h1>Xavfsizlik va Oferta Shartlari</h1>
+</header>
+
+<main>
+  <div class="card">
+    <h2>1. Umumiy shartlar</h2>
+    <p>Ilovaga kirish va xizmatlardan foydalanish uchun foydalanuvchi barcha maʼlumotlarni <strong>aniq va to‘g‘ri</strong> kiritishi shart. Har qanday soxta maʼlumot, firibgarlik yoki xatolik <span class="warning">jinoiy javobgarlikka</span> olib kelishi mumkin.</p>
+    <ul>
+      <li>Ilovada faqat haqiqiy shaxsiy maʼlumotlarni ishlatish.</li>
+      <li>Ruxsatsiz kirish yoki boshqa foydalanuvchilarni aldash taqiqlanadi.</li>
+      <li>Kiberhujumlar, soxta hisoblar yoki boshqa zararli harakatlar qatʼiyan man etiladi.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>2. Bron qilish va javobgarlik</h2>
+    <p>Foydalanuvchi reysga bron qilganda, quyidagi shartlarga rioya qilishi majbur:</p>
+    <ul>
+      <li>Reysga bron qilgandan keyin uni bekor qilmaslik yoki ishtirok etmaslik <span class="warning">jarima va jazo</span> bilan yakunlanadi.</li>
+      <li>Bron qilingan reys jo‘nash vaqtidan kamida <strong>2 soat oldin bekor qilinishi</strong> kerak.</li>
+      <li>Bekor qilish muddati o'tgan taqdirda <strong>500,000 so‘m jarima</strong> qo‘llaniladi.</li>
+      <li>Reysga ishtirok etmaslik yoki yolg‘on maʼlumot berish taqiqlanadi.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>3. Xavfsizlik va kiberhujumlardan himoya</h2>
+    <p>Ilovadan foydalanishda quyidagi xavfsizlik qoidalariga rioya qilinishi zarur:</p>
+    <ul>
+      <li>Hech qachon shaxsiy maʼlumotlarni uchinchi shaxslar bilan bo‘lishmaslik.</li>
+      <li>Ilovaning xizmatlarini buzish yoki firibgarlik maqsadida ishlatish qatʼiyan man etiladi.</li>
+      <li>Kiberxujumlar, spam yoki zararli dastur ishlatish <span class="warning">jinoiy javobgarlik</span>ga olib keladi.</li>
+      <li>Ilovada shirinso‘z va halol foydalanish shart.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Mas’uliyat va ogohlantirish</h2>
+    <p>Foydalanuvchi ilovadagi barcha shartlarga amal qilishi shart:</p>
+    <ul>
+      <li>Oferta shartlarini buzgan har bir foydalanuvchi uchun maʼmuriyat tomonidan jarimalar qo‘llanadi.</li>
+      <li>Yolg‘on maʼlumot yoki soxta bron holatlari aniqlanganda <span class="warning">jazo qo‘llaniladi</span>.</li>
+      <li>Ilovaning barcha xizmatlaridan foydalanganingizda, ushbu shartlarni qabul qilgan hisoblanasiz.</li>
+    </ul>
+  </div>
+</main>
+
+</body>
+</html>
