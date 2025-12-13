@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) return location.href = '/login';
 
+  // DOM elementlar
   const fromCityEl = document.getElementById('fromCity');
   const toCityEl = document.getElementById('toCity');
   const dateEl = document.getElementById('date');
@@ -114,6 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
           paymentType
         })
       });
+
+      if (res.status === 400) {
+        alert('Siz allaqachon ushbu reys uchun bron qilgansiz!');
+        return;
+      }
+
       const result = await res.json();
 
       if (result.success) {
