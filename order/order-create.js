@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(location.search);
   const routeId = urlParams.get('id');
+
   if (!routeId) {
     alert('Reys topilmadi');
     history.back();
@@ -20,21 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const seatsCountEl = document.getElementById('seatsCount');
   const totalPriceEl = document.getElementById('totalPrice');
   const submitBtn = document.getElementById('submitBtn');
+  const minusBtn = document.querySelector('.minus');
+  const plusBtn = document.querySelector('.plus');
+  const paymentOptions = document.querySelectorAll('.payment-option');
+
   const modalOverlay = document.getElementById('modalOverlay');
   const modalMessage = document.getElementById('modalMessage');
-  const backBtn = document.getElementById('backBtn');
-  const minusBtn = document.getElementById('minusBtn');
-  const plusBtn = document.getElementById('plusBtn');
-  const paymentOptions = document.querySelectorAll('.payment-option');
   const modalOk = document.getElementById('modalOk');
   const modalCancel = document.getElementById('modalCancel');
 
   let seatsCount = 1;
   let pricePerSeat = 0;
   let maxSeats = 1;
-
-  // Back button
-  backBtn.addEventListener('click', () => history.back());
 
   // Fetch route details
   fetch(`https://api.rout24.online/routes/${routeId}`, {
@@ -124,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await res.json();
 
       if (result.success) {
+        // Modalni ochish
         modalMessage.textContent = result.message || 'Chipta muvaffaqiyatli bron qilindi!';
         modalOverlay.style.display = 'flex';
       } else {
@@ -134,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Modal
+  // Modalni yopish
   modalOk.addEventListener('click', () => {
     modalOverlay.style.display = 'none';
     history.back();
