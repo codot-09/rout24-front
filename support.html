@@ -24,6 +24,7 @@
     --radius-sm:12px;
     --shadow-sm:0 4px 12px rgba(0,0,0,.08);
     --shadow-md:0 12px 36px rgba(0,0,0,.15);
+    --shadow-hover:0 18px 40px rgba(128,0,0,.25);
     --transition:.3s cubic-bezier(.25,.46,.45,.94);
 }
 
@@ -46,11 +47,31 @@ a{text-decoration:none;color:inherit;}
     color:#fff;
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
+    padding:0 16px;
+    gap:12px;
     box-shadow:0 4px 20px rgba(0,0,0,.15);
     z-index:1000;
 }
-.header h1{font-size:22px;font-weight:900;letter-spacing:-0.5px;}
+.header h1{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-0.5px;
+    flex:1;
+    text-align:center;
+}
+.back-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:40px; height:40px;
+    background:rgba(255,255,255,.2);
+    border-radius:50%;
+    cursor:pointer;
+    transition:var(--transition);
+}
+.back-btn:hover{background:rgba(255,255,255,.35);}
+.back-btn svg{width:20px;height:20px;fill:#fff;}
 
 /* MAIN */
 .main{
@@ -62,17 +83,17 @@ a{text-decoration:none;color:inherit;}
     gap:24px;
 }
 
-/* SUPPORT INFO CARD */
+/* SUPPORT CARD */
 .support-card{
     background: var(--card-bg);
     border-radius: var(--radius-xl);
-    padding:30px 24px;
+    padding:28px 24px;
     box-shadow: var(--shadow-md);
     transition: var(--transition);
 }
 .support-card:hover{
     transform: translateY(-6px);
-    box-shadow:0 20px 48px rgba(128,0,0,.25);
+    box-shadow: var(--shadow-hover);
 }
 .support-card h2{
     font-size:20px;
@@ -85,8 +106,6 @@ a{text-decoration:none;color:inherit;}
     color:var(--text);
     margin-bottom:16px;
 }
-
-/* BUTTONS */
 .support-buttons{
     display:flex;
     gap:16px;
@@ -112,15 +131,13 @@ a{text-decoration:none;color:inherit;}
     transform: translateY(-2px);
     box-shadow:0 14px 36px rgba(128,0,0,.3);
 }
-.support-buttons a svg{
-    width:20px; height:20px; fill:#fff;
-}
+.support-buttons a svg{width:20px;height:20px;fill:#fff;}
 
 /* FAQ CARD */
 .faq-card{
     background: var(--card-bg);
     border-radius: var(--radius-lg);
-    padding:20px 20px;
+    padding:18px 20px;
     box-shadow: var(--shadow-sm);
     transition:var(--transition);
     cursor:pointer;
@@ -128,7 +145,10 @@ a{text-decoration:none;color:inherit;}
 }
 .faq-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
 .faq-card h3{font-size:16px;font-weight:700;color:var(--primary);}
-.faq-card p{font-size:15px;color:var(--text);margin-top:8px;display:none;}
+.faq-card p{
+    font-size:15px;color:var(--text);
+    margin-top:8px;display:none;
+}
 .faq-card.active p{display:block;margin-top:12px;}
 
 /* FOOTER NOTE */
@@ -149,6 +169,9 @@ a{text-decoration:none;color:inherit;}
 
 <!-- HEADER -->
 <header class="header">
+    <div class="back-btn" onclick="history.back()">
+        <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+    </div>
     <h1>Support • Rout24</h1>
 </header>
 
