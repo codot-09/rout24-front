@@ -60,6 +60,11 @@
   status = 200
 
 [[redirects]]
+  from = "/banner"
+  to = "/banner-info.html"
+  status = 200
+
+[[redirects]]
   from = "/set-credentials"
   to = "/login/set-credentials.html"
   status = 200

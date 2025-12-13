@@ -137,47 +137,37 @@ async function loadStats() {
     }
 }
 
-// Bannerlarni yuklash va Swiper inicializatsiya qilish
 async function loadBanners() {
     try {
         const result = await authFetch('/banners');
 
-        if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
-            return; // Banner yo‘q bo‘lsa hech nima qilmaymiz
-        }
+        if (!result.success || !Array.isArray(result.data) || result.data.length === 0) return;
 
         const wrapper = document.getElementById('bannerWrapper');
         if (!wrapper) return;
 
-        // Bannerlarni HTML ga joylash
         wrapper.innerHTML = result.data
             .map(
-                (banner) => `
-                    <div class="swiper-slide">
-                        <img src="${banner.coverImage || ''}" alt="Reklama banneri" loading="lazy">
+                b => `
+                    <div class="swiper-slide" onclick="location.href='/banner/${b.id}'">
+                        <img src="${b.coverImage || ''}" alt="Reklama banneri" loading="lazy">
                     </div>
                 `
             )
             .join('');
 
-        // Swiper ni faqat bannerlar bo‘lsa inicializatsiya qilamiz
-        if (result.data.length > 0) {
-            new Swiper('#bannerSwiper', {
-                loop: result.data.length > 1,
-                autoplay: result.data.length > 1 ? { delay: 4000, disableOnInteraction: false } : false,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 1,
-            });
-        }
-    } catch (error) {
-        console.error('Bannerlar yuklashda xato:', error);
-        // Banner muhim emas – xato bo‘lsa jim ishlayveradi
-    }
+        new Swiper('#bannerSwiper', {
+            loop: result.data.length > 1,
+            autoplay: result.data.length > 1 ? { delay: 4000, disableOnInteraction: false } : false,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 1,
+        });
+    } catch {}
 }
 
 // Sahifa yuklanganda barcha funksiyalarni ishga tushirish
