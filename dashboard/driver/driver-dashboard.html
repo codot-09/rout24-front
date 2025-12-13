@@ -4,87 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Haydovchi paneli</title>
-    <link rel="stylesheet" href="/dashboard/driver/driver-dashboard.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <meta name="description" content="Haydovchi uchun asosiy panel - marshrutlar, daromad va boshqalar">
+
+    <!-- Swiper CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="/dashboard/driver/driver-dashboard.css"
 </head>
 <body>
 
 <!-- Header -->
 <header class="header">
     <div class="logo">
-        <img src="/assets/icon.png" alt="Rout24">
+        <img src="/assets/icon.png" alt="Rout24 logo">
         <span>Rout24</span>
     </div>
-    <button class="notifications" id="notificationsBtn">
-        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+    <button class="notifications" id="notificationsBtn" aria-label="Bildirishnomalar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
     </button>
 </header>
 
 <main class="main">
 
-    <!-- Creative Profile Card -->
-    <div class="profile-card" id="profileCard">
-        <div class="profile-bg"></div>
+    <!-- Profile Card -->
+    <section class="profile-card" id="profileCard" aria-labelledby="profileName">
+        <div class="profile-bg" aria-hidden="true"></div>
         <div class="profile-content">
             <div class="profile-avatar">
-                <img id="profileImg" src="" alt="Profil">
-                <div class="status-ring" id="statusRing"></div>
+                <img id="profileImg" src="/assets/default-avatar.jpg" alt="Haydovchi profil rasmi">
+                <div class="status-ring" id="statusRing" aria-hidden="true"></div>
             </div>
             <div class="profile-info">
-                <h3 id="fullName">Yuklanmoqda...</h3>
-                <div class="status-badge" id="statusBadge">
-                    <span id="statusText"></span>
+                <h3 id="fullName" class="profile-name">Yuklanmoqda...</h3>
+                <div class="status-badge" id="statusBadge" aria-live="polite">
+                    <span id="statusText">Onlayn</span>
                 </div>
             </div>
-            <button class="profile-btn" onclick="location.href='/driver/profile'">
-                <svg viewBox="0 0 24 24"><path d="M9 11l3 3 7-7"/></svg>
+            <button class="profile-btn" onclick="location.href='/driver/profile'" aria-label="Profilga o'tish">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3 7-7"/>
+                </svg>
             </button>
         </div>
-    </div>
+    </section>
 
-    <!-- Statistics (2 + 1 layout) -->
-    <div class="stats-container">
+    <!-- Statistics -->
+    <section class="stats-container" aria-label="Statistika">
         <div class="stats-row">
             <div class="stat-big">
-                <div class="stat-value" id="routesCount">0</div>
+                <div class="stat-value" id="routesCount" aria-label="Jami marshrutlar soni">0</div>
                 <div class="stat-label">Jami marshrutlar</div>
             </div>
             <div class="stat-big">
-                <div class="stat-value" id="ordersCount">0</div>
+                <div class="stat-value" id="ordersCount" aria-label="Faol buyurtmalar soni">0</div>
                 <div class="stat-label">Faol buyurtmalar</div>
             </div>
         </div>
         <div class="stats-row">
             <div class="stat-full">
-                <div class="stat-value" id="monthlyIncome">0 so'm</div>
+                <div class="stat-value" id="monthlyIncome" aria-label="Bu oy daromad">0 so‘m</div>
                 <div class="stat-label">Bu oy daromad</div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Banners -->
-    <div class="banners-section">
+    <section class="banners-section" aria-label="Reklama bannerlari">
         <div class="swiper" id="bannerSwiper">
-            <div class="swiper-wrapper" id="bannerWrapper"></div>
+            <div class="swiper-wrapper" id="bannerWrapper">
+                <!-- Bannerlar JS orqali qo'shiladi -->
+            </div>
             <div class="swiper-pagination"></div>
         </div>
-    </div>
+    </section>
 
 </main>
 
 <!-- Bottom Navigation -->
-<nav class="bottom-nav">
-    <button class="nav-item active" data-page="home">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+<nav class="bottom-nav" role="navigation" aria-label="Asosiy navigatsiya">
+    <button class="nav-item active" data-page="home" aria-label="Asosiy sahifa" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
         <span>Asosiy</span>
     </button>
-    <button class="nav-item" data-page="routes" onclick="window.location.href='/routes'">
-        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+
+    <button class="nav-item" data-page="routes" onclick="window.location.href='/routes'" aria-label="Reyslar">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
         <span>Reyslar</span>
     </button>
 
-    <!-- YANGI: QR Skaner tugmasi (o‘rtada, kattaroq) -->
-    <button class="nav-item qr-scan-btn" onclick="window.location.href='/qr-scan'">
+    <!-- QR Scan - Markaziy kattaroq tugma -->
+    <button class="nav-item qr-scan-btn" onclick="window.location.href='/qr-scan'" aria-label="QR kod skan qilish">
         <div class="qr-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="5" height="5"/>
@@ -104,8 +118,10 @@
         <span>QR Skan</span>
     </button>
 
-    <button class="nav-item" data-page="profile" onclick="window.location.href='/driver/profile'">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <button class="nav-item" data-page="profile" onclick="window.location.href='/driver/profile'" aria-label="Profil">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
         <span>Profil</span>
     </button>
 </nav>

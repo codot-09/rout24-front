@@ -1,115 +1,188 @@
+// Token tekshiruvi – agar yo‘q bo‘lsa login sahifasiga yo‘naltirish
 const token = localStorage.getItem('token');
-if (!token) location.href = '/login';
+if (!token) {
+    window.location.href = '/login';
+}
 
+// API base URL (kelajakda o‘zgartirish oson bo‘lishi uchun)
+const API_BASE = 'https://api.rout24.online';
+
+// Umumiy fetch helper – xatoliklarni markazlashgan boshqarish
+async function authFetch(url, options = {}) {
+    const response = await fetch(`${API_BASE}${url}`, {
+        ...options,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Server xatosi: ${response.status}`);
+    }
+
+    return response.json();
+}
+
+// Profil ma‘lumotlarini yuklash
 async function loadProfile() {
     try {
-        const res = await fetch('https://api.rout24.online/drivers/profile', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const result = await authFetch('/drivers/profile');
 
-        const result = await res.json();
         if (!result.success || !result.data) {
             throw new Error('Profil ma‘lumotlari topilmadi');
         }
 
         const { fullName, imageUrl, status } = result.data;
 
-        // 1. Ism
-        document.getElementById('fullName').textContent = fullName || 'Haydovchi';
+        // Ism
+        const fullNameEl = document.getElementById('fullName');
+        if (fullNameEl) {
+            fullNameEl.textContent = fullName || 'Haydovchi';
+        }
 
-        // 2. Profil rasm
-        const img = document.getElementById('profileImg');
-        img.src = imageUrl || '/assets/default.png';
-        img.onerror = () => img.src = '/assets/default.png';
+        // Profil rasmi
+        const profileImg = document.getElementById('profileImg');
+        if (profileImg) {
+            const defaultImg = '/assets/default-avatar.jpg';
+            profileImg.src = imageUrl || defaultImg;
 
-        // 3. Elementlar (agar sahifada bo‘lsa)
-        const card       = document.querySelector('.profile-card');
-        const ring       = document.getElementById('statusRing');
-        const badgeText  = document.getElementById('statusText') || document.getElementById('statusBadge');
+            // Rasm yuklanmasa defaultga o‘tish
+            profileImg.onerror = () => {
+                profileImg.src = defaultImg;
+            };
+        }
 
-        // Tozalash
-        if (card) card.className = 'profile-card';
-        if (ring) ring.className = 'status-ring';
+        // Statusga qarab UI o‘zgartirish
+        const profileCard = document.querySelector('.profile-card');
+        const statusRing = document.getElementById('statusRing');
+        const statusBadge = document.getElementById('statusText') || document.querySelector('#statusBadge span');
 
-        // 4. Status bo‘yicha o‘zgarishlar
+        // Oldingi classlarni tozalash
+        if (profileCard) {
+            profileCard.classList.remove('confirmed', 'waiting', 'pending', 'not-confirmed', 'rejected');
+        }
+        if (statusRing) {
+            statusRing.classList.remove('visible', 'green', 'yellow', 'red');
+        }
+
+        // Status mapping (CSS ga moslashtirilgan)
         let cardClass = '';
         let ringClass = '';
-        let badgeContent = '';
+        let badgeText = 'Noma‘lum';
 
         switch (status) {
-            case 'NOT_CONFIRMED':
-                cardClass = 'not-confirmed';
-                ringClass = 'red';
-                badgeContent = 'To‘ldirish kerak';
+            case 'CONFIRMED':
+                cardClass = 'confirmed';
+                ringClass = 'green';
+                badgeText = 'Faol';
                 break;
-
             case 'WAITING':
             case 'PENDING':
                 cardClass = 'waiting';
                 ringClass = 'yellow';
-                badgeContent = 'Tekshiruvda';
+                badgeText = 'Tekshiruvda';
                 break;
-
-            case 'CONFIRMED':
-                cardClass = 'confirmed';
-                ringClass = 'green';
-                badgeContent = 'Faol';
+            case 'NOT_CONFIRMED':
+                cardClass = 'not-confirmed';
+                ringClass = 'red';
+                badgeText = 'To‘ldirish kerak';
                 break;
-
             default:
-                badgeContent = 'Noma‘lum';
+                cardClass = 'not-confirmed';
+                ringClass = 'red';
+                badgeText = 'Noma‘lum';
         }
 
-        // Qo‘shish
-        if (card && cardClass) card.classList.add(cardClass);
-        if (ring && ringClass) ring.classList.add(ringClass);
-        if (badgeText) badgeText.textContent = badgeContent;
+        // Classlarni qo‘shish
+        if (profileCard && cardClass) {
+            profileCard.classList.add(cardClass);
+        }
+        if (statusRing && ringClass) {
+            statusRing.classList.add('visible', ringClass);
+        }
+        if (statusBadge) {
+            statusBadge.textContent = badgeText;
+        }
 
-    } catch (err) {
-        console.error('loadProfile xatosi:', err);
-        alert('Profil yuklanmadi. Internetni tekshiring');
+    } catch (error) {
+        console.error('Profil yuklashda xato:', error);
+        alert('Profil yuklanmadi. Internet aloqasini tekshiring yoki qayta urinib ko‘ring.');
     }
 }
 
+// Statistika yuklash
 async function loadStats() {
     try {
-        const res = await fetch('https://api.rout24.online/statistics/me', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (data.success) {
-            const s = data.data;
-            document.getElementById('routesCount').textContent = s.routesCount;
-            document.getElementById('ordersCount').textContent = s.ordersCount;
-            document.getElementById('monthlyIncome').textContent = s.monthlyIncome.toLocaleString() + ' so‘m';
+        const result = await authFetch('/statistics/me');
+
+        if (result.success && result.data) {
+            const s = result.data;
+
+            const routesEl = document.getElementById('routesCount');
+            const ordersEl = document.getElementById('ordersCount');
+            const incomeEl = document.getElementById('monthlyIncome');
+
+            if (routesEl) routesEl.textContent = s.routesCount ?? 0;
+            if (ordersEl) ordersEl.textContent = s.ordersCount ?? 0;
+            if (incomeEl) {
+                const income = Number(s.monthlyIncome ?? 0);
+                incomeEl.textContent = income.toLocaleString('uz-UZ') + ' so‘m';
+            }
         }
-    } catch {}
+    } catch (error) {
+        console.error('Statistika yuklashda xato:', error);
+        // Foydalanuvchiga xabar bermaymiz – statistika muhim emas, sahifa ishlayveradi
+    }
 }
 
+// Bannerlarni yuklash va Swiper inicializatsiya qilish
 async function loadBanners() {
     try {
-        const res = await fetch('https://api.rout24.online/banners', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!data.success || !data.data.length) return;
+        const result = await authFetch('/banners');
+
+        if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+            return; // Banner yo‘q bo‘lsa hech nima qilmaymiz
+        }
 
         const wrapper = document.getElementById('bannerWrapper');
-        wrapper.innerHTML = data.data.map(b => `
-            <div class="swiper-slide">
-                <img src="${b.coverImage}" alt="Banner">
-            </div>
-        `).join('');
+        if (!wrapper) return;
 
-        new Swiper('#bannerSwiper', {
-            loop: true,
-            autoplay: { delay: 4000 },
-            pagination: { el: '.swiper-pagination', clickable: true }
-        });
-    } catch {}
+        // Bannerlarni HTML ga joylash
+        wrapper.innerHTML = result.data
+            .map(
+                (banner) => `
+                    <div class="swiper-slide">
+                        <img src="${banner.coverImage || ''}" alt="Reklama banneri" loading="lazy">
+                    </div>
+                `
+            )
+            .join('');
+
+        // Swiper ni faqat bannerlar bo‘lsa inicializatsiya qilamiz
+        if (result.data.length > 0) {
+            new Swiper('#bannerSwiper', {
+                loop: result.data.length > 1,
+                autoplay: result.data.length > 1 ? { delay: 4000, disableOnInteraction: false } : false,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 1,
+            });
+        }
+    } catch (error) {
+        console.error('Bannerlar yuklashda xato:', error);
+        // Banner muhim emas – xato bo‘lsa jim ishlayveradi
+    }
 }
 
-// Init
-loadProfile();
-loadStats();
-loadBanners();
+// Sahifa yuklanganda barcha funksiyalarni ishga tushirish
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfile();
+    loadStats();
+    loadBanners();
+});
