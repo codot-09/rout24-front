@@ -2,71 +2,56 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kirish</title>
 
 <style>
 :root{
 --primary:#800000;
 --primary-light:#a00000;
---shadow:rgba(128,0,0,.25);
---radius-lg:32px;
---radius-md:28px;
---transition:all .35s cubic-bezier(.2,.8,.2,1)
+--radius:28px
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{
 height:100%;
 font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-background:#fff;
-color:#800000
+background:#fff
 }
-.container{
+.page{
 height:100%;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-padding:40px 24px 160px;
-text-align:center
-}
-.header{
-flex:1;
 display:flex;
 flex-direction:column;
 justify-content:center;
-gap:28px
+align-items:center;
+gap:32px;
+padding:24px;
+text-align:center
 }
-.illustration{
-width:170px;
-height:170px;
-margin:0 auto
+.logo{
+width:150px;
+height:150px
 }
-.illustration img{
+.logo img{
 width:100%;
 height:100%;
-object-fit:contain;
-filter:drop-shadow(0 6px 14px rgba(128,0,0,.18))
+object-fit:contain
 }
 h2{
-font-size:38px;
+font-size:36px;
 font-weight:900;
-letter-spacing:-1.2px
+color:var(--primary)
 }
 p{
 font-size:18px;
-line-height:1.6;
-color:rgba(0,0,0,.75);
-max-width:340px;
-margin:0 auto
+max-width:320px;
+color:rgba(0,0,0,.75)
 }
 .terms{
 display:flex;
 gap:12px;
 align-items:center;
-justify-content:center;
 font-size:15px;
-color:rgba(0,0,0,.75);
-margin-bottom:24px
+color:rgba(0,0,0,.75)
 }
 .terms input{
 width:22px;
@@ -76,91 +61,54 @@ accent-color:var(--primary)
 .terms a{
 color:var(--primary);
 font-weight:600;
-text-decoration:none;
-border-bottom:1px solid rgba(128,0,0,.3)
+text-decoration:none
 }
-.login-box{
-background:linear-gradient(180deg,#fff,#f7f7f7);
-border-radius:var(--radius-lg);
-padding:28px 20px;
-box-shadow:0 22px 44px var(--shadow);
-max-width:400px;
-margin:0 auto
+.telegram-box{
+position:relative;
+margin-top:12px
 }
-.telegram-login-wrapper{
-opacity:0;
-pointer-events:none;
-transition:var(--transition)
-}
-.telegram-login-wrapper.active{
-opacity:1;
-pointer-events:auto
-}
-.telegram-login-wrapper iframe{
-width:100%!important;
+.telegram-box iframe{
+width:280px!important;
 height:72px!important;
-border-radius:var(--radius-md)!important;
+border-radius:var(--radius)!important;
 box-shadow:0 18px 36px rgba(128,0,0,.28)!important
 }
-.btn{
-width:100%;
-height:72px;
-border-radius:var(--radius-md);
-border:none;
-font-size:18px;
-font-weight:700;
-color:#fff;
-background:linear-gradient(135deg,#c0c0c0,#9a9a9a);
-cursor:not-allowed;
+.overlay{
+position:absolute;
+inset:0;
+background:rgba(255,255,255,.85);
+backdrop-filter:blur(4px);
+border-radius:var(--radius);
 display:flex;
 align-items:center;
 justify-content:center;
-gap:10px;
-transition:var(--transition);
-box-shadow:0 14px 28px rgba(0,0,0,.2)
+font-weight:700;
+color:#555;
+pointer-events:auto;
+transition:.3s
 }
-.btn.active{
-cursor:pointer;
-background:linear-gradient(135deg,var(--primary),var(--primary-light));
-box-shadow:0 18px 36px var(--shadow)
-}
-.btn.active:active{
-transform:scale(.96)
-}
-.btn.loading{
+.overlay.hidden{
+opacity:0;
 pointer-events:none
 }
-.btn.loading::after{
-content:'';
-width:22px;
-height:22px;
-border:3px solid rgba(255,255,255,.4);
-border-top-color:#fff;
-border-radius:50%;
-animation:spin .8s linear infinite
-}
-@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div class="container">
-<div class="header">
-<div class="illustration">
+<div class="page">
+<div class="logo">
 <img src="/assets/icon.png">
 </div>
-<h2>Xush kelibsiz!</h2>
-<p>Telegram orqali bir marta bosish bilan tez va xavfsiz kiring</p>
-</div>
 
-<div>
+<h2>Xush kelibsiz!</h2>
+<p>Telegram orqali tez va xavfsiz kiring</p>
+
 <div class="terms">
 <input type="checkbox" id="terms">
 <label for="terms">Men <a href="oferta.html" target="_blank">oferta shartlari</a> bilan tanishdim</label>
 </div>
 
-<div class="login-box">
-<div class="telegram-login-wrapper" id="telegram-wrapper">
+<div class="telegram-box">
 <script async src="https://telegram.org/js/telegram-widget.js?22"
 data-telegram-login="rout24bot"
 data-size="large"
@@ -168,39 +116,21 @@ data-userpic="false"
 data-radius="28"
 data-onauth="onTelegramAuth(user)"
 data-request-access="write"></script>
-</div>
 
-<button class="btn" id="loginBtn" disabled>Oferta shartlarini tasdiqlang</button>
-</div>
+<div class="overlay" id="overlay">Avval oferta shartlarini tasdiqlang</div>
 </div>
 </div>
 
 <script>
 const terms=document.getElementById('terms')
-const tg=document.getElementById('telegram-wrapper')
-const btn=document.getElementById('loginBtn')
+const overlay=document.getElementById('overlay')
 
-function toggle(){
-if(terms.checked){
-tg.classList.add('active')
-btn.style.display='none'
-}else{
-tg.classList.remove('active')
-btn.style.display='flex'
-btn.textContent='Oferta shartlarini tasdiqlang'
-btn.disabled=true
-}
-}
-terms.addEventListener('change',toggle)
-window.addEventListener('load',toggle)
+terms.addEventListener('change',()=>{
+overlay.classList.toggle('hidden',terms.checked)
+})
 
 function onTelegramAuth(user){
 if(!terms.checked)return
-btn.style.display='flex'
-tg.style.display='none'
-btn.classList.add('loading')
-btn.textContent=''
-
 fetch('https://api.rout24.online/auth/login',{
 method:'POST',
 headers:{'Content-Type':'application/json'},
@@ -212,23 +142,13 @@ imageUrl:user.photo_url||''
 })
 .then(r=>r.json())
 .then(d=>{
-btn.classList.remove('loading')
 if(d.success&&d.data?.token){
 localStorage.setItem('token',d.data.token)
 localStorage.setItem('role',d.data.role||'')
 location.href=d.data.role==='DRIVER'?'/driver/dashboard':d.data.role==='CLIENT'?'/client/dashboard':'/'
-}else{
-btn.textContent='Qayta urinish'
-btn.classList.add('active')
-btn.disabled=false
-}
+}else alert(d.message||'Xatolik')
 })
-.catch(()=>{
-btn.classList.remove('loading')
-btn.textContent='Aloqa xatosi'
-btn.classList.add('active')
-btn.disabled=false
-})
+.catch(()=>alert('Aloqa xatosi'))
 }
 window.onTelegramAuth=onTelegramAuth
 </script>
