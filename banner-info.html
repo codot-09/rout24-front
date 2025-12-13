@@ -33,20 +33,6 @@ html,body{
     -webkit-font-smoothing:antialiased;
 }
 
-.header{
-    position:fixed;
-    top:0;left:0;right:0;
-    height:60px;
-    background:var(--primary);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:0 12px;
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
-    z-index:1000;
-}
-
 .back-btn{
     display:flex;
     align-items:center;
@@ -115,6 +101,34 @@ html,body{
     white-space:pre-line;
 }
 
+.header{
+    position:fixed;
+    top:0;left:0;right:0;
+    height:70px;
+    background:var(--primary);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.15);
+    z-index:1000;
+}
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-size:26px;
+    font-weight:900;
+    letter-spacing:-0.5px;
+}
+.logo img{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    object-fit:cover;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
 .action-btn{
     margin-top:12px;
     width:100%;
@@ -152,7 +166,10 @@ html,body{
             <path d="M15 18l-6-6 6-6"/>
         </svg>
     </div>
-    <div class="title">Banner</div>
+    <div class="logo">
+        <img src="/assets/icon.png" alt="Rout24 logotipi">
+        <span>Rout24</span>
+      </div>
 </header>
 
 <main class="page" id="app">
