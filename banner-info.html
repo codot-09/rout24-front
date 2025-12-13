@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banner maʼlumoti</title>
-
 <style>
 :root {
     --primary:#800000;
@@ -24,11 +23,7 @@
     --font-base:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans',sans-serif;
 }
 
-*,*::before,*::after{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 html,body{
     height:100%;
@@ -46,86 +41,92 @@ html,body{
     color:#fff;
     display:flex;
     align-items:center;
-    justify-content:center;
+    gap:16px;
+    padding:0 16px;
     box-shadow:0 6px 20px rgba(0,0,0,.15);
     z-index:1000;
 }
 
-.logo{
+.back-btn{
     display:flex;
     align-items:center;
-    gap:14px;
-    font-size:26px;
-    font-weight:900;
-    letter-spacing:-.5px;
+    justify-content:center;
+    width:40px; height:40px;
+    background:rgba(255,255,255,.2);
+    border-radius:50%;
+    cursor:pointer;
+    transition:var(--transition);
 }
+.back-btn:hover{background:rgba(255,255,255,.35);}
+.back-btn svg{width:20px;height:20px;fill:#fff;}
 
-.logo img{
-    width:46px;
-    height:46px;
-    border-radius:12px;
-    object-fit:cover;
-    box-shadow:0 2px 8px rgba(0,0,0,.2);
+.header .title{
+    font-size:20px;
+    font-weight:700;
 }
 
 .page{
-    padding-top:90px;
+    padding-top:80px;
     padding-bottom:40px;
 }
 
 .banner-cover{
-    margin:0 16px;
-    height:240px;
-    border-radius:var(--radius-lg);
+    width:100%;
+    height:300px;
     overflow:hidden;
+    border-radius:var(--radius-lg) var(--radius-lg) 0 0;
     background:#e5e7eb;
-    box-shadow:0 18px 40px var(--primary-shadow);
+    box-shadow:0 12px 30px var(--primary-shadow);
 }
 
 .banner-cover img{
     width:100%;
     height:100%;
     object-fit:cover;
+    transition:transform .5s;
+}
+.banner-cover img:hover{
+    transform:scale(1.03);
 }
 
 .banner-card{
     background:var(--surface);
-    margin:24px 16px 0;
+    margin:0 16px;
     padding:24px;
-    border-radius:var(--radius-md);
-    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    border-radius:0 0 var(--radius-lg) var(--radius-lg);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    display:flex;
+    flex-direction:column;
+    gap:16px;
 }
 
 .banner-title{
-    font-size:24px;
-    font-weight:800;
+    font-size:26px;
+    font-weight:900;
     color:var(--text-primary);
-    margin-bottom:8px;
-}
-
-.banner-date{
-    font-size:14px;
-    color:var(--text-muted);
-    margin-bottom:16px;
+    line-height:1.2;
+    text-shadow:0 1px 2px rgba(0,0,0,.1);
 }
 
 .banner-desc{
     font-size:16px;
-    line-height:1.7;
+    line-height:1.8;
     color:var(--text-secondary);
     white-space:pre-line;
 }
 
 .action-btn{
-    margin-top:28px;
+    margin-top:16px;
+    width:100%;
     display:flex;
     align-items:center;
     justify-content:center;
-    height:54px;
+    height:56px;
     border-radius:20px;
     background:linear-gradient(135deg,var(--primary),var(--primary-light));
     color:#fff;
     font-weight:700;
+    font-size:16px;
     text-decoration:none;
     box-shadow:0 10px 30px var(--primary-shadow);
     transition:var(--transition);
@@ -144,14 +145,15 @@ html,body{
 .error{color:var(--danger)}
 </style>
 </head>
-
 <body>
 
 <header class="header">
-    <div class="logo">
-        <img src="/assets/icon.png" alt="">
-        Rout24
+    <div class="back-btn" onclick="history.back()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6"/>
+        </svg>
     </div>
+    <div class="title">Banner</div>
 </header>
 
 <main class="page" id="app">
@@ -159,58 +161,50 @@ html,body{
 </main>
 
 <script>
-const API_BASE = 'https://api.rout24.online';
-const app = document.getElementById('app');
-
+const API_BASE='https://api.rout24.online';
+const app=document.getElementById('app');
 const token = localStorage.getItem('token');
 
 const pathParts = location.pathname.split('/').filter(Boolean);
 const bannerId = pathParts[pathParts.length - 1];
 
-if (!bannerId || bannerId === 'banner') {
-    app.innerHTML = '<div class="error">❌ Banner topilmadi</div>';
-} else if (!token) {
-    app.innerHTML = '<div class="error">🔒 Avtorizatsiya talab qilinadi</div>';
-} else {
-    fetch(`${API_BASE}/banners/${bannerId}`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+if(!bannerId || bannerId==='banner'){
+    app.innerHTML='<div class="error">❌ Banner topilmadi</div>';
+}else if(!token){
+    app.innerHTML='<div class="error">🔒 Avtorizatsiya talab qilinadi</div>';
+}else{
+    fetch(`${API_BASE}/banners/${bannerId}`,{
+        headers:{Authorization:`Bearer ${token}`}
     })
-        .then(r => r.json())
-        .then(res => {
-            if (!res.success || !res.data) {
-                app.innerHTML = '<div class="error">❌ Maʼlumot yuklanmadi</div>';
-                return;
-            }
+    .then(r=>r.json())
+    .then(res=>{
+        if(!res.success || !res.data){
+            app.innerHTML='<div class="error">❌ Maʼlumot yuklanmadi</div>';
+            return;
+        }
 
-            const b = res.data;
+        const b = res.data;
 
-            app.innerHTML = `
-                <section class="banner-cover">
-                    <img src="${b.coverImage || ''}" alt="">
-                </section>
+        app.innerHTML=`
+            <section class="banner-cover">
+                <img src="${b.coverImage || ''}" alt="">
+            </section>
 
-                <section class="banner-card">
-                    <h1 class="banner-title">${b.title || ''}</h1>
-                    <div class="banner-date">
-                        📅 ${new Date(b.createdAt).toLocaleDateString('uz-UZ')}
-                    </div>
-                    <div class="banner-desc">${b.description || ''}</div>
+            <section class="banner-card">
+                <h1 class="banner-title">${b.title || ''}</h1>
+                <div class="banner-desc">${b.description || ''}</div>
 
-                    ${b.externalLink ? `
-                        <a href="${b.externalLink}" target="_blank" class="action-btn">
-                            🌐 Batafsil o‘tish
-                        </a>
-                    ` : ''}
-                </section>
-            `;
-        })
-        .catch(() => {
-            app.innerHTML = '<div class="error">⚠️ Server bilan bog‘lanib bo‘lmadi</div>';
-        });
+                ${b.externalLink?`
+                    <a href="${b.externalLink}" target="_blank" class="action-btn">
+                        🌐 Batafsil o‘tish
+                    </a>`:''}
+            </section>
+        `;
+    })
+    .catch(()=>{
+        app.innerHTML='<div class="error">⚠️ Server bilan bog‘lanib bo‘lmadi</div>';
+    });
 }
 </script>
-
 </body>
 </html>
