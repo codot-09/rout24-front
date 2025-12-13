@@ -62,18 +62,15 @@
 </main>
 
 <!-- SUCCESS MODAL -->
-<div class="modal-overlay" id="modal">
+<div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <svg class="success-icon" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="10" fill="#10b981"/>
-      <path fill="white" d="M9 12l2 2 4-4"/>
-    </svg>
-    <h2>Buyurtma muvaffaqiyatli yaratildi!</h2>
-    <p id="modalMessage">Chiptangiz bron qilindi.</p>
-    <div class="modal-actions">
-      <button class="btn-primary" onclick="location.href='/orders'">Mening buyurtmalarim</button>
-      <button class="btn-secondary" onclick="history.back()">Yakunlash</button>
-    </div>
+      <img src="/assets/success.svg" alt="Success" class="success-icon">
+      <h2>Muvaffaqiyatli!</h2>
+      <p>Sizning murojaatingiz yuborildi. Tez orada siz bilan bog‘lanamiz.</p>
+      <div class="modal-actions">
+          <button class="btn-primary" onclick="closeModal()">OK</button>
+          <button class="btn-secondary" onclick="closeModal()">Bekor qilish</button>
+      </div>
   </div>
 </div>
 
