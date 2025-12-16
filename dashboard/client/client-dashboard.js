@@ -81,33 +81,19 @@ function clearRoutes() {
 }
 
 function renderRouteCard(route) {
-    const departureDate = new Date(route.departureDate);
-    
-    const formattedDate = departureDate.toLocaleString('uz-UZ', {
-        weekday: 'short', day: 'numeric', month: 'short',
-    }).replace(',', '');
-
-    const formattedTime = departureDate.toLocaleString('uz-UZ', {
-        hour: '2-digit', minute: '2-digit'
-    });
-
     const price = route.price ? route.price.toLocaleString('uz-UZ') + ' so‘m' : 'Kelishilgan narx';
-    const seats = route.seatsCount ? `${route.seatsCount} joy` : 'Joylar belgilanmagan';
+    const imageUrl = route.coverImage || '/assets/default-route-cover.jpg';
 
     return `
         <article class="route-card-search" onclick="openRoute('${route.id}')" role="button" tabindex="0">
-            <div class="route-card-header">
-                <span class="route-time">${formattedTime}</span>
-                <span class="route-date">${formattedDate}</span>
+            <div class="route-image-container">
+                <img src="${imageUrl}" alt="${route.from} dan ${route.to} ga" loading="lazy">
             </div>
             <div class="route-card-content">
                 <div class="route-direction">
                     <span class="route-from">${route.from}</span>
                     <svg class="arrow" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                     <span class="route-to">${route.to}</span>
-                </div>
-                <div class="route-meta-info">
-                    <span class="route-seats">${seats}</span>
                 </div>
             </div>
             <div class="route-price-tag">
@@ -194,9 +180,7 @@ async function loadBanners() {
             isSwiping = true;
         });
         
-        DOM.bannersBox.addEventListener('touchmove', () => {
-             // Faqat touch harakatini to'xtatmaslik uchun
-        });
+        DOM.bannersBox.addEventListener('touchmove', () => {});
 
         DOM.bannersBox.addEventListener('touchend', e => {
             if (!isSwiping) return;
@@ -210,7 +194,7 @@ async function loadBanners() {
 
         DOM.bannersBox.querySelectorAll('.banner-slide').forEach(slide => {
             slide.addEventListener('click', () => {
-                if (!isSwiping) { // Faqat tap bo'lganda ishlasin
+                if (!isSwiping) {
                     const id = slide.getAttribute('data-id');
                     if (id) window.location.href = `/banner/${id}`;
                 }
