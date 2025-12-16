@@ -82,7 +82,7 @@ function clearRoutes() {
 
 function renderRouteCard(route) {
     const price = route.price ? route.price.toLocaleString('uz-UZ') + ' so‘m' : 'Kelishilgan narx';
-    const imageUrl = route.coverImage || '/assets/default-route-cover.jpg';
+    const imageUrl = route.coverImageUrl || '/assets/default-route-cover.jpg';
 
     return `
         <article class="route-card-search" onclick="openRoute('${route.id}')" role="button" tabindex="0">
