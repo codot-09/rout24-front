@@ -20,7 +20,7 @@
     --card-padding: 14px;
     --image-size: 80px;
     --swipe-width: 90px;
-    --delete-label-font-size: 13px; /* Yangi: O'chirish yozuvi o'lchami */
+    --delete-label-font-size: 13px; 
 }
 
 *, *::before, *::after {
@@ -306,16 +306,16 @@ body, html {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Kontentni vertikal markazlash */
+    justify-content: center;
     gap: 6px;
-    padding-right: 120px; /* Narxni joylash uchun joy qoldirish */
+    padding-right: 120px;
 }
 
-/* 5. From/To Display (Chiroyli ko'rinishda) */
+/* 5. From/To Display */
 .route-info {
     display: flex;
     flex-direction: column;
-    gap: 2px; /* Kichikroq gap */
+    gap: 2px;
 }
 
 .route-content h3 {
@@ -324,7 +324,6 @@ body, html {
     color: var(--text-secondary);
     letter-spacing: -0.4px;
     line-height: 1.2;
-    /* Manzil va yo'nalishni ajratish */
     display: flex;
     align-items: center;
     gap: 8px;
@@ -353,7 +352,7 @@ body, html {
     margin-top: 4px;
 }
 
-/* 6. Price Display (Creative Pastki-o'ng) */
+/* 6. Price Display */
 .route-price {
     position: absolute;
     bottom: var(--card-padding);
@@ -368,7 +367,7 @@ body, html {
     letter-spacing: -0.5px;
     line-height: 1;
     z-index: 10;
-    transform: rotate(1deg); /* Kichik burchak effekt */
+    transform: rotate(1deg);
     transition: var(--transition-ease);
 }
 
@@ -376,7 +375,7 @@ body, html {
     transform: rotate(0deg) scale(1.05);
 }
 
-/* 7. Delete Button Wrapper (Swipe Target - Qo'shimcha yozuv qo'shildi) */
+/* 7. Delete Button Wrapper (Ixchamlashtirish) */
 .delete-btn-wrapper {
     position: absolute;
     top: 0;
@@ -384,21 +383,30 @@ body, html {
     bottom: 0;
     width: var(--swipe-width);
     display: flex;
-    flex-direction: column; /* Ikonka va yozuvni vertikal joylash */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: var(--status-delete);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    transition: background-color 0.3s ease;
     z-index: 1;
     gap: 4px;
+    
+    /* Faqat swipe qilinganda ko'rinishi uchun */
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    pointer-events: none; /* Standart holatda bosilmasligi uchun */
+}
+
+.route-card-wrapper.swiped .delete-btn-wrapper {
+    opacity: 1;
+    pointer-events: all; /* Ochilganda bosilishi uchun */
 }
 
 .route-card-wrapper:hover .delete-btn-wrapper {
     background: #c0392b;
 }
 
-/* 8. Delete Button (Inside wrapper) */
+/* 8. Delete Button */
 .delete-btn {
     width: 44px;
     height: 44px;
