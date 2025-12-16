@@ -1,3 +1,4 @@
+/* Custom properties for the new card style */
 :root {
     --color-primary: #800000;
     --color-primary-light: #a00000;
@@ -6,7 +7,7 @@
     --color-surface: #ffffff;
     --color-border: rgba(128, 0, 0, 0.12);
     --text-primary: var(--color-primary);
-    --text-secondary: rgba(0, 0, 0, 0.85);
+    --text-secondary: rgba(0, 0, 0, 0.9);
     --text-muted: rgba(0, 0, 0, 0.65);
     --status-active: #4caf50;
     --status-finished: #999999;
@@ -16,6 +17,11 @@
     --nav-height: 84px;
     --transition-ease: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+
+    /* New card styling variables */
+    --card-padding: 14px;
+    --image-size: 80px;
+    --swipe-width: 90px; /* Width of the delete area */
 }
 
 *, *::before, *::after {
@@ -199,46 +205,47 @@ body, html {
     padding-bottom: 20px;
 }
 
+/* 1. Wrapper for Swipe Functionality */
 .route-card-wrapper {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Unified shadow for wrapper */
+    border: 1px solid var(--color-border);
 }
 
+.route-card-wrapper:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 2. Main Card Content (Swiping Element) */
 .route-card-modern {
     background: var(--color-surface);
-    border-radius: var(--radius-md);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: var(--transition-ease);
+    transition: transform var(--transition-ease);
     cursor: pointer;
     position: relative;
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    touch-action: pan-y;
+    padding: var(--card-padding);
+    touch-action: pan-y; /* Allow vertical scrolling, manage horizontal swipe with JS */
     transform: translateX(0);
+    gap: 12px;
 }
 
 .route-card-wrapper.swiped .route-card-modern {
-    transform: translateX(-80px);
-}
-
-.route-card-modern:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border-color: var(--color-primary);
+    transform: translateX(calc(-1 * var(--swipe-width))); /* Slide left to show delete button */
 }
 
 .route-card-modern:active {
-    transform: translateX(var(--swipe-offset, 0)) scale(0.98);
+    transform: translateX(var(--swipe-offset, 0)) scale(0.99); /* Gentle active scale */
 }
 
+/* 3. Image Style */
 .route-image {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    border-radius: 12px;
+    width: var(--image-size);
+    height: var(--image-size);
+    border-radius: 8px;
     overflow: hidden;
     background: #f0f0f0;
 }
@@ -249,68 +256,95 @@ body, html {
     object-fit: cover;
 }
 
+/* 4. Content Area (Flex container for vertical layout) */
 .route-content {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding-right: 60px;
+    justify-content: space-between;
+    padding: 2px 0; /* Add slight vertical padding */
+}
+
+/* 5. From/To Display (Minimalist and Structured) */
+.route-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 6px;
 }
 
 .route-content h3 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text-secondary);
+    letter-spacing: -0.2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    letter-spacing: -0.3px;
+    line-height: 1.3;
 }
 
+.route-meta {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.route-times {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 6. Price Display (Bottom-right, prominent) */
 .route-price {
     position: absolute;
-    bottom: 8px;
-    right: 12px;
-    font-size: 16px;
-    font-weight: 800;
+    bottom: var(--card-padding);
+    right: var(--card-padding);
+    font-size: 18px;
+    font-weight: 900;
     color: #fff;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+    background: var(--color-primary);
     padding: 6px 14px;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.25);
-    letter-spacing: -0.4px;
-    transform: rotate(-2deg);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    z-index: 10;
 }
 
+/* 7. Delete Button Wrapper (Swipe Target) */
 .delete-btn-wrapper {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 80px;
+    width: var(--swipe-width);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--status-active);
+    background: #e74c3c; /* Red color for delete action */
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: background-color 0.3s ease;
+    z-index: 1; /* Behind the swiping card */
 }
 
-.route-card-wrapper.swiped .delete-btn-wrapper {
-    opacity: 1;
-    pointer-events: all;
+.route-card-wrapper:hover .delete-btn-wrapper {
+    background: #c0392b;
 }
 
+/* 8. Delete Button (Inside wrapper) */
 .delete-btn {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.95);
-    color: var(--status-active);
+    color: #e74c3c;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -440,13 +474,17 @@ body, html {
         gap: 14px;
     }
 
+    .route-card-wrapper {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
     .route-card-modern {
-        padding: 14px;
+        padding: 16px;
+        gap: 16px;
     }
 
     .route-image {
-        width: 90px;
-        height: 90px;
+        --image-size: 100px;
     }
 
     .route-content h3 {
@@ -454,8 +492,18 @@ body, html {
     }
 
     .route-price {
-        font-size: 17px;
-        padding: 7px 16px;
+        font-size: 20px;
+        right: 16px;
+        bottom: 16px;
+    }
+
+    .delete-btn-wrapper {
+        --swipe-width: 100px;
+    }
+
+    .delete-btn {
+        width: 54px;
+        height: 54px;
     }
 
     :root {
