@@ -1,4 +1,3 @@
-/* Custom properties for the new card style */
 :root {
     --color-primary: #800000;
     --color-primary-light: #a00000;
@@ -11,17 +10,16 @@
     --text-muted: rgba(0, 0, 0, 0.65);
     --status-active: #4caf50;
     --status-finished: #999999;
+    --status-delete: #e74c3c;
     --radius-md: 16px;
     --radius-sm: 12px;
     --header-height: 74px;
     --nav-height: 84px;
     --transition-ease: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-
-    /* New card styling variables */
     --card-padding: 14px;
     --image-size: 80px;
-    --swipe-width: 90px; /* Width of the delete area */
+    --swipe-width: 90px;
 }
 
 *, *::before, *::after {
@@ -205,21 +203,19 @@ body, html {
     padding-bottom: 20px;
 }
 
-/* 1. Wrapper for Swipe Functionality */
 .route-card-wrapper {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Unified shadow for wrapper */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border: 1px solid var(--color-border);
 }
 
-.route-card-wrapper:hover {
+.route-card-wrapper:hover:not(.route-card-finished) {
     border-color: var(--color-primary);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* 2. Main Card Content (Swiping Element) */
 .route-card-modern {
     background: var(--color-surface);
     transition: transform var(--transition-ease);
@@ -227,20 +223,41 @@ body, html {
     position: relative;
     display: flex;
     padding: var(--card-padding);
-    touch-action: pan-y; /* Allow vertical scrolling, manage horizontal swipe with JS */
+    touch-action: pan-y;
     transform: translateX(0);
     gap: 12px;
 }
 
 .route-card-wrapper.swiped .route-card-modern {
-    transform: translateX(calc(-1 * var(--swipe-width))); /* Slide left to show delete button */
+    transform: translateX(calc(-1 * var(--swipe-width)));
 }
 
-.route-card-modern:active {
-    transform: translateX(var(--swipe-offset, 0)) scale(0.99); /* Gentle active scale */
+.route-card-modern:active:not(.route-card-finished) {
+    transform: translateX(var(--swipe-offset, 0)) scale(0.99);
 }
 
-/* 3. Image Style */
+.route-card-finished {
+    opacity: 0.6;
+    pointer-events: none;
+    background: #fcfcfc;
+    border-left: 5px solid var(--status-finished);
+    transform: translateX(0) !important;
+}
+
+.route-card-finished .route-price {
+    background: var(--status-finished);
+    box-shadow: 0 4px 10px rgba(153, 153, 153, 0.3);
+}
+
+.route-card-finished .route-content h3 {
+    text-decoration: line-through;
+    color: var(--status-finished);
+}
+
+.route-card-finished .route-meta {
+    color: rgba(153, 153, 153, 0.8);
+}
+
 .route-image {
     flex-shrink: 0;
     width: var(--image-size);
@@ -248,6 +265,7 @@ body, html {
     border-radius: 8px;
     overflow: hidden;
     background: #f0f0f0;
+    position: relative;
 }
 
 .route-image img {
@@ -256,17 +274,36 @@ body, html {
     object-fit: cover;
 }
 
-/* 4. Content Area (Flex container for vertical layout) */
+.route-image::after {
+    content: attr(data-status);
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.route-card-finished .route-image::after {
+    content: "YAKUNLANDI";
+    background: var(--status-finished);
+    opacity: 1;
+}
+
 .route-content {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 2px 0; /* Add slight vertical padding */
+    padding: 2px 0;
 }
 
-/* 5. From/To Display (Minimalist and Structured) */
 .route-info {
     display: flex;
     flex-direction: column;
@@ -300,7 +337,6 @@ body, html {
     gap: 12px;
 }
 
-/* 6. Price Display (Bottom-right, prominent) */
 .route-price {
     position: absolute;
     bottom: var(--card-padding);
@@ -317,7 +353,6 @@ body, html {
     z-index: 10;
 }
 
-/* 7. Delete Button Wrapper (Swipe Target) */
 .delete-btn-wrapper {
     position: absolute;
     top: 0;
@@ -327,24 +362,23 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #e74c3c; /* Red color for delete action */
+    background: var(--status-delete);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     transition: background-color 0.3s ease;
-    z-index: 1; /* Behind the swiping card */
+    z-index: 1;
 }
 
 .route-card-wrapper:hover .delete-btn-wrapper {
     background: #c0392b;
 }
 
-/* 8. Delete Button (Inside wrapper) */
 .delete-btn {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.95);
-    color: #e74c3c;
+    color: var(--status-delete);
     display: flex;
     align-items: center;
     justify-content: center;
