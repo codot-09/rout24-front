@@ -203,6 +203,7 @@ body, html {
     padding-bottom: 20px;
 }
 
+/* 1. Wrapper for Swipe Functionality */
 .route-card-wrapper {
     position: relative;
     overflow: hidden;
@@ -216,6 +217,7 @@ body, html {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* 2. Main Card Content (Swiping Element) */
 .route-card-modern {
     background: var(--color-surface);
     transition: transform var(--transition-ease);
@@ -236,6 +238,7 @@ body, html {
     transform: translateX(var(--swipe-offset, 0)) scale(0.99);
 }
 
+/* 2.1. Finished State Styling */
 .route-card-finished {
     opacity: 0.6;
     pointer-events: none;
@@ -258,6 +261,7 @@ body, html {
     color: rgba(153, 153, 153, 0.8);
 }
 
+/* 3. Image Style */
 .route-image {
     flex-shrink: 0;
     width: var(--image-size);
@@ -295,6 +299,7 @@ body, html {
     opacity: 1;
 }
 
+/* 4. Content Area */
 .route-content {
     flex: 1;
     min-width: 0;
@@ -304,6 +309,7 @@ body, html {
     padding: 2px 0;
 }
 
+/* 5. From/To Display (Optimized) */
 .route-info {
     display: flex;
     flex-direction: column;
@@ -312,10 +318,10 @@ body, html {
 }
 
 .route-content h3 {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
     color: var(--text-secondary);
-    letter-spacing: -0.2px;
+    letter-spacing: -0.3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -324,19 +330,11 @@ body, html {
 
 .route-meta {
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-muted);
 }
 
-.route-times {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
+/* 6. Price Display (Creative Bottom-right) */
 .route-price {
     position: absolute;
     bottom: var(--card-padding);
@@ -353,6 +351,7 @@ body, html {
     z-index: 10;
 }
 
+/* 7. Delete Button Wrapper (Swipe Target) */
 .delete-btn-wrapper {
     position: absolute;
     top: 0;
@@ -372,6 +371,7 @@ body, html {
     background: #c0392b;
 }
 
+/* 8. Delete Button (Inside wrapper) */
 .delete-btn {
     width: 50px;
     height: 50px;
@@ -522,13 +522,14 @@ body, html {
     }
 
     .route-content h3 {
-        font-size: 17px;
+        font-size: 18px;
     }
 
     .route-price {
         font-size: 20px;
         right: 16px;
         bottom: 16px;
+        padding: 7px 16px;
     }
 
     .delete-btn-wrapper {
