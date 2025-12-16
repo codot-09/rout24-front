@@ -3,76 +3,115 @@ if (!token) location.href = '/login';
 
 const API_BASE = 'https://api.rout24.online';
 
-const regions = [
-    "TOSHKENT","NAVOIY","SAMARKAND","BUXORO","QASHQADARYO",
-    "XORAZM","SURXONDARYO","JIZZAX","SIRDARYO","QORAQALPOGISTON",
-    "ANDIJON","NAMANGAN","FARGONA"
+const REGIONS = [
+    "TOSHKENT", "NAVOIY", "SAMARKAND", "BUXORO", "QASHQADARYO",
+    "XORAZM", "SURXONDARYO", "JIZZAX", "SIRDARYO", "QORAQALPOGISTON",
+    "ANDIJON", "NAMANGAN", "FARGONA"
 ];
 
-const fromFilter   = document.getElementById('fromFilter');
-const toFilter     = document.getElementById('toFilter');
-const minPrice     = document.getElementById('minPrice');
-const maxPrice     = document.getElementById('maxPrice');
-const searchBtn    = document.getElementById('searchBtn');
-const filterToggle = document.getElementById('filterToggle');
-const searchCard   = document.getElementById('searchCard');
-const routesList   = document.getElementById('routesList');
-const emptyState   = document.getElementById('emptyState');
-const bannersBox   = document.getElementById('banners');
+const DOM = {
+    fromFilter: document.getElementById('fromFilter'),
+    toFilter: document.getElementById('toFilter'),
+    minPrice: document.getElementById('minPrice'),
+    maxPrice: document.getElementById('maxPrice'),
+    searchBtn: document.getElementById('searchBtn'),
+    filterToggle: document.getElementById('filterToggle'),
+    searchCard: document.getElementById('searchCard'),
+    routesList: document.getElementById('routesList'),
+    emptyState: document.getElementById('emptyState'),
+    bannersBox: document.getElementById('banners')
+};
 
 function populateRegions() {
-    regions.forEach(r => {
+    const fragmentFrom = document.createDocumentFragment();
+    const fragmentTo = document.createDocumentFragment();
+
+    REGIONS.forEach(r => {
         const label = r.charAt(0) + r.slice(1).toLowerCase();
-        fromFilter.add(new Option(label, r));
-        toFilter.add(new Option(label, r));
+        const option = new Option(label, r);
+        fragmentFrom.appendChild(option.cloneNode(true));
+        fragmentTo.appendChild(option);
     });
+
+    DOM.fromFilter.appendChild(fragmentFrom);
+    DOM.toFilter.appendChild(fragmentTo);
 }
 populateRegions();
 
-// Filter toggle
-filterToggle.addEventListener('click', () => {
-    const isOpen = searchCard.classList.toggle('show');
-    filterToggle.setAttribute('aria-expanded', isOpen);
-    searchCard.hidden = !isOpen;
+DOM.filterToggle.addEventListener('click', () => {
+    const isOpen = DOM.searchCard.classList.toggle('show');
+    DOM.filterToggle.setAttribute('aria-expanded', isOpen);
+    DOM.searchCard.hidden = !isOpen;
 });
 
 async function authFetch(url, options = {}) {
-    const res = await fetch(url, {
-        ...options,
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            ...options.headers
+    try {
+        const res = await fetch(url, {
+            ...options,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+
+        if (res.status === 401) {
+            location.href = '/login';
+            throw new Error('Autentifikatsiya xatosi');
         }
-    });
-    if (!res.ok) throw new Error(res.status);
-    return res.json();
+
+        if (!res.ok) {
+            const errorBody = await res.json().catch(() => ({}));
+            throw new Error(`Server xatosi: ${res.status} - ${errorBody.message || res.statusText}`);
+        }
+        return res.json();
+    } catch (error) {
+        console.error('AuthFetch xatosi:', error);
+        throw error;
+    }
 }
 
 function showLoading() {
-    routesList.innerHTML = `<div style="padding:40px;text-align:center;color:#999">Yuklanmoqda...</div>`;
-    emptyState.hidden = true;
+    DOM.routesList.innerHTML = `<div class="loading">Yuklanmoqda...</div>`;
+    DOM.emptyState.hidden = true;
 }
 
 function clearRoutes() {
-    routesList.innerHTML = '';
+    DOM.routesList.innerHTML = '';
 }
 
 function renderRouteCard(route) {
-    const date = new Date(route.departureDate).toLocaleString('uz-UZ', {
+    const departureDate = new Date(route.departureDate);
+    
+    const formattedDate = departureDate.toLocaleString('uz-UZ', {
         weekday: 'short', day: 'numeric', month: 'short',
-        hour: '2-digit', minute: '2-digit'
     }).replace(',', '');
 
+    const formattedTime = departureDate.toLocaleString('uz-UZ', {
+        hour: '2-digit', minute: '2-digit'
+    });
+
+    const price = route.price ? route.price.toLocaleString('uz-UZ') + ' so‘m' : 'Kelishilgan narx';
+    const seats = route.seatsCount ? `${route.seatsCount} joy` : 'Joylar belgilanmagan';
+
     return `
-        <article class="route" onclick="openRoute('${route.id}')">
-            <header class="route-header">
-                <h3>${route.from} → ${route.to}</h3>
-                <p>${date}</p>
-            </header>
-            <div class="route-body">
-                <div>${route.price.toLocaleString('uz-UZ')} so‘m</div>
-                <div>${route.seatsCount} joy</div>
+        <article class="route-card-search" onclick="openRoute('${route.id}')" role="button" tabindex="0">
+            <div class="route-card-header">
+                <span class="route-time">${formattedTime}</span>
+                <span class="route-date">${formattedDate}</span>
+            </div>
+            <div class="route-card-content">
+                <div class="route-direction">
+                    <span class="route-from">${route.from}</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <span class="route-to">${route.to}</span>
+                </div>
+                <div class="route-meta-info">
+                    <span class="route-seats">${seats}</span>
+                </div>
+            </div>
+            <div class="route-price-tag">
+                ${price}
             </div>
         </article>
     `;
@@ -87,10 +126,10 @@ async function loadRoutes(withFilters = false) {
 
     const params = new URLSearchParams({ page: 0, size: 30 });
     if (withFilters) {
-        if (fromFilter.value) params.set('from', fromFilter.value);
-        if (toFilter.value) params.set('to', toFilter.value);
-        if (minPrice.value) params.set('minprice', minPrice.value);
-        if (maxPrice.value) params.set('maxprice', maxPrice.value);
+        if (DOM.fromFilter.value) params.set('from', DOM.fromFilter.value);
+        if (DOM.toFilter.value) params.set('to', DOM.toFilter.value);
+        if (DOM.minPrice.value) params.set('minprice', DOM.minPrice.value);
+        if (DOM.maxPrice.value) params.set('maxprice', DOM.maxPrice.value);
     }
 
     try {
@@ -98,15 +137,15 @@ async function loadRoutes(withFilters = false) {
         clearRoutes();
 
         if (!res.success || !res.data?.content?.length) {
-            emptyState.hidden = false;
+            DOM.emptyState.hidden = false;
             return;
         }
 
-        emptyState.hidden = true;
-        routesList.innerHTML = res.data.content.map(renderRouteCard).join('');
+        DOM.emptyState.hidden = true;
+        DOM.routesList.innerHTML = res.data.content.map(renderRouteCard).join('');
     } catch {
         clearRoutes();
-        emptyState.hidden = false;
+        DOM.emptyState.hidden = false;
     }
 }
 
@@ -116,53 +155,65 @@ async function loadBanners() {
         if (!res.success || !res.data?.length) return;
 
         let index = 0;
+        const banners = res.data;
+        const total = banners.length;
 
-        bannersBox.innerHTML = `
+        DOM.bannersBox.innerHTML = `
             <div class="banner-track">
-                ${res.data.map(b =>
+                ${banners.map(b =>
                     `<div class="banner-slide" data-id="${b.id}">
-                        <img src="${b.coverImage}" loading="lazy">
+                        <img src="${b.coverImage}" alt="Banner" loading="lazy">
                     </div>`
                 ).join('')}
             </div>
             <div class="banner-dots">
-                ${res.data.map((_, i) =>
+                ${banners.map((_, i) =>
                     `<span class="banner-dot ${i === 0 ? 'active' : ''}"></span>`
                 ).join('')}
             </div>
         `;
 
-        const track = bannersBox.querySelector('.banner-track');
-        const dots = bannersBox.querySelectorAll('.banner-dot');
-        const total = dots.length;
+        const track = DOM.bannersBox.querySelector('.banner-track');
+        const dots = DOM.bannersBox.querySelectorAll('.banner-dot');
 
         const update = () => {
             track.style.transform = `translateX(-${index * 100}%)`;
             dots.forEach((d, i) => d.classList.toggle('active', i === index));
         };
 
-        // Auto-slide
         setInterval(() => {
             index = (index + 1) % total;
             update();
         }, 4000);
 
-        // Touch swipe
         let startX = 0;
-        bannersBox.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-        bannersBox.addEventListener('touchend', e => {
+        let isSwiping = false;
+
+        DOM.bannersBox.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+            isSwiping = true;
+        });
+        
+        DOM.bannersBox.addEventListener('touchmove', () => {
+             // Faqat touch harakatini to'xtatmaslik uchun
+        });
+
+        DOM.bannersBox.addEventListener('touchend', e => {
+            if (!isSwiping) return;
             const diff = startX - e.changedTouches[0].clientX;
             if (Math.abs(diff) > 40) {
                 index = diff > 0 ? (index + 1) % total : (index - 1 + total) % total;
                 update();
             }
+            isSwiping = false;
         });
 
-        // Click on banner -> go to /banner/{id}
-        bannersBox.querySelectorAll('.banner-slide').forEach(slide => {
+        DOM.bannersBox.querySelectorAll('.banner-slide').forEach(slide => {
             slide.addEventListener('click', () => {
-                const id = slide.getAttribute('data-id');
-                if (id) window.location.href = `/banner/${id}`;
+                if (!isSwiping) { // Faqat tap bo'lganda ishlasin
+                    const id = slide.getAttribute('data-id');
+                    if (id) window.location.href = `/banner/${id}`;
+                }
             });
         });
 
@@ -171,13 +222,13 @@ async function loadBanners() {
     }
 }
 
-searchBtn.addEventListener('click', () => loadRoutes(true));
-[minPrice, maxPrice].forEach(i => i.addEventListener('keydown', e => {
+DOM.searchBtn.addEventListener('click', () => loadRoutes(true));
+[DOM.minPrice, DOM.maxPrice].forEach(i => i.addEventListener('keydown', e => {
     if (e.key === 'Enter') loadRoutes(true);
 }));
 
 document.addEventListener('DOMContentLoaded', () => {
-    searchCard.hidden = true;
+    DOM.searchCard.hidden = true;
     loadRoutes(false);
     loadBanners();
 });
