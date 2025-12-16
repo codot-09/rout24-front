@@ -71,21 +71,22 @@ async function authFetch(url, options = {}) {
 function renderRouteCard(route) {
     const isFinished = route.finished;
     const cardClass = isFinished ? 'route-card-modern route-card-finished' : 'route-card-modern';
-    const deleteText = isFinished ? 'O\'chirish' : 'Tugatish';
-    const deleteAction = isFinished ? `deleteRoute('${route.id}')` : `finishRoute('${route.id}')`;
-    const deleteIcon = isFinished 
+    const actionText = isFinished ? 'O\'chirish' : 'Yakunlash';
+    const action = isFinished ? `deleteRoute('${route.id}')` : `finishRoute('${route.id}')`;
+    const actionIcon = isFinished 
         ? `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`
         : `<svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>`;
     
-    // Swipe funksiyasi uchun alohida wrapper kerak
+    const clickHandler = `viewDetails('${route.id}')`;
+
     const deleteBtnBlock = `
-        <div class="delete-btn-wrapper" onclick="${deleteAction}">
-            <button class="delete-btn" aria-label="Reysni ${deleteText}">${deleteIcon}</button>
+        <div class="delete-btn-wrapper" onclick="${action}">
+            <button class="delete-btn" aria-label="Reysni ${actionText}">
+                ${actionIcon}
+            </button>
+            <span class="delete-label">${actionText}</span>
         </div>
     `;
-
-    // Finished reyslarga bosishni o'chirish
-    const clickHandler = isFinished ? '' : `viewDetails('${route.id}')`;
 
     return `
         <div class="route-card-wrapper">
@@ -93,14 +94,14 @@ function renderRouteCard(route) {
                 data-route-id="${route.id}">
                 <div class="route-image">
                     <img src="${route.coverImageUrl || '/assets/default-route.jpg'}" alt="Reys rasmi" loading="lazy">
-                    <div class="route-price">${route.price.toLocaleString('uz-UZ')} so'm</div>
                 </div>
                 <div class="route-content">
                     <div class="route-info">
                         <h3>${route.from} → ${route.to}</h3>
-                        <p class="route-meta">${route.departureTime} dan boshlab</p>
+                        <p class="route-meta">Ketish: ${route.departureTime || 'Noma\'lum'}</p>
                     </div>
                 </div>
+                <div class="route-price">${route.price.toLocaleString('uz-UZ')} so'm</div>
             </article>
             ${!isFinished ? deleteBtnBlock : ''}
         </div>
@@ -133,7 +134,6 @@ window.deleteRoute = async function(routeId) {
             method: 'DELETE' 
         });
         
-        // Agar API delete operatsiyasi uchun success/status qaytarsa
         if (result.success || result.status === 204) {
             await loadRoutes();
         } else {
@@ -155,7 +155,7 @@ async function loadRoutes() {
     const params = new URLSearchParams();
     if (DOM.fromFilter.value) params.set('from', DOM.fromFilter.value);
     if (DOM.toFilter.value) params.set('to', DOM.toFilter.value);
-    params.set('includeFinished', true); // Yakunlangan reyslarni ham yuklash uchun
+    params.set('includeFinished', true);
 
     const paramString = params.toString() ? '?' + params : '';
     const url = `${API_BASE}/routes/my-routes${paramString}`;
@@ -167,6 +167,7 @@ async function loadRoutes() {
             throw new Error('Serverdan noto\'g\'ri ma\'lumot formati keldi');
         }
 
+        // Active reyslar yuqorida, finished reyslar pastda
         const routes = result.data.sort((a, b) => (a.finished === b.finished) ? 0 : a.finished ? 1 : -1);
 
         if (routes.length === 0) {
@@ -183,67 +184,86 @@ async function loadRoutes() {
     }
 }
 
-// Swipe (surish) funksiyasini qo'shish
 function initSwipeHandlers() {
-    const swipeableCards = DOM.routesList.querySelectorAll('.route-card-wrapper');
-    const swipeWidth = 90; // CSS: --swipe-width
+    const swipeableWrappers = DOM.routesList.querySelectorAll('.route-card-wrapper');
+    const swipeWidth = 90;
 
     let startX;
-    let currentCard = null;
+    let currentWrapper = null;
+    let isSwiping = false;
+    let initialSwipeX = 0;
 
     function resetSwipe() {
-        if (currentCard) {
-            currentCard.classList.remove('swiped');
-            currentCard = null;
+        if (currentWrapper) {
+            currentWrapper.classList.remove('swiped');
+            currentWrapper.querySelector('.route-card-modern').style.transform = `translateX(0)`;
+            currentWrapper = null;
         }
     }
 
-    swipeableCards.forEach(wrapper => {
+    // Har bir card wrapper uchun swipe eshituvchilarini o'rnating
+    swipeableWrappers.forEach(wrapper => {
         const card = wrapper.querySelector('.route-card-modern:not(.route-card-finished)');
         if (!card) return;
 
         wrapper.addEventListener('touchstart', (e) => {
-            resetSwipe(); 
+            // Agar oldingi card ochiq bo'lsa, uni yoping
+            if (currentWrapper && currentWrapper !== wrapper) {
+                resetSwipe();
+            }
+            
             startX = e.touches[0].clientX;
-            currentCard = wrapper;
+            currentWrapper = wrapper;
+            isSwiping = false;
+            initialSwipeX = new WebKitCSSMatrix(window.getComputedStyle(card).transform).m41;
         });
 
         wrapper.addEventListener('touchmove', (e) => {
-            if (!currentCard) return;
+            if (!currentWrapper || e.touches.length > 1) return;
+            
             const diffX = e.touches[0].clientX - startX;
+            
+            if (Math.abs(diffX) > 10) {
+                isSwiping = true;
+                const newX = initialSwipeX + diffX;
 
-            if (diffX < -10) { // chapga surish
-                e.preventDefault();
-                const transformValue = Math.max(-swipeWidth, diffX);
-                card.style.transform = `translateX(${transformValue}px)`;
-            } else if (diffX > 10) { // o'ngga surish
-                e.preventDefault();
-                const transformValue = Math.min(0, diffX - swipeWidth);
+                let transformValue;
+                if (newX < 0) {
+                    // Chapga surish (ko'rsatish)
+                    transformValue = Math.max(-swipeWidth, newX);
+                } else {
+                    // O'ngga surish (yopish)
+                    transformValue = Math.min(0, newX);
+                }
+
                 card.style.transform = `translateX(${transformValue}px)`;
             }
         });
 
         wrapper.addEventListener('touchend', () => {
-            if (!currentCard) return;
+            if (!currentWrapper || !isSwiping) {
+                isSwiping = false;
+                return;
+            }
+
             const style = window.getComputedStyle(card);
             const matrix = new WebKitCSSMatrix(style.transform);
             const currentX = matrix.m41;
 
-            if (currentX < (-swipeWidth / 2)) {
+            if (currentX < (-swipeWidth / 3)) {
                 // To'liq ochish
-                currentCard.classList.add('swiped');
+                currentWrapper.classList.add('swiped');
                 card.style.transform = `translateX(-${swipeWidth}px)`;
             } else {
                 // Yopish
                 resetSwipe();
-                card.style.transform = `translateX(0)`;
             }
+            isSwiping = false;
         });
     });
 
-    // Boshqa joyga bosilganda yopish
     document.addEventListener('click', (e) => {
-        if (currentCard && !currentCard.contains(e.target)) {
+        if (currentWrapper && !currentWrapper.contains(e.target)) {
             resetSwipe();
         }
     });

@@ -20,6 +20,7 @@
     --card-padding: 14px;
     --image-size: 80px;
     --swipe-width: 90px;
+    --delete-label-font-size: 13px; /* Yangi: O'chirish yozuvi o'lchami */
 }
 
 *, *::before, *::after {
@@ -240,8 +241,7 @@ body, html {
 
 /* 2.1. Finished State Styling */
 .route-card-finished {
-    opacity: 0.6;
-    pointer-events: none;
+    opacity: 0.7;
     background: #fcfcfc;
     border-left: 5px solid var(--status-finished);
     transform: translateX(0) !important;
@@ -270,6 +270,7 @@ body, html {
     overflow: hidden;
     background: #f0f0f0;
     position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .route-image img {
@@ -305,53 +306,77 @@ body, html {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 2px 0;
+    justify-content: center; /* Kontentni vertikal markazlash */
+    gap: 6px;
+    padding-right: 120px; /* Narxni joylash uchun joy qoldirish */
 }
 
-/* 5. From/To Display (Optimized) */
+/* 5. From/To Display (Chiroyli ko'rinishda) */
 .route-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-bottom: 6px;
+    gap: 2px; /* Kichikroq gap */
 }
 
 .route-content h3 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 800;
     color: var(--text-secondary);
-    letter-spacing: -0.3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+    /* Manzil va yo'nalishni ajratish */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.route-content h3 span {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.route-content h3::before {
+    content: '→';
+    font-weight: 400;
+    color: var(--text-muted);
 }
 
 .route-meta {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-muted);
+    margin-top: 4px;
 }
 
-/* 6. Price Display (Creative Bottom-right) */
+/* 6. Price Display (Creative Pastki-o'ng) */
 .route-price {
     position: absolute;
     bottom: var(--card-padding);
     right: var(--card-padding);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 900;
     color: #fff;
     background: var(--color-primary);
-    padding: 6px 14px;
-    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    border-radius: 8px;
     box-shadow: 0 4px 10px rgba(128, 0, 0, 0.3);
     letter-spacing: -0.5px;
     line-height: 1;
     z-index: 10;
+    transform: rotate(1deg); /* Kichik burchak effekt */
+    transition: var(--transition-ease);
 }
 
-/* 7. Delete Button Wrapper (Swipe Target) */
+.route-card-modern:hover .route-price {
+    transform: rotate(0deg) scale(1.05);
+}
+
+/* 7. Delete Button Wrapper (Swipe Target - Qo'shimcha yozuv qo'shildi) */
 .delete-btn-wrapper {
     position: absolute;
     top: 0;
@@ -359,12 +384,14 @@ body, html {
     bottom: 0;
     width: var(--swipe-width);
     display: flex;
+    flex-direction: column; /* Ikonka va yozuvni vertikal joylash */
     align-items: center;
     justify-content: center;
     background: var(--status-delete);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     transition: background-color 0.3s ease;
     z-index: 1;
+    gap: 4px;
 }
 
 .route-card-wrapper:hover .delete-btn-wrapper {
@@ -373,8 +400,8 @@ body, html {
 
 /* 8. Delete Button (Inside wrapper) */
 .delete-btn {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.95);
@@ -384,7 +411,7 @@ body, html {
     justify-content: center;
     cursor: pointer;
     transition: var(--transition-ease);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .delete-btn svg {
@@ -395,6 +422,13 @@ body, html {
 
 .delete-btn:active {
     transform: scale(0.9);
+}
+
+.delete-label {
+    font-size: var(--delete-label-font-size);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .empty-state {
@@ -513,32 +547,44 @@ body, html {
     }
 
     .route-card-modern {
-        padding: 16px;
-        gap: 16px;
+        padding: 18px;
+        gap: 20px;
     }
 
     .route-image {
-        --image-size: 100px;
+        --image-size: 110px;
+    }
+
+    .route-content {
+        padding-right: 140px;
     }
 
     .route-content h3 {
-        font-size: 18px;
+        font-size: 19px;
+    }
+
+    .route-content h3 span {
+        font-size: 17px;
     }
 
     .route-price {
-        font-size: 20px;
-        right: 16px;
-        bottom: 16px;
-        padding: 7px 16px;
+        font-size: 22px;
+        right: 18px;
+        bottom: 18px;
+        padding: 9px 18px;
     }
 
     .delete-btn-wrapper {
-        --swipe-width: 100px;
+        --swipe-width: 110px;
     }
 
     .delete-btn {
-        width: 54px;
-        height: 54px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .delete-label {
+        --delete-label-font-size: 14px;
     }
 
     :root {
