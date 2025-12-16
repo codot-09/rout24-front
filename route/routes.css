@@ -1,55 +1,89 @@
-:root {
-    --primary: #800000;
-    --primary-light: #a00000;
-    --primary-shadow: rgba(128, 0, 0, 0.25);
-    --bg: #ffffff;
-    --surface: #ffffff;
-    --text-primary: #800000;
+/* =========================================================================
+   1. Konfiguratsiya (Variables)
+   ========================================================================= */
+   :root {
+    /* Ranglar */
+    --color-primary: #800000;          /* To'q Qizil (Bordo) */
+    --color-primary-light: #a00000;
+    --color-shadow: rgba(128, 0, 0, 0.25);
+
+    /* Fon va Sirt */
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-border: rgba(128, 0, 0, 0.16);
+
+    /* Matn */
+    --text-primary: var(--color-primary);
     --text-secondary: rgba(0, 0, 0, 0.85);
     --text-muted: rgba(0, 0, 0, 0.65);
-    --border: rgba(128, 0, 0, 0.16);
-    --status-active: #4caf50;
-    --status-finished: #999999;
+
+    /* Statuslar */
+    --status-active: #4caf50;          /* Yashil */
+    --status-finished: #999999;        /* Kulrang */
+
+    /* Metrikalar */
     --radius-lg: 32px;
     --radius-md: 28px;
     --radius-sm: 26px;
-    --transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-    --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    --header-height: 74px;
+    --nav-height: 84px;
+    
+    /* Tranzitsiya va Font */
+    --transition-ease: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
 }
 
+
+/* =========================================================================
+   2. Boshlang'ich Holat (Reset/Base)
+   ========================================================================= */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Eng muhim qoida */
 }
 
-body, html {
-    height: 100%;
-    font-family: var(--font-base);
-    background: var(--bg);
+html {
+    /* Scroll xatti-harakatini silliq qilish (UX) */
+    scroll-behavior: smooth;
+}
+
+body {
+    height: 100vh; /* body 100% height emas, 100vh bo'lishi aniqroq */
+    font-family: var(--font-stack);
+    background: var(--color-bg);
     color: var(--text-primary);
+    /* Matnni o'qish qulayligini oshirish */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: hidden;
+    /* body'da overflow: hidden o'rniga main elementda ishlatish yaxshiroq, 
+       chunki header/footer fixed turadi. */
+    overflow: hidden; 
 }
 
-/* Header */
+
+/* =========================================================================
+   3. Komponentlar (Layout & Structure)
+   ========================================================================= */
+
+/* A. Header */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 74px;
+    height: var(--header-height); /* O'zgaruvchi ishlatildi */
     padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--bg);
+    background: var(--color-bg);
+    /* Bitta qatorda backdrop-filter yozildi */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     z-index: 100;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 25px rgba(128, 0, 0, 0.1);
+    border-bottom: 1px solid var(--color-border); /* O'zgaruvchi ishlatildi */
+    box-shadow: 0 4px 25px rgba(128, 0, 0, 0.1); /* Shadow'ni var(--color-shadow) orqali kiritish mumkin */
 }
 
 .logo {
@@ -59,6 +93,9 @@ body, html {
     font-size: 26px;
     font-weight: 900;
     letter-spacing: -0.5px;
+    /* Logo rangi matn rangi bilan bir xil bo'lishi uchun o'zgaruvchi kiritish mumkin */
+    color: var(--text-primary); 
+    text-decoration: none; /* Agar link bo'lsa */
 }
 
 .logo img {
@@ -69,12 +106,16 @@ body, html {
 }
 
 .notifications {
+    /* Faqat kerakli CSS qo'yildi */
     width: 48px;
     height: 48px;
-    background: none;
     border: none;
+    background-color: transparent;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-ease); /* O'zgaruvchi ishlatildi */
+    display: flex; /* SVG'ni markazlashtirish uchun */
+    align-items: center;
+    justify-content: center;
 }
 
 .notifications svg {
@@ -87,15 +128,16 @@ body, html {
     transform: scale(0.92);
 }
 
-/* Main */
+/* B. Main Kontent */
 .main {
-    padding: 90px 20px 100px;
+    /* Header va Navigatsiya balandligini o'zgaruvchi bilan belgilash */
+    padding: calc(var(--header-height) + 16px) 20px var(--nav-height); 
     height: 100vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
-/* Page Header */
+/* C. Page Header & FAB */
 .page-header {
     display: flex;
     align-items: center;
@@ -107,19 +149,20 @@ body, html {
     font-size: 26px;
     font-weight: 900;
     letter-spacing: -0.8px;
+    color: var(--text-secondary); /* Sarlavha uchun kuchliroq rang */
 }
 
-/* Add Button (FAB) */
 .add-btn {
     width: 56px;
     height: 56px;
-    background: var(--primary);
+    background: var(--color-primary); /* O'zgaruvchi ishlatildi */
     color: #fff;
     border: none;
     border-radius: 50%;
-    box-shadow: 0 12px 32px var(--primary-shadow);
+    /* O'zgaruvchi ishlatildi */
+    box-shadow: 0 12px 32px var(--color-shadow); 
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-ease); /* O'zgaruvchi ishlatildi */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -135,7 +178,8 @@ body, html {
     transform: scale(0.92);
 }
 
-/* Filter Bar */
+
+/* D. Filter Bar */
 .filter-bar {
     display: flex;
     gap: 12px;
@@ -152,13 +196,15 @@ body, html {
 .filter-bar select {
     width: 100%;
     padding: 16px 18px;
-    border: 2px solid var(--border);
+    border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
     font-size: 16px;
     background: #fafafa;
-    transition: var(--transition);
+    color: var(--text-secondary); /* Matn rangini aniqlash */
+    transition: var(--transition-ease);
     -webkit-appearance: none;
     appearance: none;
+    /* Data URI dagi rangni var() orqali o'zgartirish qiyin. Uni saqlash optimal. */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23800000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 18px center;
@@ -167,20 +213,20 @@ body, html {
 
 .filter-bar select:focus {
     outline: none;
-    border-color: var(--primary);
-    background-color: var(--bg);
+    border-color: var(--color-primary);
+    background-color: var(--color-bg);
     box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.12);
 }
 
 #clearFilter {
-    background: none;
+    background: transparent; /* None o'rniga transparent */
     border: 2px solid rgba(128, 0, 0, 0.3);
     color: var(--text-primary);
     padding: 16px 20px;
     border-radius: var(--radius-sm);
     font-weight: 700;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-ease);
     white-space: nowrap;
 }
 
@@ -189,30 +235,38 @@ body, html {
     transform: scale(0.96);
 }
 
-/* Routes List */
+
+/* E. Route Cards */
 .routes-list {
+    /* Yuqori qismdagi margin-bottom'ni grid gap bilan almashtirish (yaxshiroq layout) */
     display: grid;
     gap: 18px;
-    margin-bottom: 32px;
+    /* oxirgi element pastki navigatsiya bilan yopilib qolmasligi uchun */
+    padding-bottom: 20px; 
 }
 
 .route-card {
-    background: var(--surface);
+    background: var(--color-surface);
     border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 14px 38px rgba(128, 0, 0, 0.14);
-    transition: var(--transition);
+    box-shadow: 0 14px 38px var(--color-shadow);
+    transition: var(--transition-ease);
     cursor: pointer;
+    /* Saqlash uchun: hover effekti */
+    /* @media (hover: hover) {
+        &:hover {
+            box-shadow: 0 18px 44px var(--color-shadow);
+        }
+    } */
 }
 
 .route-card:active {
     transform: scale(0.98);
-    box-shadow: 0 18px 44px rgba(128, 0, 0, 0.18);
+    box-shadow: 0 18px 44px var(--color-shadow);
 }
 
-/* Route Header */
 .route-header {
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
     color: #fff;
     padding: 20px 24px;
     text-align: left;
@@ -229,14 +283,14 @@ body, html {
     font-weight: 900;
 }
 
-/* Route Body */
 .route-body {
     padding: 20px 24px;
 }
 
 .route-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns o'rniga flex bilan moslashuvchanlikni oshirish mumkin */
+    display: flex; 
+    flex-wrap: wrap; /* Kichik ekranlarda pastga tushishi uchun */
     gap: 12px;
     margin-bottom: 20px;
 }
@@ -247,16 +301,16 @@ body, html {
     gap: 10px;
     font-size: 15px;
     color: var(--text-secondary);
+    flex-basis: calc(50% - 6px); /* 50% kenglik - yarmigacha gap */
 }
 
 .route-info svg {
     width: 20px;
     height: 20px;
-    fill: var(--text-primary);
+    fill: var(--color-primary); /* Faqat asosiy rang ishlatildi */
     flex-shrink: 0;
 }
 
-/* Route Footer */
 .route-footer {
     display: flex;
     align-items: center;
@@ -275,6 +329,8 @@ body, html {
     font-size: 13px;
     font-weight: 700;
     color: #fff;
+    /* Transition qo'shish */
+    transition: background-color 0.3s;
 }
 
 .status.active {
@@ -285,7 +341,8 @@ body, html {
     background: var(--status-finished);
 }
 
-/* Empty State */
+
+/* F. Empty State */
 .empty-state {
     text-align: center;
     margin-top: 80px;
@@ -312,20 +369,22 @@ body, html {
     opacity: 0.8;
 }
 
-/* Bottom Navigation */
+/* G. Bottom Navigation */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 84px;
-    background: var(--bg);
+    height: var(--nav-height); /* O'zgaruvchi ishlatildi */
+    background: var(--color-bg);
     display: flex;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
     box-shadow: 0 -4px 20px rgba(128, 0, 0, 0.1);
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom);
+    /* Safe-area-insetni to'g'ri qo'llash */
+    padding-bottom: max(10px, env(safe-area-inset-bottom)); 
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .nav-item {
@@ -341,8 +400,9 @@ body, html {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-ease);
     position: relative;
+    /* padding-top: 10px; Mobil uchun vertikal padding berish qulaylik uchun. */
 }
 
 .nav-item svg {
@@ -363,10 +423,40 @@ body, html {
     transform: translateX(-50%);
     width: 40px;
     height: 4px;
-    background: var(--primary);
+    background: var(--color-primary);
     border-radius: 2px;
 }
 
 .nav-item:active:not(.active) {
     opacity: 0.7;
+}
+
+/* =========================================================================
+   4. Media Queries (Desktop/Tablet uchun)
+   ========================================================================= */
+
+@media (min-width: 768px) {
+    /* Katta ekranlarda kontentni markazlashtirish va cheklash */
+    .main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    /* Katta ekranlarda kartalar dizayni */
+    .routes-list {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    /* Header balandligini oshirish */
+    :root {
+        --header-height: 80px;
+    }
+
+    /* Filtr barini chiroyli qilish */
+    .filter-bar {
+        justify-content: flex-start;
+    }
 }
