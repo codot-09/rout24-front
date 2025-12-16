@@ -24,6 +24,7 @@
     --shadow-route-hover:0 8px 20px rgba(128,0,0,.25); 
     
     --transition:.3s cubic-bezier(.25,.46,.45,.94);
+    --image-width: 130px; /* Rasm uchun yangi kenglik */
 }
 
 /* BASE */
@@ -168,7 +169,7 @@ select:focus,input:focus{
     margin-top:24px;
 }
 
-/* ROUTE CARD (SEARCH) - Yangi, ixcham dizayn */
+/* ROUTE CARD (SEARCH) - Professional dizayn */
 .route-card-search {
     background: var(--card-bg);
     border-radius: var(--radius-lg);
@@ -179,12 +180,13 @@ select:focus,input:focus{
     display: flex;
     padding: 0;
     overflow: hidden;
-    height: 120px; /* Ixcham balandlik */
+    height: 140px; /* Balandlik biroz oshirildi */
 }
 
 .route-card-search:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-route-hover);
+    border-color: var(--primary);
 }
 .route-card-search:active {
     transform: scale(0.99);
@@ -193,10 +195,11 @@ select:focus,input:focus{
 /* Rasm maydoni (Chap tomon) */
 .route-image-container {
     flex-shrink: 0;
-    width: 120px;
+    width: var(--image-width);
     height: 100%;
     overflow: hidden;
     position: relative;
+    border-right: 2px solid var(--primary); /* Rasm va kontent orasidagi chiziq */
 }
 .route-image-container img {
     width: 100%;
@@ -207,12 +210,13 @@ select:focus,input:focus{
 }
 .route-card-search:hover .route-image-container img {
     transform: scale(1.05);
+    opacity: 0.9;
 }
 
 /* Kontent maydoni (O'rta qism) */
 .route-card-content {
     flex: 1;
-    padding: 16px 14px;
+    padding: 20px 18px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -222,18 +226,21 @@ select:focus,input:focus{
 .route-direction {
     display: flex;
     align-items: center;
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 19px;
+    font-weight: 800;
     color: var(--text);
     line-height: 1.2;
+    margin-bottom: 5px;
+    position: relative;
 }
 
 .route-direction .arrow {
     width: 20px;
     height: 20px;
     fill: var(--primary);
-    margin: 0 8px;
+    margin: 0 10px;
     flex-shrink: 0;
+    transform: translateY(2px);
 }
 
 .route-from, .route-to {
@@ -242,21 +249,27 @@ select:focus,input:focus{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 20px; /* Kattaroq yozuv */
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: var(--primary-dark);
 }
+.route-from {
+    color: var(--text);
+}
+
 
 /* Narx tegi (O'ng burchak) */
 .route-price-tag {
     position: absolute;
-    bottom: 0;
+    top: 0; /* Yuqoriga ko'chirildi */
     right: 0;
     padding: 12px 18px;
     background: var(--primary);
     color: #fff;
     font-size: 20px;
     font-weight: 900;
-    border-top-left-radius: var(--radius-lg);
+    border-bottom-left-radius: var(--radius-lg);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     letter-spacing: -0.5px;
     transition: var(--transition);
@@ -264,6 +277,7 @@ select:focus,input:focus{
 }
 .route-card-search:hover .route-price-tag {
     background: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 /* EMPTY STATE */
