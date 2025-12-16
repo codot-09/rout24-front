@@ -66,13 +66,11 @@ async function authFetch(url, options = {}) {
 }
 
 function renderRouteCard(route) {
-    const isDriver = USER_ROLE === 'driver';
     
-    const deleteBtn = isDriver 
-        ? `<button class="delete-btn" onclick="finishRoute('${route.id}', event)" aria-label="Reysni tugatish">
+    const deleteBtn =  
+         `<button class="delete-btn" onclick="finishRoute('${route.id}', event)" aria-label="Reysni tugatish">
              <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-           </button>`
-        : '';
+           </button>`;
 
     return `
         <article class="route-card-modern" onclick="viewDetails('${route.id}')" role="button" tabindex="0">
