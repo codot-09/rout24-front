@@ -156,6 +156,7 @@ function onTelegramAuth(user) {
             if (!role) location.href = '/set-credentials';
             else if (role === 'DRIVER') location.href = '/driver/dashboard';
             else if (role === 'CLIENT') location.href = '/client/dashboard';
+            else if (role === 'ADMIN') window.location.href = 'https://rout-admin.netlify.app';
         } else {
             alert(res.message || 'Kirishda xatolik');
         }
