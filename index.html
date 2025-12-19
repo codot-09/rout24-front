@@ -3,52 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xush kelibsiz</title>
+    <title>Welcome</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <style>
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        body,html{height:100%;overflow:hidden;background:#fff;color:#800000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-        .swiper{width:100%;height:100%}
-        .swiper-slide{
-            display:flex;flex-direction:column;justify-content:center;align-items:center;
-            padding:0 40px 180px;text-align:center;
+        :root {
+            --brand: #800000;
+            --brand-dark: #4a0000;
+            --brand-soft: #fff5f5;
+            --glass: rgba(255, 255, 255, 0.95);
+            --text-main: #2d3436;
+            --text-muted: #636e72;
         }
-        .illustration{
-            width:320px;height:320px;margin-bottom:68px;flex-shrink:0;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
         }
-        .illustration svg{width:100%;height:100%}
-        h2{
-            font-size:38px;font-weight:900;letter-spacing:-1.2px;line-height:1.1;
-            margin-bottom:22px;
+
+        .swiper { width: 100%; height: 100%; }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 32px 160px;
+            text-align: center;
+            background: #f0f2f5;
         }
-        p{
-            font-size:19px;line-height:1.6;opacity:0.9;max-width:360px;
+
+        .illustration-box {
+            width: 280px;
+            height: 280px;
+            background: var(--glass);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 48px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            position: relative;
         }
-        .bottom-fixed{
-            position:fixed;bottom:0;left:0;right:0;padding:40px;
-            background:linear-gradient(180deg,#ffffff 20%,rgba(255,255,255,0.96) 100%);
-            backdrop-filter:blur(24px);z-index:20;
+
+        .illustration-box svg {
+            width: 140px;
+            height: 140px;
+            filter: drop-shadow(0 8px 12px rgba(128,0,0,0.15));
         }
-        .btn{
-            width:100%;background:#800000;color:#fff;border:none;
-            padding:23px 0;border-radius:34px;font-size:20px;font-weight:800;
-            letter-spacing:0.4px;box-shadow:0 22px 44px rgba(128,0,0,0.3);
-            transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;
+
+        h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
         }
-        .btn:active{
-            transform:scale(.945);box-shadow:0 12px 28px rgba(128,0,0,0.34);
+
+        p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            max-width: 320px;
         }
-        .dots{
-            position:fixed;bottom:116px;left:50%;transform:translateX(-50%);
-            display:flex;gap:15px;z-index:10;
+
+        .bottom-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 32px;
+            background: linear-gradient(to top, #f0f2f5 80%, rgba(240,242,245,0));
+            z-index: 100;
         }
-        .dot{
-            width:11px;height:11px;border-radius:50%;
-            background:rgba(128,0,0,0.24);transition:all .6s cubic-bezier(.4,0,.2,1);
+
+        .btn-primary {
+            width: 100%;
+            background: var(--brand);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(128, 0, 0, 0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
-        .dot.active{
-            background:#800000;width:42px;border-radius:22px;
-            box-shadow:0 0 28px rgba(128,0,0,0.45);
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            background: var(--brand-dark);
+        }
+
+        .pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(128, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .dot.active {
+            width: 32px;
+            background: var(--brand);
         }
     </style>
 </head>
@@ -56,84 +125,82 @@
 
 <div class="swiper">
     <div class="swiper-wrapper">
-
-        <!-- 1-slide -->
         <div class="swiper-slide">
-            <div class="illustration">
+            <div class="illustration-box">
                 <svg viewBox="0 0 120 120">
-                    <path d="M60 14 L108 42 L108 78 L60 106 L12 78 L12 42 Z" fill="none" stroke="#800000" stroke-width="3.2"/>
-                    <circle cx="60" cy="60" r="28" fill="#800000" opacity="0.11"/>
-                    <circle cx="60" cy="60" r="15" fill="#800000" opacity="0.07"/>
+                    <path d="M60 14 L108 42 L108 78 L60 106 L12 78 L12 42 Z" fill="none" stroke="var(--brand)" stroke-width="4"/>
+                    <circle cx="60" cy="60" r="25" fill="var(--brand)" opacity="0.1"/>
                 </svg>
             </div>
             <h2>Yangi boshlanish</h2>
             <p>Barcha imkoniyatlar endi qo‘lingizda. Tez, sodda va ishonchli tajriba.</p>
         </div>
 
-        <!-- 2-slide -->
         <div class="swiper-slide">
-            <div class="illustration">
+            <div class="illustration-box">
                 <svg viewBox="0 0 120 120">
-                    <path d="M60 14 L104 40 L104 80 L60 106 L16 80 L16 40 Z" fill="none" stroke="#800000" stroke-width="3.2"/>
-                    <circle cx="60" cy="60" r="30" fill="#800000" opacity="0.09"/>
-                    <path d="M40 60 L54 74 L82 46" stroke="#800000" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M60 20 L100 45 L100 85 L60 110 L20 85 L20 45 Z" fill="none" stroke="var(--brand)" stroke-width="4"/>
+                    <path d="M45 60 L55 70 L75 50" stroke="var(--brand)" stroke-width="6" fill="none" stroke-linecap="round"/>
                 </svg>
             </div>
             <h2>Hamma narsa bir joyda</h2>
             <p>Bir marta bosish bilan kerakli funksiyalarga o‘ting. Vaqtni tejang.</p>
         </div>
 
-        <!-- 3-slide -->
         <div class="swiper-slide">
-            <div class="illustration">
+            <div class="illustration-box">
                 <svg viewBox="0 0 120 120">
-                    <path d="M60 14 L108 42 L108 78 L60 106 L12 78 L12 42 Z" fill="#800000" opacity="0.05"/>
-                    <path d="M34 62 L52 80 L88 42" stroke="#800000" stroke-width="7.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="60" cy="60" r="45" fill="var(--brand)" opacity="0.05"/>
+                    <path d="M35 60 L55 80 L90 45" stroke="var(--brand)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <h2>Tayyormisiz?</h2>
             <p>Hisobingizga kiring va yangi imkoniyatlardan darhol foydalaning.</p>
         </div>
-
     </div>
 </div>
 
-<div class="bottom-fixed">
-    <button class="btn" id="mainBtn">Keyingi</button>
-</div>
-
-<div class="dots">
-    <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+<div class="bottom-controls">
+    <div class="pagination-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+    <button class="btn-primary" id="nextBtn">Keyingi</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    const token = localStorage.getItem("token")
-    const role = localStorage.getItem("role")
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
 
-    if (token){
-       if (role == "DRIVER") location.href = "/driver/dashboard"
-       if (role == "CLIENT") location.href = "/client/dashboard"
+    if (token) {
+        if (role === "DRIVER") window.location.href = "/driver/dashboard";
+        if (role === "CLIENT") window.location.href = "/client/dashboard";
     }
 
     const swiper = new Swiper('.swiper', {
-        speed: 920,
+        speed: 800,
         allowTouchMove: true,
-        effect: 'slide',
-        on: { slideChange: updateUI }
+        on: { slideChange: updateView }
     });
-    const btn = document.getElementById('mainBtn');
+
+    const btn = document.getElementById('nextBtn');
     const dots = document.querySelectorAll('.dot');
 
-    function updateUI() {
-        const i = swiper.activeIndex;
-        btn.textContent = i === 2 ? 'Boshlash' : 'Keyingi';
-        btn.onclick = i === 2 ? () => location.href='/login' : () => swiper.slideNext();
-        dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    function updateView() {
+        const idx = swiper.activeIndex;
+        btn.textContent = idx === 2 ? 'Boshlash' : 'Keyingi';
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
     }
-    updateUI();
+
+    btn.addEventListener('click', () => {
+        if (swiper.activeIndex === 2) {
+            window.location.href = '/login';
+        } else {
+            swiper.slideNext();
+        }
+    });
 </script>
 
 </body>
