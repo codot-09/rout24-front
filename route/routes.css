@@ -41,58 +41,55 @@ body, html {
     overflow: hidden;
 }
 
+/* Header - Fixed Top */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: var(--header-height);
+    height: 74px;
     padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--color-bg);
+    background: var(--bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     z-index: 100;
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(128, 0, 0, 0.09);
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 22px;
-    font-weight: 800;
+    gap: 14px;
+    font-size: 26px;
+    font-weight: 900;
     letter-spacing: -0.5px;
-    color: var(--text-primary);
-    text-decoration: none;
 }
 
 .logo img {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     object-fit: contain;
 }
 
 .notifications {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
+    background: none;
     border: none;
-    background-color: transparent;
     cursor: pointer;
-    transition: var(--transition-ease);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: var(--text-primary);
+    transition: var(--transition);
 }
 
 .notifications svg {
-    width: 24px;
-    height: 24px;
-    fill: var(--text-primary);
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
 }
 
 .notifications:active {
