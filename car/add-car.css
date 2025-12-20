@@ -1,4 +1,5 @@
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;    -webkit-tap-highlight-color: transparent;
+    outline: none;}
 body,html{height:100%;background:#fff;color:#800000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;overflow-x:hidden}
 .header{position:fixed;top:0;left:0;right:0;height:74px;padding:0 20px;display:flex;align-items:center;background:#fff;z-index:100;box-shadow:0 4px 25px rgba(128,0,0,0.1)}
 .back-btn{background:none;border:none;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .3s}

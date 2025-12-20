@@ -48,23 +48,44 @@
 
 </main>
 
-<!-- Bottom Navigation (Haydovchi uchun) -->
+<!-- Bottom Navigation -->
 <nav class="bottom-nav" role="navigation" aria-label="Asosiy navigatsiya">
-    <button class="nav-item" onclick="window.location.href='/driver/dashboard'" aria-label="Asosiy">
+    <button class="nav-item" data-page="home" aria-label="Asosiy sahifa" aria-current="page">
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
         <span>Asosiy</span>
     </button>
 
-    <button class="nav-item" onclick="window.location.href='/routes'" aria-label="Reyslar">
+    <button class="nav-item" data-page="routes" onclick="window.location.href='/routes'" aria-label="Reyslar">
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
         </svg>
         <span>Reyslar</span>
     </button>
 
-    <button class="nav-item active" aria-current="page" aria-label="Profil">
+    <!-- QR Scan - Markaziy kattaroq tugma -->
+    <button class="nav-item qr-scan-btn" onclick="window.location.href='/qr-scan'" aria-label="QR kod skan qilish">
+        <div class="qr-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="5" height="5"/>
+                <rect x="16" y="3" width="5" height="5"/>
+                <rect x="3" y="16" width="5" height="5"/>
+                <path d="M21 16h-3a2 2 0 0 0-2 2v3"/>
+                <path d="M21 21v.01"/>
+                <path d="M12 7v3a2 2 0 0 1-2 2H7"/>
+                <path d="M3 12h.01"/>
+                <path d="M12 3h.01"/>
+                <path d="M12 16v.01"/>
+                <path d="M16 12h1"/>
+                <path d="M21 12v.01"/>
+                <path d="M12 21v-1"/>
+            </svg>
+        </div>
+        <span>QR Skan</span>
+    </button>
+
+    <button class="nav-item active" data-page="profile" onclick="window.location.href='/driver/profile'" aria-label="Profil">
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
