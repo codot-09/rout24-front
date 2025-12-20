@@ -497,7 +497,6 @@ body, html {
     -webkit-backdrop-filter: blur(12px);
 }
 
-/* BOTTOM NAV */
 .bottom-nav {
     position: fixed;
     bottom: 0;
