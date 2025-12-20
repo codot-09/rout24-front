@@ -75,22 +75,21 @@
 
 </main>
 
-<nav class="bottom-nav" role="navigation" onclick="window.location.href='/driver/dashboard'" aria-label="Asosiy navigatsiya">
-    <button class="nav-item" data-page="home" aria-label="Asosiy sahifa" aria-current="page">
+<nav class="bottom-nav" role="navigation" aria-label="Asosiy navigatsiya">
+    <button class="nav-item" data-page="home" onclick="window.location.href='/driver/dashboard'" aria-label="Asosiy sahifa" aria-current="page">
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
         <span>Asosiy</span>
     </button>
 
-    <button class="nav-item active" data-page="routes" aria-label="Reyslar">
+    <button class="nav-item active" data-page="routes" onclick="window.location.href='/routes'" aria-label="Reyslar">
         <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
         </svg>
         <span>Reyslar</span>
     </button>
 
-    <!-- QR Scan - Markaziy kattaroq tugma -->
     <button class="nav-item qr-scan-btn" onclick="window.location.href='/qr-scan'" aria-label="QR kod skan qilish">
         <div class="qr-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
